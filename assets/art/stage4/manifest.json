@@ -1,0 +1,462 @@
+{
+  "version": 1,
+  "root": "assets/art/stage4",
+  "assets": [
+    {
+      "id": "chef-shiba-n",
+      "path": "assets/art/stage4/chef/chef-shiba-n.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-ne",
+      "path": "assets/art/stage4/chef/chef-shiba-ne.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-e",
+      "path": "assets/art/stage4/chef/chef-shiba-e.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-se",
+      "path": "assets/art/stage4/chef/chef-shiba-se.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-s",
+      "path": "assets/art/stage4/chef/chef-shiba-s.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-sw",
+      "path": "assets/art/stage4/chef/chef-shiba-sw.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-w",
+      "path": "assets/art/stage4/chef/chef-shiba-w.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "chef-shiba-nw",
+      "path": "assets/art/stage4/chef/chef-shiba-nw.svg",
+      "viewBox": "0 0 160 180",
+      "nominalWidth": 160,
+      "nominalHeight": 180,
+      "category": "chef"
+    },
+    {
+      "id": "kitchen-u-counter-base",
+      "path": "assets/art/stage4/kitchen/kitchen-u-counter-base.svg",
+      "viewBox": "0 0 1200 620",
+      "nominalWidth": 1200,
+      "nominalHeight": 620,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-prep-bin",
+      "path": "assets/art/stage4/kitchen/station-prep-bin.svg",
+      "viewBox": "0 0 120 96",
+      "nominalWidth": 120,
+      "nominalHeight": 96,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-cutting-inset",
+      "path": "assets/art/stage4/kitchen/station-cutting-inset.svg",
+      "viewBox": "0 0 160 104",
+      "nominalWidth": 160,
+      "nominalHeight": 104,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-pan-inset",
+      "path": "assets/art/stage4/kitchen/station-pan-inset.svg",
+      "viewBox": "0 0 160 104",
+      "nominalWidth": 160,
+      "nominalHeight": 104,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-ready-tray",
+      "path": "assets/art/stage4/kitchen/station-ready-tray.svg",
+      "viewBox": "0 0 140 96",
+      "nominalWidth": 140,
+      "nominalHeight": 96,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-assembly-inset",
+      "path": "assets/art/stage4/kitchen/station-assembly-inset.svg",
+      "viewBox": "0 0 150 104",
+      "nominalWidth": 150,
+      "nominalHeight": 104,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-service-inset",
+      "path": "assets/art/stage4/kitchen/station-service-inset.svg",
+      "viewBox": "0 0 150 104",
+      "nominalWidth": 150,
+      "nominalHeight": 104,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-disassembly-inset",
+      "path": "assets/art/stage4/kitchen/station-disassembly-inset.svg",
+      "viewBox": "0 0 120 96",
+      "nominalWidth": 120,
+      "nominalHeight": 96,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-focus-ring",
+      "path": "assets/art/stage4/kitchen/station-focus-ring.svg",
+      "viewBox": "0 0 180 120",
+      "nominalWidth": 180,
+      "nominalHeight": 120,
+      "category": "kitchen"
+    },
+    {
+      "id": "station-progress-track",
+      "path": "assets/art/stage4/kitchen/station-progress-track.svg",
+      "viewBox": "0 0 160 24",
+      "nominalWidth": 160,
+      "nominalHeight": 24,
+      "category": "kitchen"
+    },
+    {
+      "id": "food-bun",
+      "path": "assets/art/stage4/food/food-bun.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-tomato-raw",
+      "path": "assets/art/stage4/food/food-tomato-raw.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-tomato-chopped",
+      "path": "assets/art/stage4/food/food-tomato-chopped.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-meat-raw",
+      "path": "assets/art/stage4/food/food-meat-raw.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-meat-cooked",
+      "path": "assets/art/stage4/food/food-meat-cooked.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-burger-complete",
+      "path": "assets/art/stage4/food/food-burger-complete.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "food-placeholder",
+      "path": "assets/art/stage4/food/food-placeholder.svg",
+      "viewBox": "0 0 96 96",
+      "nominalWidth": 96,
+      "nominalHeight": 96,
+      "category": "food"
+    },
+    {
+      "id": "ui-hud-star",
+      "path": "assets/art/stage4/ui/ui-hud-star.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-hud-clock",
+      "path": "assets/art/stage4/ui/ui-hud-clock.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-pause",
+      "path": "assets/art/stage4/ui/ui-pause.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-music-on",
+      "path": "assets/art/stage4/ui/ui-music-on.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-music-off",
+      "path": "assets/art/stage4/ui/ui-music-off.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-sound-on",
+      "path": "assets/art/stage4/ui/ui-sound-on.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-sound-off",
+      "path": "assets/art/stage4/ui/ui-sound-off.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-vibration-on",
+      "path": "assets/art/stage4/ui/ui-vibration-on.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-vibration-off",
+      "path": "assets/art/stage4/ui/ui-vibration-off.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-motion-on",
+      "path": "assets/art/stage4/ui/ui-motion-on.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-motion-reduced",
+      "path": "assets/art/stage4/ui/ui-motion-reduced.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-interact",
+      "path": "assets/art/stage4/ui/ui-interact.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-discard",
+      "path": "assets/art/stage4/ui/ui-discard.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-direction-arrow",
+      "path": "assets/art/stage4/ui/ui-direction-arrow.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-state-ready",
+      "path": "assets/art/stage4/ui/ui-state-ready.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-state-error",
+      "path": "assets/art/stage4/ui/ui-state-error.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-screen-rotate",
+      "path": "assets/art/stage4/ui/ui-screen-rotate.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-retry",
+      "path": "assets/art/stage4/ui/ui-retry.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-next",
+      "path": "assets/art/stage4/ui/ui-next.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-back",
+      "path": "assets/art/stage4/ui/ui-back.svg",
+      "viewBox": "0 0 64 64",
+      "nominalWidth": 64,
+      "nominalHeight": 64,
+      "category": "ui"
+    },
+    {
+      "id": "ui-order-current",
+      "path": "assets/art/stage4/ui/ui-order-current.svg",
+      "viewBox": "0 0 240 112",
+      "nominalWidth": 240,
+      "nominalHeight": 112,
+      "category": "ui"
+    },
+    {
+      "id": "ui-order-waiting",
+      "path": "assets/art/stage4/ui/ui-order-waiting.svg",
+      "viewBox": "0 0 240 112",
+      "nominalWidth": 240,
+      "nominalHeight": 112,
+      "category": "ui"
+    },
+    {
+      "id": "ui-order-zero",
+      "path": "assets/art/stage4/ui/ui-order-zero.svg",
+      "viewBox": "0 0 240 112",
+      "nominalWidth": 240,
+      "nominalHeight": 112,
+      "category": "ui"
+    },
+    {
+      "id": "ui-result-medal",
+      "path": "assets/art/stage4/ui/ui-result-medal.svg",
+      "viewBox": "0 0 160 160",
+      "nominalWidth": 160,
+      "nominalHeight": 160,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-primary-idle",
+      "path": "assets/art/stage4/ui/ui-button-primary-idle.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-primary-focus",
+      "path": "assets/art/stage4/ui/ui-button-primary-focus.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-primary-pressed",
+      "path": "assets/art/stage4/ui/ui-button-primary-pressed.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-primary-disabled",
+      "path": "assets/art/stage4/ui/ui-button-primary-disabled.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-secondary-idle",
+      "path": "assets/art/stage4/ui/ui-button-secondary-idle.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-secondary-focus",
+      "path": "assets/art/stage4/ui/ui-button-secondary-focus.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-secondary-pressed",
+      "path": "assets/art/stage4/ui/ui-button-secondary-pressed.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    },
+    {
+      "id": "ui-button-secondary-disabled",
+      "path": "assets/art/stage4/ui/ui-button-secondary-disabled.svg",
+      "viewBox": "0 0 240 80",
+      "nominalWidth": 240,
+      "nominalHeight": 80,
+      "category": "ui"
+    }
+  ]
+}
