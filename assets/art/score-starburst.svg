@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">得分星芒</title>
+  <desc id="desc">得分與成功動畫使用的原創金色星芒</desc>
+  <defs><filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter></defs>
+  <circle cx="64" cy="64" r="40" fill="#ffd45e" opacity=".3" filter="url(#glow)"/>
+  <path d="m64 8 10 31 29-17-17 29 34 9-34 10 17 29-29-17-10 38-10-38-29 17 17-29L8 60l34-9-17-29 29 17Z" fill="#ffd45e" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="64" cy="63" r="29" fill="#fff1d2" stroke="#e7a72e" stroke-width="4"/>
+  <path d="m64 42 6 12 14 2-10 10 3 14-13-7-13 7 3-14-10-10 14-2Z" fill="#f26b5e" stroke="#54372d" stroke-width="3" stroke-linejoin="round"/>
+</svg>

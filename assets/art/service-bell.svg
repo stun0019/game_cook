@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">出餐鈴</title>
+  <desc id="desc">暖陽小廚房原創 2.5D 玩具風格出餐鈴圖示</desc>
+  <defs><filter id="shadow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+  <ellipse cx="64" cy="103" rx="42" ry="9" fill="#35251f" opacity=".18" filter="url(#shadow)"/>
+  <path d="M24 78c2-27 18-43 40-43s38 16 40 43l-2 12H26Z" fill="#e7a72e" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M31 74c4-20 17-33 34-33 11 0 20 5 27 14-6-13-16-20-28-20-22 0-38 16-40 43l-1 6c2-4 5-7 8-10Z" fill="#ffd45e"/>
+  <ellipse cx="64" cy="33" rx="11" ry="8" fill="#f7dda7" stroke="#54372d" stroke-width="4"/>
+  <path d="M64 25v-8" stroke="#54372d" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="64" cy="17" rx="7" ry="5" fill="#f26b5e" stroke="#54372d" stroke-width="3"/>
+  <path d="M19 85c0-6 5-10 11-10h68c6 0 11 4 11 10v8H19Z" fill="#c9783f" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M28 85h72" stroke="#ffe78c" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+</svg>

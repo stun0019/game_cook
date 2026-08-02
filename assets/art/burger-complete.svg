@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" role="img" aria-labelledby="title desc">
+  <title id="title">完成漢堡餐點</title>
+  <desc id="desc">暖陽小廚房原創完成漢堡與餐盤圖示</desc>
+  <defs><filter id="shadow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="3.5"/></filter></defs>
+  <ellipse cx="80" cy="120" rx="58" ry="10" fill="#35251f" opacity=".18" filter="url(#shadow)"/>
+  <path d="M20 101c4 20 27 31 60 31 32 0 55-11 60-31Z" fill="#d8e9e8" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <ellipse cx="80" cy="100" rx="60" ry="27" fill="#fffaf0" stroke="#54372d" stroke-width="4"/>
+  <path d="M43 85c5-12 18-18 37-18 20 0 33 6 38 18l-3 12H46Z" fill="#e9ad68" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M42 74c7-7 23-10 38-10 16 0 31 3 39 10l-7 10-15-3-17 6-16-6-15 3Z" fill="#55b894" stroke="#54372d" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M43 70c8-9 22-13 37-13 16 0 30 4 38 13l-5 12c-21 7-46 7-67 0Z" fill="#c9783f" stroke="#54372d" stroke-width="4"/>
+  <path d="M46 65c8-6 20-9 34-9 14 0 27 3 35 9l-4 8-15-3-16 6-17-6-14 3Z" fill="#df5147" stroke="#54372d" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M39 52c3-24 20-37 41-37 22 0 39 13 42 37-18 12-64 12-83 0Z" fill="#ffd45e" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M46 48c5-17 18-28 35-28 13 0 25 6 32 17-8-15-20-22-33-22-21 0-38 13-41 37 3-2 5-3 7-4Z" fill="#ffe78c"/>
+  <g fill="none" stroke="#c9783f" stroke-width="2.5" stroke-linecap="round"><path d="m63 35 5 3"/><path d="m82 28 1 6"/><path d="m98 38 5-2"/></g>
+  <g fill="#fffaf0" stroke="#e7a72e" stroke-width="2">
+    <path d="m29 38 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z"/>
+    <path d="m133 49 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/>
+  </g>
+</svg>

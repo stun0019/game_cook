@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">砧板</title>
+  <desc id="desc">暖陽小廚房原創 2.5D 玩具風格砧板圖示</desc>
+  <defs><filter id="shadow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+  <ellipse cx="63" cy="105" rx="48" ry="9" fill="#35251f" opacity=".18" filter="url(#shadow)"/>
+  <path d="M16 44 81 23l31 22-3 40-67 23-29-22Z" fill="#c9783f" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M16 44 81 23l31 22-67 23Z" fill="#f0bd79" stroke="#54372d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M45 68 112 45l-3 40-67 23 3-40Z" fill="#d58b4e" opacity=".78"/>
+  <ellipse cx="87" cy="42" rx="8" ry="5" transform="rotate(-17 87 42)" fill="#fff1d2" stroke="#54372d" stroke-width="3"/>
+  <g fill="none" stroke="#c9783f" stroke-width="3" stroke-linecap="round" opacity=".8">
+    <path d="m34 47 28-9"/><path d="m43 54 35-11"/><path d="m57 57 22-7"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 112" role="img" aria-labelledby="title desc">
+  <title id="title">料理蒸氣</title>
+  <desc id="desc">工作站加熱動畫使用的原創分層蒸氣</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 100c-8-14 5-22 1-35-3-10-13-13-10-27 2-9 9-14 16-19" stroke="#54372d" stroke-width="10" opacity=".18"/>
+    <path d="M25 100c-8-14 5-22 1-35-3-10-13-13-10-27 2-9 9-14 16-19" stroke="#fffaf0" stroke-width="7"/>
+    <path d="M51 102c8-16-5-24-1-38 3-11 14-16 10-30-2-9-9-15-14-22" stroke="#54372d" stroke-width="10" opacity=".18"/>
+    <path d="M51 102c8-16-5-24-1-38 3-11 14-16 10-30-2-9-9-15-14-22" stroke="#d8e9e8" stroke-width="7"/>
+    <path d="M75 99c-5-11 4-18 1-28-2-8-9-11-7-21 1-7 6-12 11-16" stroke="#54372d" stroke-width="9" opacity=".16"/>
+    <path d="M75 99c-5-11 4-18 1-28-2-8-9-11-7-21 1-7 6-12 11-16" stroke="#fffaf0" stroke-width="6"/>
+  </g>
+</svg>
