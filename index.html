@@ -296,6 +296,35 @@
       line-height:1.5;
       font-weight:700;
     }
+
+    .loading-start-btn{
+      width:100%;
+      margin-top:18px;
+      border:none;
+      border-radius:18px;
+      padding:14px 20px;
+      background:linear-gradient(180deg,#ff9d67,#ff7f4a);
+      color:white;
+      font-weight:1000;
+      font-size:18px;
+      box-shadow:0 6px 0 #d96535,0 12px 24px rgba(108,55,29,.18);
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(10px);
+      pointer-events:none;
+      transition:opacity .35s ease,transform .35s ease,visibility .35s ease;
+    }
+    .loading-start-btn.show{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+    .loading-start-btn:active{
+      transform:translateY(4px);
+      box-shadow:0 2px 0 #d96535,0 7px 16px rgba(108,55,29,.16);
+    }
+
     @keyframes loadingFloat{
       0%,100%{transform:translateY(0)}
       50%{transform:translateY(-7px)}
@@ -334,6 +363,10 @@
     <div class="loading-tip" id="loadingTip">
       小提示：快速連續上菜可以累積 Combo。
     </div>
+
+    <button class="loading-start-btn" id="loadingStartBtn" onclick="enterGame()">
+      開始營業
+    </button>
   </div>
 </div>
 
@@ -458,11 +491,23 @@ function runLoadingScreen(){
 
     if(progress >= 100){
       clearInterval(timer);
+      text.textContent = '載入完成';
+      tip.textContent = '準備好了，點擊下方按鈕開始營業。';
+
+      const startBtn = document.getElementById('loadingStartBtn');
       setTimeout(()=>{
-        screen.classList.add('hide');
-      },450);
+        startBtn.classList.add('show');
+      },250);
     }
   },140);
+}
+
+function enterGame(){
+  const screen = document.getElementById('loadingScreen');
+  const startBtn = document.getElementById('loadingStartBtn');
+
+  startBtn.disabled = true;
+  screen.classList.add('hide');
 }
 
 const FOOD = {
