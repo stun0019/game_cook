@@ -200,6 +200,111 @@
       opacity:0;pointer-events:none;transition:.25s;z-index:8;white-space:nowrap
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .loading-screen{
+      position:fixed;
+      inset:0;
+      z-index:30;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255,255,255,.72), transparent 28%),
+        linear-gradient(180deg,#ffd29f 0%,#ffb980 45%,#fff0da 100%);
+      transition:opacity .55s ease, visibility .55s ease;
+    }
+    .loading-screen.hide{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .loading-content{
+      width:min(100%,360px);
+      text-align:center;
+      animation:loadingFloat 2.2s ease-in-out infinite;
+    }
+    .loading-logo{
+      width:146px;
+      height:146px;
+      margin:0 auto 14px;
+      display:grid;
+      place-items:center;
+      border-radius:42px;
+      background:rgba(255,255,255,.92);
+      border:5px solid rgba(255,255,255,.75);
+      box-shadow:0 18px 40px rgba(103,57,28,.22);
+      font-size:76px;
+      transform:rotate(-3deg);
+    }
+    .loading-title{
+      margin:0;
+      font-size:34px;
+      line-height:1.1;
+      font-weight:1000;
+      letter-spacing:1px;
+      color:#5b3523;
+      text-shadow:0 3px 0 rgba(255,255,255,.55);
+    }
+    .loading-subtitle{
+      margin:8px 0 24px;
+      color:#80553d;
+      font-weight:800;
+      font-size:15px;
+    }
+    .loading-bar-shell{
+      height:18px;
+      padding:4px;
+      border-radius:999px;
+      background:rgba(255,255,255,.74);
+      box-shadow:inset 0 2px 5px rgba(76,45,26,.12),0 7px 18px rgba(84,47,25,.13);
+      overflow:hidden;
+    }
+    .loading-bar-fill{
+      width:0%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#ffd166,#ff8f5a);
+      transition:width .18s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .loading-bar-fill:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.58) 45%,transparent 70%);
+      animation:loadingShine 1.15s linear infinite;
+    }
+    .loading-info{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:10px;
+      color:#714832;
+      font-size:13px;
+      font-weight:900;
+    }
+    .loading-tip{
+      margin-top:26px;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.5);
+      color:#714832;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:700;
+    }
+    @keyframes loadingFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-7px)}
+    }
+    @keyframes loadingShine{
+      from{transform:translateX(-100%)}
+      to{transform:translateX(100%)}
+    }
+
     @media (max-height:760px){
       .restaurant{min-height:185px}
       .customers{min-height:145px}
@@ -210,6 +315,28 @@
   </style>
 </head>
 <body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-content">
+    <div class="loading-logo">🐶🍳</div>
+    <h1 class="loading-title">小鎮開飯啦！</h1>
+    <div class="loading-subtitle">早餐小舖準備營業中</div>
+
+    <div class="loading-bar-shell">
+      <div class="loading-bar-fill" id="loadingBar"></div>
+    </div>
+
+    <div class="loading-info">
+      <span id="loadingText">正在整理廚房...</span>
+      <span id="loadingPercent">0%</span>
+    </div>
+
+    <div class="loading-tip" id="loadingTip">
+      小提示：快速連續上菜可以累積 Combo。
+    </div>
+  </div>
+</div>
+
 <div class="game">
   <div class="topbar">
     <div>
@@ -298,6 +425,46 @@
 </div>
 
 <script>
+
+const loadingMessages = [
+  ['正在整理廚房...', '小提示：快速連續上菜可以累積 Combo。'],
+  ['正在準備食材...', '小提示：越早完成訂單，客人給的小費越多。'],
+  ['正在加熱廚具...', '小提示：先觀察客人的訂單，再安排料理順序。'],
+  ['正在迎接客人...', '小提示：客人耐心耗盡後會直接離開。'],
+  ['準備開店！', '今日目標：讓每位客人吃得開心。']
+];
+
+function runLoadingScreen(){
+  const screen = document.getElementById('loadingScreen');
+  const bar = document.getElementById('loadingBar');
+  const percent = document.getElementById('loadingPercent');
+  const text = document.getElementById('loadingText');
+  const tip = document.getElementById('loadingTip');
+
+  let progress = 0;
+  const timer = setInterval(()=>{
+    progress += Math.floor(Math.random()*8)+4;
+    if(progress >= 100) progress = 100;
+
+    const messageIndex = Math.min(
+      loadingMessages.length-1,
+      Math.floor(progress / 21)
+    );
+
+    bar.style.width = progress + '%';
+    percent.textContent = progress + '%';
+    text.textContent = loadingMessages[messageIndex][0];
+    tip.textContent = loadingMessages[messageIndex][1];
+
+    if(progress >= 100){
+      clearInterval(timer);
+      setTimeout(()=>{
+        screen.classList.add('hide');
+      },450);
+    }
+  },140);
+}
+
 const FOOD = {
   toast: {icon:'🍞', time:1800, label:'吐司'},
   egg: {icon:'🍳', time:2300, label:'煎蛋'},
@@ -519,6 +686,7 @@ function closeHelp(){
   document.getElementById('helpOverlay').classList.remove('show');
 }
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+window.addEventListener("load", runLoadingScreen);
 </script>
 </body>
 </html>
