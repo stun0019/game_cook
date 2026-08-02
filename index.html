@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>小鎮開飯啦！HTML 原型</title>
+  <style>
+    :root{
+      --bg:#fff6e8;
+      --panel:#ffffff;
+      --ink:#3b2b22;
+      --accent:#ff8f5a;
+      --accent2:#ffd166;
+      --good:#63c174;
+      --bad:#e85d75;
+      --muted:#8c7a70;
+      --shadow:0 10px 24px rgba(82,54,34,.14);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
+      background:linear-gradient(180deg,#ffd9b8 0%,#fff6e8 32%,#fff6e8 100%);
+      color:var(--ink);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+    }
+    button{font:inherit}
+    .game{
+      width:min(100vw,460px);
+      min-height:100vh;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      position:relative;
+      overflow:hidden;
+    }
+    .topbar{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.9);
+      box-shadow:var(--shadow);
+    }
+    .level{font-weight:900}
+    .stat{
+      background:#fff1d3;
+      border:2px solid #ffe0a0;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .progress-wrap{
+      background:#eadfd8;
+      height:10px;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:5px;
+    }
+    .progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:.25s}
+    .restaurant{
+      background:linear-gradient(180deg,#fffaf4,#ffe8cf);
+      min-height:210px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .restaurant:before{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:0;height:58px;
+      background:#d69a65;
+      border-top:8px solid #bd7e4a;
+    }
+    .customers{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      min-height:170px;
+      align-items:end;
+    }
+    .customer{
+      background:rgba(255,255,255,.95);
+      border:2px solid #f1d4bc;
+      border-radius:20px;
+      padding:8px;
+      text-align:center;
+      min-height:156px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:0 6px 12px rgba(74,45,26,.1);
+    }
+    .customer.empty{opacity:.42;filter:grayscale(.4)}
+    .face{font-size:40px;line-height:1}
+    .order{font-size:25px;min-height:31px}
+    .patience{
+      height:8px;background:#eadfd8;border-radius:99px;overflow:hidden
+    }
+    .patience > div{height:100%;background:var(--good);width:100%;transition:width .3s}
+    .serve{
+      border:none;border-radius:12px;padding:8px 4px;
+      background:var(--accent);color:white;font-weight:900;
+      box-shadow:0 4px 0 #d86f3e;
+    }
+    .serve:disabled{background:#c9bdb6;box-shadow:0 4px 0 #aa9f99}
+    .combo{
+      position:absolute;right:16px;top:14px;
+      font-weight:1000;color:#d65326;
+      transform:rotate(5deg);
+      text-shadow:0 2px white;
+      z-index:3;
+    }
+    .kitchen{
+      background:var(--panel);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:12px;
+    }
+    .section-title{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:8px;font-weight:900
+    }
+    .stations{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .station{
+      border:2px solid #f1dfd2;
+      background:#fffaf6;
+      border-radius:18px;
+      padding:10px;
+      min-height:114px;
+      position:relative;
+    }
+    .station h3{margin:0 0 6px;font-size:15px}
+    .station .icon{font-size:34px}
+    .station button{
+      width:100%;border:none;border-radius:12px;
+      padding:9px 6px;background:#684b3a;color:white;font-weight:900;
+    }
+    .station button:disabled{opacity:.45}
+    .cookbar{
+      height:9px;background:#e9dfda;border-radius:99px;overflow:hidden;margin:8px 0;
+    }
+    .cookbar > div{height:100%;width:0;background:var(--accent2)}
+    .inventory{
+      display:flex;gap:6px;flex-wrap:wrap;margin-top:8px
+    }
+    .food{
+      border:2px solid #f3d0aa;
+      background:#fff3dd;
+      border-radius:12px;
+      padding:6px 9px;
+      font-size:22px;
+      position:relative;
+    }
+    .food span{
+      position:absolute;top:-7px;right:-5px;background:#7a5844;color:white;
+      width:18px;height:18px;border-radius:50%;font-size:11px;
+      display:grid;place-items:center;font-weight:900
+    }
+    .footer{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px
+    }
+    .footer button{
+      border:none;border-radius:16px;padding:12px;font-weight:900;
+      background:#fff;box-shadow:var(--shadow);color:var(--ink)
+    }
+    .footer .primary{background:var(--accent);color:white}
+    .overlay{
+      position:fixed;inset:0;background:rgba(49,31,20,.72);
+      display:none;align-items:center;justify-content:center;padding:22px;z-index:10
+    }
+    .overlay.show{display:flex}
+    .card{
+      width:min(100%,390px);background:white;border-radius:26px;padding:22px;
+      text-align:center;box-shadow:var(--shadow)
+    }
+    .card h1{margin:0 0 8px}
+    .stars{font-size:38px;letter-spacing:4px}
+    .card button{
+      width:100%;border:none;border-radius:16px;padding:13px;
+      margin-top:12px;background:var(--accent);color:white;font-weight:900
+    }
+    .toast{
+      position:absolute;left:50%;top:92px;transform:translateX(-50%) translateY(-10px);
+      background:#3d2f27;color:white;padding:9px 14px;border-radius:99px;
+      opacity:0;pointer-events:none;transition:.25s;z-index:8;white-space:nowrap
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media (max-height:760px){
+      .restaurant{min-height:185px}
+      .customers{min-height:145px}
+      .customer{min-height:132px}
+      .face{font-size:32px}
+      .station{min-height:100px}
+    }
+  </style>
+</head>
+<body>
+<div class="game">
+  <div class="topbar">
+    <div>
+      <div class="level">第 1 關｜早餐小舖</div>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+    </div>
+    <div class="stat">🪙 <span id="coins">0</span></div>
+    <div class="stat">⏱ <span id="time">60</span></div>
+  </div>
+
+  <section class="restaurant">
+    <div class="combo" id="combo"></div>
+    <div class="customers" id="customers"></div>
+  </section>
+
+  <section class="kitchen">
+    <div class="section-title">
+      <span>廚房</span>
+      <span>目標：🪙 <b id="goal">180</b></span>
+    </div>
+    <div class="stations">
+      <div class="station">
+        <h3>烤麵包機</h3>
+        <div class="icon">🍞</div>
+        <div class="cookbar"><div id="barToast"></div></div>
+        <button id="btnToast" onclick="startCooking('toast')">製作吐司</button>
+      </div>
+      <div class="station">
+        <h3>平底煎鍋</h3>
+        <div class="icon">🍳</div>
+        <div class="cookbar"><div id="barEgg"></div></div>
+        <button id="btnEgg" onclick="startCooking('egg')">製作煎蛋</button>
+      </div>
+      <div class="station">
+        <h3>咖啡機</h3>
+        <div class="icon">☕</div>
+        <div class="cookbar"><div id="barCoffee"></div></div>
+        <button id="btnCoffee" onclick="startCooking('coffee')">沖泡咖啡</button>
+      </div>
+      <div class="station">
+        <h3>完成餐點</h3>
+        <div class="inventory" id="inventory"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <button onclick="resetGame()">重新開始</button>
+    <button class="primary" onclick="showHelp()">玩法說明</button>
+  </div>
+
+  <div class="toast" id="toastMsg"></div>
+</div>
+
+<div class="overlay show" id="startOverlay">
+  <div class="card">
+    <div style="font-size:58px">🐶🍳</div>
+    <h1>小鎮開飯啦！</h1>
+    <p>HTML 手機料理養成原型</p>
+    <p style="color:#7b6b62">在 60 秒內完成客人的餐點，達成 180 金幣。</p>
+    <button onclick="startGame()">開始營業</button>
+  </div>
+</div>
+
+<div class="overlay" id="resultOverlay">
+  <div class="card">
+    <h1 id="resultTitle">營業結束</h1>
+    <div class="stars" id="stars">⭐</div>
+    <p id="resultText"></p>
+    <button onclick="resetGame()">再玩一次</button>
+  </div>
+</div>
+
+<div class="overlay" id="helpOverlay">
+  <div class="card">
+    <h1>玩法說明</h1>
+    <p style="text-align:left;line-height:1.7">
+      1. 點擊廚具製作吐司、煎蛋或咖啡。<br>
+      2. 完成的料理會進入右下角庫存。<br>
+      3. 客人餐點備齊後，點擊「上菜」。<br>
+      4. 越快上菜，小費越高；連續上菜會增加 Combo。<br>
+      5. 在時間結束前達成金幣目標。
+    </p>
+    <button onclick="closeHelp()">返回遊戲</button>
+  </div>
+</div>
+
+<script>
+const FOOD = {
+  toast: {icon:'🍞', time:1800, label:'吐司'},
+  egg: {icon:'🍳', time:2300, label:'煎蛋'},
+  coffee: {icon:'☕', time:1500, label:'咖啡'}
+};
+
+const faces = ['🐰','🐻','🐱','🐼','🦊','🐨'];
+const orderPool = [
+  ['toast'], ['egg'], ['coffee'],
+  ['toast','coffee'], ['egg','coffee'], ['toast','egg']
+];
+
+let state;
+let timerId;
+let customerTick;
+let spawnTick;
+
+function initialState(){
+  return {
+    running:false,
+    time:60,
+    coins:0,
+    goal:180,
+    inventory:{toast:0,egg:0,coffee:0},
+    cooking:{toast:false,egg:false,coffee:false},
+    customers:[null,null,null],
+    combo:0,
+    lastServe:0,
+    served:0
+  };
+}
+
+function startGame(){
+  document.getElementById('startOverlay').classList.remove('show');
+  state = initialState();
+  state.running = true;
+  spawnCustomer();
+  spawnCustomer();
+  render();
+  timerId = setInterval(()=>{
+    state.time--;
+    if(state.time <= 0) endGame();
+    render();
+  },1000);
+  customerTick = setInterval(updateCustomers,500);
+  spawnTick = setInterval(spawnCustomer,2800);
+}
+
+function resetGame(){
+  clearAll();
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('startOverlay').classList.remove('show');
+  startGame();
+}
+
+function clearAll(){
+  clearInterval(timerId);
+  clearInterval(customerTick);
+  clearInterval(spawnTick);
+}
+
+function spawnCustomer(){
+  if(!state || !state.running) return;
+  const idx = state.customers.findIndex(c=>c===null);
+  if(idx === -1) return;
+  const order = orderPool[Math.floor(Math.random()*orderPool.length)];
+  state.customers[idx] = {
+    face:faces[Math.floor(Math.random()*faces.length)],
+    order:[...order],
+    patience:100
+  };
+  renderCustomers();
+}
+
+function updateCustomers(){
+  if(!state.running) return;
+  state.customers.forEach((c,i)=>{
+    if(!c) return;
+    c.patience -= 2.8;
+    if(c.patience <= 0){
+      state.customers[i]=null;
+      state.combo=0;
+      toast('客人生氣離開了');
+      setTimeout(spawnCustomer,500);
+    }
+  });
+  renderCustomers();
+  renderTop();
+}
+
+function startCooking(type){
+  if(!state.running || state.cooking[type]) return;
+  state.cooking[type]=true;
+  const btn = document.getElementById('btn'+cap(type));
+  const bar = document.getElementById('bar'+cap(type));
+  btn.disabled=true;
+  bar.style.transition='none';
+  bar.style.width='0%';
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      bar.style.transition=`width ${FOOD[type].time}ms linear`;
+      bar.style.width='100%';
+    });
+  });
+  setTimeout(()=>{
+    if(!state || !state.running) return;
+    state.cooking[type]=false;
+    state.inventory[type]++;
+    btn.disabled=false;
+    bar.style.transition='none';
+    bar.style.width='0%';
+    renderInventory();
+    renderCustomers();
+  },FOOD[type].time);
+}
+
+function canServe(customer){
+  if(!customer) return false;
+  const need={toast:0,egg:0,coffee:0};
+  customer.order.forEach(x=>need[x]++);
+  return Object.keys(need).every(k=>state.inventory[k]>=need[k]);
+}
+
+function serve(index){
+  const c=state.customers[index];
+  if(!c || !canServe(c)) return;
+  c.order.forEach(x=>state.inventory[x]--);
+
+  const now=Date.now();
+  state.combo = (now-state.lastServe<4500) ? state.combo+1 : 1;
+  state.lastServe=now;
+
+  const base = c.order.length*18;
+  const tip = Math.round(c.patience/10);
+  const comboBonus = Math.min(state.combo-1,5)*3;
+  const earned=base+tip+comboBonus;
+
+  state.coins += earned;
+  state.served++;
+  state.customers[index]=null;
+  toast(`上菜成功 +${earned} 金幣`);
+  setTimeout(spawnCustomer,650);
+  render();
+}
+
+function render(){
+  if(!state) return;
+  renderTop();
+  renderCustomers();
+  renderInventory();
+}
+
+function renderTop(){
+  document.getElementById('coins').textContent=state.coins;
+  document.getElementById('time').textContent=state.time;
+  document.getElementById('goal').textContent=state.goal;
+  document.getElementById('progress').style.width=Math.min(100,state.coins/state.goal*100)+'%';
+  document.getElementById('combo').textContent=state.combo>=2?`COMBO ×${state.combo}`:'';
+}
+
+function renderCustomers(){
+  const root=document.getElementById('customers');
+  root.innerHTML='';
+  state.customers.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='customer'+(!c?' empty':'');
+    if(!c){
+      el.innerHTML='<div class="face">🪑</div><div>等待客人</div><button class="serve" disabled>空位</button>';
+    }else{
+      const ready=canServe(c);
+      const color=c.patience>55?'#63c174':c.patience>25?'#f0ad4e':'#e85d75';
+      el.innerHTML=`
+        <div class="face">${c.face}</div>
+        <div class="order">${c.order.map(x=>FOOD[x].icon).join('')}</div>
+        <div class="patience"><div style="width:${Math.max(0,c.patience)}%;background:${color}"></div></div>
+        <button class="serve" ${ready?'':'disabled'} onclick="serve(${i})">${ready?'上菜':'備餐中'}</button>`;
+    }
+    root.appendChild(el);
+  });
+}
+
+function renderInventory(){
+  const root=document.getElementById('inventory');
+  root.innerHTML='';
+  Object.keys(FOOD).forEach(type=>{
+    const count=state.inventory[type];
+    const el=document.createElement('div');
+    el.className='food';
+    el.innerHTML=`${FOOD[type].icon}<span>${count}</span>`;
+    root.appendChild(el);
+  });
+}
+
+function endGame(){
+  if(!state.running) return;
+  state.running=false;
+  clearAll();
+  const ratio=state.coins/state.goal;
+  const stars=ratio>=1.5?3:ratio>=1?2:ratio>=.65?1:0;
+  document.getElementById('resultTitle').textContent=ratio>=1?'過關成功！':'挑戰失敗';
+  document.getElementById('stars').textContent=stars?'⭐'.repeat(stars):'☆';
+  document.getElementById('resultText').innerHTML=
+    `本次收入：<b>${state.coins}</b> 金幣<br>完成訂單：<b>${state.served}</b> 份`;
+  document.getElementById('resultOverlay').classList.add('show');
+}
+
+function toast(msg){
+  const el=document.getElementById('toastMsg');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),1200);
+}
+
+function showHelp(){
+  document.getElementById('helpOverlay').classList.add('show');
+}
+function closeHelp(){
+  document.getElementById('helpOverlay').classList.remove('show');
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+</script>
+</body>
+</html>
