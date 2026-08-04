@@ -1,101 +1,2256 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <title>灶腳大亂鬥｜第一關</title>
-  <link rel="stylesheet" href="assets/game/stage4.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#17120f">
+
+<title>灶咖大亂鬥｜Kitchen Clash Café</title>
+
+<style>
+:root{
+  --ink:#2a1d18;
+  --cream:#fff4dc;
+  --paper:#f8e7c6;
+  --red:#e3533e;
+  --red2:#b72e28;
+  --orange:#f29a3d;
+  --yellow:#ffd86a;
+  --green:#62a96b;
+  --teal:#4c9b98;
+  --blue:#4f78a8;
+  --shadow:#1a100c66;
+  --line:#4a2b22;
+  --glass:#fff8eccc;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#17120f;
+  color:var(--ink);
+  font-family:
+    "Noto Sans TC",
+    "PingFang TC",
+    "Microsoft JhengHei",
+    system-ui,
+    sans-serif;
+}
+
+button{
+  font:inherit;
+  color:inherit;
+}
+
+button:focus-visible{
+  outline:4px solid #fff;
+  outline-offset:3px;
+}
+
+#rotate{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:999;
+  background:#17120f;
+  color:#fff;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:32px;
+}
+
+#rotate .phone{
+  width:58px;
+  height:94px;
+  border:5px solid #fff;
+  border-radius:12px;
+  margin:0 auto 20px;
+  animation:turn 1.8s ease-in-out infinite;
+}
+
+@keyframes turn{
+  0%,
+  25%{
+    transform:rotate(0);
+  }
+
+  70%,
+  100%{
+    transform:rotate(90deg);
+  }
+}
+
+#viewport{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 20% 20%,#613b2b 0 2px,transparent 3px),
+    radial-gradient(circle at 80% 75%,#43291f 0 2px,transparent 3px),
+    #1a1210;
+  background-size:36px 36px,44px 44px;
+}
+
+#game{
+  position:relative;
+  width:1280px;
+  height:720px;
+  overflow:hidden;
+  background:#f2d6a1;
+  transform-origin:center;
+  border-radius:22px;
+  box-shadow:
+    0 32px 90px #000b,
+    0 0 0 4px #5b382d;
+}
+
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+/* =========================================================
+   Loading
+========================================================= */
+
+#loading{
+  display:block;
+  background:linear-gradient(#222 0 52%,#16110f 52%);
+  color:#fff;
+  z-index:50;
+}
+
+.loading-kitchen{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:48%;
+  background:
+    linear-gradient(
+      #8f4d32 0 10%,
+      #d58a4a 10% 18%,
+      #7e3e2d 18%
+    );
+  border-top:8px solid #301c16;
+}
+
+.loading-counter{
+  position:absolute;
+  left:130px;
+  right:130px;
+  bottom:80px;
+  height:150px;
+  border:6px solid #321d17;
+  border-radius:22px 22px 8px 8px;
+  background:linear-gradient(#f4d694 0 24%,#a94b32 24%);
+  box-shadow:inset 0 -12px #873626;
+}
+
+.loading-counter::before,
+.loading-counter::after{
+  content:"";
+  position:absolute;
+  top:45px;
+  width:205px;
+  height:88px;
+  border:5px solid #562a22;
+  background:#c7613d;
+  border-radius:10px;
+}
+
+.loading-counter::before{
+  left:50px;
+}
+
+.loading-counter::after{
+  right:50px;
+}
+
+.loading-chef{
+  position:absolute;
+  left:50%;
+  bottom:100px;
+  width:160px;
+  height:220px;
+  transform:translateX(-50%);
+  animation:chefBob .8s ease-in-out infinite alternate;
+}
+
+@keyframes chefBob{
+  to{
+    transform:translateX(-50%) translateY(-7px);
+  }
+}
+
+.hat{
+  position:absolute;
+  left:26px;
+  top:0;
+  width:108px;
+  height:65px;
+  background:#fff7e7;
+  border:6px solid #38231e;
+  border-radius:55% 55% 30% 30%;
+}
+
+.hat::before,
+.hat::after{
+  content:"";
+  position:absolute;
+  background:#fff7e7;
+  border:6px solid #38231e;
+  border-bottom:0;
+  border-radius:50% 50% 0 0;
+}
+
+.hat::before{
+  width:48px;
+  height:52px;
+  left:-12px;
+  top:-24px;
+}
+
+.hat::after{
+  width:52px;
+  height:58px;
+  right:-12px;
+  top:-30px;
+}
+
+.chef-head{
+  position:absolute;
+  left:33px;
+  top:52px;
+  width:94px;
+  height:82px;
+  background:#cc7b48;
+  border:6px solid #38231e;
+  border-radius:48% 48% 42% 42%;
+}
+
+.chef-head::before,
+.chef-head::after{
+  content:"";
+  position:absolute;
+  top:27px;
+  width:9px;
+  height:12px;
+  background:#34201b;
+  border-radius:50%;
+}
+
+.chef-head::before{
+  left:25px;
+}
+
+.chef-head::after{
+  right:25px;
+}
+
+.muzzle{
+  position:absolute;
+  left:30px;
+  top:44px;
+  width:34px;
+  height:25px;
+  border-radius:50%;
+  background:#fff0d4;
+  border:4px solid #38231e;
+}
+
+.muzzle::after{
+  content:"";
+  position:absolute;
+  width:9px;
+  height:7px;
+  border-radius:50%;
+  background:#34201b;
+  left:9px;
+  top:3px;
+}
+
+.chef-body{
+  position:absolute;
+  left:20px;
+  top:125px;
+  width:120px;
+  height:90px;
+  background:#fff0d4;
+  border:6px solid #38231e;
+  border-radius:35px 35px 22px 22px;
+}
+
+.chef-body::before{
+  content:"";
+  position:absolute;
+  left:49px;
+  top:0;
+  width:14px;
+  height:82px;
+  background:#e15e45;
+}
+
+.loading-title{
+  position:absolute;
+  left:0;
+  right:0;
+  top:54px;
+  text-align:center;
+}
+
+.loading-title small{
+  display:block;
+  letter-spacing:.38em;
+  color:#ffd776;
+  font-weight:900;
+  font-size:16px;
+}
+
+.loading-title h1{
+  margin:5px 0 0;
+  font-size:68px;
+  line-height:1;
+  text-shadow:
+    0 6px #71251f,
+    0 9px #1d100e;
+  letter-spacing:.06em;
+  color:#fff4d0;
+}
+
+.loading-title p{
+  margin:13px 0 0;
+  font-weight:800;
+  color:#f7c97b;
+  letter-spacing:.18em;
+}
+
+.loading-ui{
+  position:absolute;
+  left:205px;
+  right:205px;
+  bottom:30px;
+  text-align:center;
+}
+
+.loading-track{
+  height:24px;
+  padding:4px;
+  border:4px solid #fff0d0;
+  border-radius:20px;
+  background:#281712;
+  box-shadow:0 5px #0006;
+}
+
+.loading-fill{
+  height:100%;
+  width:0;
+  border-radius:12px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      #ffd467 0 15px,
+      #f29a3d 15px 30px
+    );
+  transition:width .12s linear;
+}
+
+.loading-meta{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  font-weight:900;
+  color:#fff1ce;
+  letter-spacing:.12em;
+}
+
+/* =========================================================
+   Title screen
+========================================================= */
+
+#title{
+  background:linear-gradient(#7fc6c2 0 58%,#dfbd7f 58%);
+  overflow:hidden;
+}
+
+.title-cloud{
+  position:absolute;
+  background:#eaf7ee;
+  border:5px solid #3f6f6c;
+  border-radius:50%;
+  opacity:.95;
+}
+
+.c1{
+  width:230px;
+  height:65px;
+  left:70px;
+  top:72px;
+}
+
+.c2{
+  width:190px;
+  height:55px;
+  right:70px;
+  top:110px;
+}
+
+.title-cafe{
+  position:absolute;
+  left:80px;
+  right:80px;
+  bottom:65px;
+  height:430px;
+  background:#f6d49b;
+  border:7px solid #4b2d23;
+  border-radius:28px 28px 12px 12px;
+  box-shadow:0 17px #7d3f2c;
+}
+
+.awning{
+  position:absolute;
+  left:-7px;
+  right:-7px;
+  top:62px;
+  height:76px;
+  border:7px solid #4b2d23;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #e85c48 0 70px,
+      #fff1cf 70px 140px
+    );
+  clip-path:polygon(0 0,100% 0,97% 100%,3% 100%);
+}
+
+.cafe-sign{
+  position:absolute;
+  left:50%;
+  top:-52px;
+  transform:translateX(-50%);
+  width:630px;
+  height:120px;
+  background:#6f3428;
+  border:7px solid #3a211a;
+  border-radius:22px;
+  box-shadow:0 11px #4c281f;
+  text-align:center;
+  color:#fff1ce;
+}
+
+.cafe-sign h1{
+  font-size:57px;
+  margin:8px 0 -3px;
+  letter-spacing:.08em;
+  text-shadow:0 5px #321713;
+}
+
+.cafe-sign p{
+  margin:0;
+  color:#ffd86a;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.22em;
+}
+
+.cafe-window{
+  position:absolute;
+  left:85px;
+  top:165px;
+  width:390px;
+  height:185px;
+  background:#8fd0c9;
+  border:7px solid #4b2d23;
+  border-radius:12px;
+  box-shadow:inset 0 0 0 10px #d5f0df;
+}
+
+.cafe-window::before{
+  content:"TODAY'S SPECIAL";
+  position:absolute;
+  left:34px;
+  right:34px;
+  top:29px;
+  background:#fff2ce;
+  border:5px solid #4b2d23;
+  border-radius:10px;
+  padding:13px;
+  text-align:center;
+  font-weight:1000;
+  color:#bb4435;
+  transform:rotate(-2deg);
+}
+
+.cafe-door{
+  position:absolute;
+  right:95px;
+  top:155px;
+  width:220px;
+  height:255px;
+  background:#7d4b34;
+  border:7px solid #4b2d23;
+  border-radius:12px 12px 0 0;
+}
+
+.cafe-door::before{
+  content:"OPEN";
+  position:absolute;
+  left:32px;
+  right:32px;
+  top:35px;
+  background:#fff2ce;
+  border:5px solid #4b2d23;
+  border-radius:9px;
+  padding:14px;
+  text-align:center;
+  font-weight:1000;
+  color:#4b8b67;
+  transform:rotate(3deg);
+}
+
+.cafe-door::after{
+  content:"";
+  position:absolute;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  background:#ffd86a;
+  border:4px solid #4b2d23;
+  right:20px;
+  top:132px;
+}
+
+.title-menu{
+  position:absolute;
+  left:50%;
+  bottom:40px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:18px;
+  z-index:4;
+}
+
+.big-btn{
+  min-width:260px;
+  border:5px solid #48271f;
+  border-radius:18px;
+  padding:16px 30px;
+  background:linear-gradient(#ffdc72,#f29a3d);
+  box-shadow:0 9px #9c432c;
+  font-weight:1000;
+  font-size:25px;
+  letter-spacing:.08em;
+  cursor:pointer;
+  transition:.12s;
+}
+
+.big-btn:hover{
+  transform:translateY(-3px);
+}
+
+.big-btn:active{
+  transform:translateY(7px);
+  box-shadow:0 2px #9c432c;
+}
+
+.big-btn.secondary{
+  min-width:90px;
+  background:linear-gradient(#fff6dc,#e8cda2);
+  box-shadow:0 9px #8b684d;
+  padding-inline:22px;
+}
+
+.title-chef{
+  position:absolute;
+  left:135px;
+  bottom:45px;
+  transform:scale(.9);
+  z-index:3;
+}
+
+.title-bubble{
+  position:absolute;
+  right:145px;
+  bottom:280px;
+  background:#fff6dc;
+  border:5px solid #4b2d23;
+  border-radius:22px;
+  padding:18px 24px;
+  font-weight:900;
+  font-size:20px;
+  transform:rotate(2deg);
+}
+
+.title-bubble::after{
+  content:"";
+  position:absolute;
+  right:35px;
+  bottom:-22px;
+  border:12px solid transparent;
+  border-top-color:#4b2d23;
+}
+
+/* =========================================================
+   Gameplay
+========================================================= */
+
+#play{
+  background:#bfe1d3;
+}
+
+#hud{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:94px;
+  background:linear-gradient(#fff2d2,#eec68d);
+  border-bottom:6px solid #553328;
+  display:flex;
+  align-items:center;
+  padding:13px 23px;
+  z-index:20;
+  box-shadow:0 8px #0002;
+}
+
+.hud-brand{
+  width:220px;
+}
+
+.hud-brand b{
+  display:block;
+  font-size:25px;
+  color:#b93b32;
+}
+
+.hud-brand small{
+  font-weight:900;
+  color:#684536;
+  letter-spacing:.12em;
+}
+
+.order-strip{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+}
+
+.order-card{
+  width:148px;
+  height:66px;
+  background:#fff8e9;
+  border:4px solid #563429;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  box-shadow:0 5px #b37b50;
+  position:relative;
+}
+
+.order-card.active{
+  animation:orderPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes orderPulse{
+  to{
+    transform:translateY(-3px);
+  }
+}
+
+.food-icon{
+  font-size:31px;
+  filter:drop-shadow(0 2px #fff);
+}
+
+.order-card .patience{
+  position:absolute;
+  left:7px;
+  right:7px;
+  bottom:5px;
+  height:7px;
+  border-radius:7px;
+  background:#d8c4a7;
+  overflow:hidden;
+}
+
+.order-card .patience i{
+  display:block;
+  height:100%;
+  background:#65aa6b;
+  width:100%;
+}
+
+.hud-stats{
+  width:300px;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.stat{
+  min-width:92px;
+  height:58px;
+  background:#fff8e9;
+  border:4px solid #563429;
+  border-radius:17px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:23px;
+  font-weight:1000;
+  box-shadow:0 5px #b37b50;
+}
+
+.pause{
+  width:58px;
+  min-width:58px;
+  cursor:pointer;
+}
+
+#kitchen{
+  position:absolute;
+  left:0;
+  right:0;
+  top:94px;
+  bottom:0;
+  background:
+    linear-gradient(90deg,#deb175 1px,transparent 1px),
+    linear-gradient(#deb175 1px,transparent 1px),
+    #f0d29c;
+  background-size:64px 64px;
+  overflow:hidden;
+}
+
+.wall-top{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:106px;
+  background:linear-gradient(#8fc5b9,#71aa9f);
+  border-bottom:6px solid #4b2d23;
+}
+
+.tiles{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,#fff3 1px,transparent 1px),
+    linear-gradient(#fff3 1px,transparent 1px);
+  background-size:45px 45px;
+}
+
+.counter{
+  position:absolute;
+  background:#a84e35;
+  border:6px solid #4a2b22;
+  border-radius:16px;
+  box-shadow:
+    inset 0 12px #d8874c,
+    0 10px #6d3025;
+}
+
+.counter.top{
+  left:180px;
+  right:180px;
+  top:82px;
+  height:96px;
+}
+
+.counter.left{
+  left:90px;
+  top:80px;
+  width:140px;
+  height:405px;
+}
+
+.counter.right{
+  right:90px;
+  top:80px;
+  width:140px;
+  height:405px;
+}
+
+.counter.bottom{
+  left:260px;
+  right:260px;
+  bottom:40px;
+  height:94px;
+}
+
+.kitchen-label{
+  position:absolute;
+  left:50%;
+  top:25px;
+  transform:translateX(-50%);
+  color:#fff6dd;
+  font-weight:1000;
+  letter-spacing:.17em;
+  text-shadow:0 3px #345f59;
+}
+
+.station{
+  position:absolute;
+  width:112px;
+  height:84px;
+  border:5px solid #4a2b22;
+  border-radius:15px;
+  background:linear-gradient(#fff4d5,#dba76d);
+  box-shadow:0 7px #7b3b2c;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.12s;
+}
+
+.station span{
+  font-size:38px;
+  line-height:1;
+}
+
+.station small{
+  margin-top:5px;
+  font-weight:1000;
+  font-size:15px;
+}
+
+.station.glow{
+  transform:translateY(-4px);
+  filter:
+    drop-shadow(0 0 7px #fff)
+    drop-shadow(0 0 14px #ffd86a);
+}
+
+.station[data-st="bun"]{
+  left:210px;
+  top:96px;
+}
+
+.station[data-st="lettuce"]{
+  left:337px;
+  top:96px;
+}
+
+.station[data-st="meat"]{
+  left:464px;
+  top:96px;
+}
+
+.station[data-st="board"]{
+  left:591px;
+  top:96px;
+}
+
+.station[data-st="pan"]{
+  left:718px;
+  top:96px;
+}
+
+.station[data-st="drink"]{
+  left:845px;
+  top:96px;
+}
+
+.station[data-st="assembly"]{
+  left:110px;
+  top:274px;
+}
+
+.station[data-st="serve"]{
+  right:110px;
+  top:274px;
+}
+
+.station[data-st="trash"]{
+  left:584px;
+  bottom:48px;
+}
+
+#chef{
+  position:absolute;
+  left:600px;
+  top:410px;
+  width:86px;
+  height:120px;
+  z-index:10;
+  transition:filter .15s;
+}
+
+#chef.near{
+  filter:drop-shadow(0 0 8px #fff8c5);
+}
+
+.player-shadow{
+  position:absolute;
+  left:11px;
+  bottom:1px;
+  width:66px;
+  height:17px;
+  border-radius:50%;
+  background:#4e302650;
+}
+
+.mini-hat{
+  position:absolute;
+  left:16px;
+  top:0;
+  width:55px;
+  height:36px;
+  background:#fff7e7;
+  border:4px solid #3c261f;
+  border-radius:50% 50% 25% 25%;
+}
+
+.mini-hat::before,
+.mini-hat::after{
+  content:"";
+  position:absolute;
+  top:-16px;
+  width:28px;
+  height:28px;
+  background:#fff7e7;
+  border:4px solid #3c261f;
+  border-bottom:0;
+  border-radius:50% 50% 0 0;
+}
+
+.mini-hat::before{
+  left:-5px;
+}
+
+.mini-hat::after{
+  right:-5px;
+}
+
+.mini-head{
+  position:absolute;
+  left:21px;
+  top:30px;
+  width:46px;
+  height:43px;
+  background:#cd7a47;
+  border:4px solid #3c261f;
+  border-radius:46%;
+}
+
+.mini-head::before,
+.mini-head::after{
+  content:"";
+  position:absolute;
+  top:14px;
+  width:5px;
+  height:7px;
+  background:#36211c;
+  border-radius:50%;
+}
+
+.mini-head::before{
+  left:11px;
+}
+
+.mini-head::after{
+  right:11px;
+}
+
+.mini-body{
+  position:absolute;
+  left:12px;
+  top:67px;
+  width:65px;
+  height:51px;
+  background:#fff0d4;
+  border:4px solid #3c261f;
+  border-radius:19px 19px 12px 12px;
+}
+
+.mini-body::before{
+  content:"";
+  position:absolute;
+  left:27px;
+  top:0;
+  width:7px;
+  height:44px;
+  background:#e25c44;
+}
+
+.held{
+  position:absolute;
+  right:-16px;
+  top:57px;
+  min-width:42px;
+  min-height:42px;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  filter:drop-shadow(0 3px #fff);
+  z-index:5;
+}
+
+.interact-ring{
+  display:none;
+  position:absolute;
+  left:-16px;
+  top:73px;
+  width:120px;
+  height:53px;
+  border:4px solid #ffd86a;
+  border-radius:50%;
+  animation:ringPulse .7s ease-in-out infinite alternate;
+}
+
+#chef.near .interact-ring{
+  display:block;
+}
+
+@keyframes ringPulse{
+  to{
+    transform:scale(1.09);
+    opacity:.55;
+  }
+}
+
+.controls-help{
+  position:absolute;
+  left:18px;
+  bottom:16px;
+  padding:9px 14px;
+  border:3px solid #4a2b22;
+  border-radius:12px;
+  background:#fff4d7dc;
+  font-weight:900;
+  color:#6b4132;
+}
+
+#message{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  transform:translateX(-50%);
+  min-width:390px;
+  padding:12px 22px;
+  border:4px solid #4a2b22;
+  border-radius:14px;
+  background:#fff5dc;
+  box-shadow:0 6px #9f6d48;
+  text-align:center;
+  font-weight:1000;
+}
+
+.combo{
+  position:absolute;
+  right:34px;
+  top:116px;
+  z-index:30;
+  padding:10px 18px;
+  border:4px solid #4a2b22;
+  border-radius:14px;
+  background:#ffd86a;
+  font-size:25px;
+  font-weight:1000;
+  transform:translateX(220px) rotate(5deg);
+  opacity:0;
+}
+
+.combo.show{
+  animation:comboPop 1.15s ease;
+}
+
+@keyframes comboPop{
+  0%{
+    transform:translateX(220px) rotate(5deg);
+    opacity:0;
+  }
+
+  18%,
+  70%{
+    transform:translateX(0) rotate(-3deg);
+    opacity:1;
+  }
+
+  100%{
+    transform:translateX(220px) rotate(5deg);
+    opacity:0;
+  }
+}
+
+/* =========================================================
+   Overlay
+========================================================= */
+
+.overlay{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:100;
+  background:#180f0db8;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(4px);
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.panel{
+  width:620px;
+  border:7px solid #4a2b22;
+  border-radius:24px;
+  background:#fff1d2;
+  box-shadow:0 16px #7b3d2c;
+  padding:34px;
+  text-align:center;
+}
+
+.panel h2{
+  margin:0 0 15px;
+  font-size:43px;
+  color:#bd4034;
+}
+
+.panel p{
+  margin:0;
+  line-height:1.8;
+  font-size:19px;
+  font-weight:800;
+  color:#6a4436;
+}
+
+.panel-actions{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:28px;
+}
+
+.stars{
+  margin:16px 0;
+  color:#f2aa31;
+  font-size:60px;
+  letter-spacing:.1em;
+  text-shadow:
+    0 4px #8e4e25,
+    0 0 2px #fff;
+}
+
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:18px 0;
+}
+
+.result-grid div{
+  padding:17px 10px;
+  background:#fff9e8;
+  border:4px solid #6a4436;
+  border-radius:15px;
+}
+
+.result-grid small{
+  display:block;
+  margin-bottom:6px;
+  color:#805343;
+  font-weight:900;
+}
+
+.result-grid b{
+  font-size:30px;
+  color:#bd4034;
+}
+
+#toast{
+  position:absolute;
+  left:50%;
+  top:118px;
+  z-index:150;
+  transform:translate(-50%,-30px);
+  padding:13px 24px;
+  border:4px solid #4a2b22;
+  border-radius:14px;
+  background:#fff5d9;
+  box-shadow:0 6px #9f6d48;
+  font-weight:1000;
+  font-size:19px;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+}
+
+#toast.show{
+  transform:translate(-50%,0);
+  opacity:1;
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (orientation:portrait) and (max-width:900px){
+  #rotate{
+    display:flex;
+  }
+}
+</style>
 </head>
+
 <body>
-  <div id="rotate-screen" aria-live="polite">
-    <span class="rotate-icon" aria-hidden="true"></span>
-    <strong>請將裝置橫向使用</strong>
-    <small>返回橫向後，請按「繼續遊戲」</small>
+
+<div id="rotate">
+  <div>
+    <div class="phone"></div>
+    <h2>請將裝置轉為橫向</h2>
+    <p>灶咖大亂鬥採用 16:9 橫向遊戲畫面。</p>
   </div>
+</div>
 
-  <main id="game" data-game-state="TITLE">
-    <header id="hud">
-      <div class="brand">灶腳大亂鬥<small>第一天</small></div>
-      <div id="orders" class="orders" aria-live="polite"></div>
-      <div class="hud-stats">
-        <div class="hud-pill"><img data-ui="hud-star" alt=""><span class="sr-only">分數</span><b id="score">0</b></div>
-        <div class="hud-pill"><img data-ui="hud-clock" alt=""><span class="sr-only">剩餘時間</span><b id="time">60</b></div>
-        <button id="pause-button" class="icon-button" type="button" aria-label="暫停遊戲"><img data-ui="pause" alt=""><span class="text-fallback">暫停</span></button>
-      </div>
-    </header>
+<div id="viewport">
+<main id="game">
 
-    <section id="kitchen-safe-area" aria-label="餐廳廚房">
-      <div id="u-counter" class="u-counter" aria-hidden="true"></div>
-      <button class="station" data-station="bun" type="button" aria-label="麵包備料盒"><img class="station-sprite" alt=""><span>麵包</span></button>
-      <button class="station" data-station="tomato" type="button" aria-label="番茄備料盒"><img class="station-sprite" alt=""><span>番茄</span></button>
-      <button class="station" data-station="meat" type="button" aria-label="生肉備料盒"><img class="station-sprite" alt=""><span>生肉</span></button>
-      <button class="station" data-station="board" type="button" aria-label="砧板"><img class="station-sprite" alt=""><span>砧板</span><i class="progress"><i></i></i></button>
-      <button class="station" data-station="pan" type="button" aria-label="煎鍋"><img class="station-sprite" alt=""><span>煎鍋</span><i class="progress"><i></i></i></button>
-      <button class="station" data-station="ready-tray" type="button" aria-label="現成食材盤"><img class="station-sprite" alt=""><span>現成食材</span><i class="station-item"></i></button>
-      <button class="station" data-station="assembly" type="button" aria-label="組裝台"><img class="station-sprite" alt=""><span>組裝</span><i class="station-item"></i></button>
-      <button class="station" data-station="service" type="button" aria-label="出餐口"><img class="station-sprite" alt=""><span>出餐</span></button>
-      <button class="station" data-station="disassembly" type="button" aria-label="拆解台"><img class="station-sprite" alt=""><span>拆解</span></button>
+  <!-- Loading -->
+  <section id="loading" class="screen active">
+    <div class="loading-title">
+      <small>KITCHEN CLASH CAFÉ</small>
+      <h1>灶咖大亂鬥</h1>
+      <p>キッチン大騒動</p>
+    </div>
 
-      <div id="chef" class="chef" data-direction="s">
-        <span class="chef-placeholder" aria-hidden="true"></span>
-        <img class="chef-sprite" alt="柴犬主廚">
-        <img id="held-item" class="held-item" data-item="none" alt="">
-      </div>
+    <div class="loading-kitchen">
+      <div class="loading-counter"></div>
 
-      <div id="guide-arrow" aria-hidden="true"><img data-ui="direction-arrow" alt=""></div>
-      <div id="hint" role="status">手上已有試吃漢堡，前往出餐口</div>
-    </section>
-
-    <div id="controls" aria-label="遊戲控制">
-      <div id="joystick" role="button" aria-label="移動主廚" tabindex="0"><i id="stick"></i></div>
-      <div class="action-buttons">
-        <button id="secondary-action" class="round-action secondary" type="button"><img data-ui="discard" alt=""><span>拆解</span></button>
-        <button id="primary-action" class="round-action primary" type="button"><img data-ui="interact" alt=""><span>互動</span></button>
+      <div class="loading-chef">
+        <div class="hat"></div>
+        <div class="chef-head">
+          <div class="muzzle"></div>
+        </div>
+        <div class="chef-body"></div>
       </div>
     </div>
 
-    <div id="toast" role="status" aria-live="polite"></div>
-    <div id="success-feedback" aria-hidden="true"><b>完成</b><span></span></div>
-
-    <section id="title-screen" class="overlay is-visible" aria-labelledby="title-heading">
-      <div class="panel">
-        <h1 id="title-heading">灶腳大亂鬥</h1>
-        <p><strong>手上已經有試吃漢堡。</strong><br>移動到黃色出餐口，按一次互動；送達後才開始六十秒。</p>
-        <div class="quick-guide"><div><b>移動</b><span>控制柴犬主廚</span></div><div><b>黃光</b><span>前往目前目標</span></div><div><b>出餐</b><span>送到右側鈴鐺</span></div></div>
-        <button id="start-button" class="menu-button primary" type="button">開始第一單</button>
+    <div class="loading-ui">
+      <div class="loading-track">
+        <div class="loading-fill" id="loadingFill"></div>
       </div>
-    </section>
 
-    <section id="pause-screen" class="overlay" aria-labelledby="pause-heading">
-      <div class="panel pause-panel">
-        <h2 id="pause-heading">遊戲暫停</h2>
-        <p id="pause-reason">時間、耐心、加工與音訊都已凍結。</p>
-        <div class="settings-grid">
-          <button id="music-toggle" type="button"><img data-ui="music-on" alt=""><span>音樂</span></button>
-          <button id="sound-toggle" type="button"><img data-ui="sound-on" alt=""><span>音效</span></button>
-          <button id="vibration-toggle" type="button"><img data-ui="vibration-on" alt=""><span>震動</span></button>
-          <button id="motion-toggle" type="button"><img data-ui="motion-on" alt=""><span>動態</span></button>
+      <div class="loading-meta">
+        <span id="loadingText">正在準備咖啡廳</span>
+        <span id="loadingPercent">0%</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Title -->
+  <section id="title" class="screen">
+    <div class="title-cloud c1"></div>
+    <div class="title-cloud c2"></div>
+
+    <div class="title-cafe">
+      <div class="cafe-sign">
+        <h1>灶咖大亂鬥</h1>
+        <p>KITCHEN CLASH CAFÉ</p>
+      </div>
+
+      <div class="awning"></div>
+      <div class="cafe-window"></div>
+      <div class="cafe-door"></div>
+    </div>
+
+    <div class="title-chef loading-chef">
+      <div class="hat"></div>
+      <div class="chef-head">
+        <div class="muzzle"></div>
+      </div>
+      <div class="chef-body"></div>
+    </div>
+
+    <div class="title-bubble">
+      尖峰時段要開始了！
+    </div>
+
+    <div class="title-menu">
+      <button class="big-btn" id="startBtn">
+        開始營業
+      </button>
+
+      <button class="big-btn secondary" id="howBtn">
+        ？
+      </button>
+    </div>
+  </section>
+
+  <!-- Gameplay -->
+  <section id="play" class="screen">
+
+    <header id="hud">
+      <div class="hud-brand">
+        <b>灶咖大亂鬥</b>
+        <small>第一天・午間尖峰</small>
+      </div>
+
+      <div class="order-strip" id="orders"></div>
+
+      <div class="hud-stats">
+        <div class="stat">
+          <span>⭐</span>
+          <b id="score">0</b>
         </div>
-        <button id="resume-button" class="menu-button primary" type="button">繼續遊戲</button>
-      </div>
-    </section>
 
-    <section id="result-screen" class="overlay" aria-labelledby="result-heading">
-      <div class="panel result-panel">
-        <img class="result-medal" data-ui="result-medal" alt="">
-        <h2 id="result-heading">第一關完成</h2>
-        <div id="result-stars" class="result-stars" aria-label="一星"><i></i><i></i><i></i></div>
-        <div class="result-grid">
-          <div><span>總分</span><b id="result-score">0</b></div>
-          <div><span>完成訂單</span><b id="result-served">0</b></div>
-          <div><span>最快一單</span><b id="result-fastest">無</b></div>
-          <div><span>最高連擊</span><b id="result-combo">0</b></div>
+        <div class="stat">
+          <span>⏱️</span>
+          <b id="time">75</b>
         </div>
-        <p id="result-tip">完成一份訂單就算過關。</p>
-        <div class="result-actions"><button id="retry-button" class="menu-button primary" type="button">再玩一次</button><button id="next-button" class="menu-button secondary" type="button">前往第二天</button></div>
+
+        <button class="stat pause" id="pauseBtn" aria-label="暫停">
+          Ⅱ
+        </button>
       </div>
-    </section>
-  </main>
-  <script type="module" src="assets/game/stage4.js"></script>
+    </header>
+
+    <div id="kitchen">
+      <div class="wall-top">
+        <div class="tiles"></div>
+      </div>
+
+      <div class="counter top"></div>
+      <div class="counter left"></div>
+      <div class="counter right"></div>
+      <div class="counter bottom"></div>
+
+      <div class="kitchen-label">
+        SUNNY PAW CAFÉ · OPEN KITCHEN
+      </div>
+
+      <button class="station" data-st="bun" data-item="bun">
+        <span>🍞</span>
+        <small>麵包</small>
+      </button>
+
+      <button class="station" data-st="lettuce" data-item="lettuce">
+        <span>🥬</span>
+        <small>生菜</small>
+      </button>
+
+      <button class="station" data-st="meat" data-item="raw">
+        <span>🥩</span>
+        <small>肉排</small>
+      </button>
+
+      <button class="station" data-st="board">
+        <span>🔪</span>
+        <small>砧板</small>
+      </button>
+
+      <button class="station" data-st="pan">
+        <span>🍳</span>
+        <small>煎台</small>
+      </button>
+
+      <button class="station" data-st="assembly">
+        <span>🍽️</span>
+        <small>組裝台</small>
+      </button>
+
+      <button class="station" data-st="serve">
+        <span>🔔</span>
+        <small>出餐口</small>
+      </button>
+
+      <button class="station" data-st="trash">
+        <span>🗑️</span>
+        <small>丟棄</small>
+      </button>
+
+      <button class="station" data-st="drink" data-item="drink">
+        <span>🥤</span>
+        <small>飲料機</small>
+      </button>
+
+      <div id="chef">
+        <i class="interact-ring"></i>
+        <div class="player-shadow"></div>
+        <div class="mini-hat"></div>
+        <div class="mini-head"></div>
+        <div class="mini-body"></div>
+        <span class="held" id="held"></span>
+      </div>
+
+      <div class="controls-help">
+        WASD／方向鍵移動　E／空白鍵互動
+      </div>
+
+      <div id="message">
+        接下第一張訂單，從麵包開始。
+      </div>
+    </div>
+
+    <div class="combo" id="combo">
+      COMBO ×2
+    </div>
+  </section>
+
+  <!-- How to play -->
+  <div class="overlay" id="how">
+    <div class="panel">
+      <h2>營業守則</h2>
+
+      <p>
+        依照上方訂單準備餐點。<br>
+        漢堡流程：拿麵包 → 拿肉排 → 煎台 → 組裝台 → 出餐口。<br>
+        飲料可直接拿取後出餐。<br>
+        靠近工作台後按 E 或空白鍵互動。
+      </p>
+
+      <div class="panel-actions">
+        <button class="big-btn" id="closeHow">
+          知道了
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pause -->
+  <div class="overlay" id="pauseOverlay">
+    <div class="panel">
+      <h2>暫停營業</h2>
+
+      <p>
+        計時與客人耐心已暫停。
+      </p>
+
+      <div class="panel-actions">
+        <button class="big-btn" id="resumeBtn">
+          繼續營業
+        </button>
+
+        <button class="big-btn secondary" id="homeBtn">
+          首頁
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="overlay" id="result">
+    <div class="panel">
+      <h2 id="resultTitle">營業結束</h2>
+
+      <div class="stars" id="stars">
+        ★★★
+      </div>
+
+      <div class="result-grid">
+        <div>
+          <small>總分</small>
+          <b id="finalScore">0</b>
+        </div>
+
+        <div>
+          <small>完成訂單</small>
+          <b id="finalServed">0</b>
+        </div>
+
+        <div>
+          <small>最高連擊</small>
+          <b id="finalCombo">0</b>
+        </div>
+      </div>
+
+      <p id="resultText">
+        今天的營業告一段落。
+      </p>
+
+      <div class="panel-actions">
+        <button class="big-btn" id="retryBtn">
+          再玩一次
+        </button>
+
+        <button class="big-btn secondary" id="resultHomeBtn">
+          首頁
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+</main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = selector => document.querySelector(selector);
+  const $$ = selector => [...document.querySelectorAll(selector)];
+
+  const game = $("#game");
+  const loading = $("#loading");
+  const title = $("#title");
+  const play = $("#play");
+
+  function fitGame() {
+    const scale = Math.min(
+      window.innerWidth / 1280,
+      window.innerHeight / 720
+    );
+
+    game.style.transform = `scale(${scale})`;
+  }
+
+  window.addEventListener("resize", fitGame);
+  fitGame();
+
+  const sleep = milliseconds =>
+    new Promise(resolve => setTimeout(resolve, milliseconds));
+
+  async function boot() {
+    const steps = [
+      "點亮招牌",
+      "預熱煎台",
+      "準備食材",
+      "整理出餐口",
+      "準備開門"
+    ];
+
+    for (let progress = 0; progress <= 100; progress += 2) {
+      $("#loadingFill").style.width = `${progress}%`;
+      $("#loadingPercent").textContent = `${progress}%`;
+
+      const stepIndex = Math.min(
+        steps.length - 1,
+        Math.floor(progress / 21)
+      );
+
+      $("#loadingText").textContent = steps[stepIndex];
+
+      await sleep(progress < 70 ? 24 : 34);
+    }
+
+    await sleep(300);
+    showScreen(title);
+  }
+
+  function showScreen(element) {
+    $$(".screen").forEach(screen => {
+      screen.classList.remove("active");
+      screen.style.display = "none";
+    });
+
+    element.classList.add("active");
+    element.style.display = "block";
+  }
+
+  boot();
+
+  const recipes = [
+    {
+      name: "經典漢堡",
+      icons: ["🍞", "🥩"],
+      type: "burger"
+    },
+    {
+      name: "生菜漢堡",
+      icons: ["🍞", "🥬", "🥩"],
+      type: "greenBurger"
+    },
+    {
+      name: "冰涼飲料",
+      icons: ["🥤"],
+      type: "drink"
+    }
+  ];
+
+  let state;
+
+  function createFreshState() {
+    return {
+      running: false,
+      paused: false,
+      time: 75,
+      score: 0,
+      served: 0,
+      combo: 0,
+      maxCombo: 0,
+      orders: [],
+      held: null,
+      plate: [],
+      chef: {
+        x: 600,
+        y: 410
+      },
+      keys: {},
+      lastFrame: performance.now(),
+      spawnTimer: 0
+    };
+  }
+
+  function createOrder() {
+    const recipe =
+      recipes[Math.floor(Math.random() * recipes.length)];
+
+    state.orders.push({
+      id: Date.now() + Math.random(),
+      ...recipe,
+      patience: 100
+    });
+  }
+
+  function renderOrders() {
+    const orderContainer = $("#orders");
+
+    orderContainer.innerHTML = state.orders
+      .slice(0, 3)
+      .map((order, index) => {
+        const icons = order.icons
+          .map(icon => `<span class="food-icon">${icon}</span>`)
+          .join("");
+
+        const patienceColor =
+          order.patience < 35 ? "#df4b3f" : "#65aa6b";
+
+        return `
+          <div
+            class="order-card ${index === 0 ? "active" : ""}"
+            title="${order.name}"
+          >
+            ${icons}
+
+            <div class="patience">
+              <i
+                style="
+                  width:${Math.max(0, order.patience)}%;
+                  background:${patienceColor};
+                "
+              ></i>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function startGame() {
+    state = createFreshState();
+    state.running = true;
+
+    createOrder();
+    createOrder();
+
+    showScreen(play);
+
+    $("#result").classList.remove("show");
+    $("#pauseOverlay").classList.remove("show");
+
+    renderOrders();
+    render();
+
+    state.lastFrame = performance.now();
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function render() {
+    const chef = $("#chef");
+
+    chef.style.left = `${state.chef.x}px`;
+    chef.style.top = `${state.chef.y}px`;
+
+    $("#held").textContent = getItemIcon(state.held);
+    $("#score").textContent = state.score;
+    $("#time").textContent = Math.ceil(state.time);
+
+    highlightNearestStation();
+    updateMessage();
+  }
+
+  function getItemIcon(item) {
+    const icons = {
+      bun: "🍞",
+      lettuce: "🥬",
+      raw: "🥩",
+      cooked: "🍖",
+      drink: "🥤",
+      burger: "🍔",
+      greenBurger: "🍔"
+    };
+
+    return icons[item] || "";
+  }
+
+  function getElementRect(element) {
+    return {
+      left: element.offsetLeft,
+      top: element.offsetTop,
+      right: element.offsetLeft + element.offsetWidth,
+      bottom: element.offsetTop + element.offsetHeight
+    };
+  }
+
+  function getNearestStation() {
+    const chefCenterX = state.chef.x + 43;
+    const chefCenterY = state.chef.y + 72;
+
+    let nearest = null;
+    let nearestDistance = Infinity;
+
+    $$(".station").forEach(station => {
+      const rect = getElementRect(station);
+
+      const stationCenterX = (rect.left + rect.right) / 2;
+      const stationCenterY = (rect.top + rect.bottom) / 2;
+
+      const distance = Math.hypot(
+        chefCenterX - stationCenterX,
+        chefCenterY - stationCenterY
+      );
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearest = station;
+      }
+    });
+
+    return nearestDistance < 115 ? nearest : null;
+  }
+
+  function highlightNearestStation() {
+    const nearest = getNearestStation();
+
+    $$(".station").forEach(station => {
+      station.classList.toggle(
+        "glow",
+        station === nearest
+      );
+    });
+
+    $("#chef").classList.toggle("near", Boolean(nearest));
+  }
+
+  function updateMessage() {
+    let message = "靠近工作台後按 E 或空白鍵互動。";
+
+    if (!state.held) {
+      message = "接單後，先拿取訂單需要的食材。";
+    } else if (state.held === "raw") {
+      message = "生肉需要先放到煎台。";
+    } else if (
+      state.held === "cooked" ||
+      state.held === "bun" ||
+      state.held === "lettuce"
+    ) {
+      message = "把食材送到組裝台。";
+    } else if (
+      ["burger", "greenBurger", "drink"].includes(state.held)
+    ) {
+      message = "餐點完成，送到右上方出餐口！";
+    }
+
+    $("#message").textContent = message;
+  }
+
+  function showToast(text) {
+    const toast = $("#toast");
+
+    toast.textContent = text;
+    toast.classList.add("show");
+
+    clearTimeout(toast.timer);
+
+    toast.timer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 1200);
+  }
+
+  function interact() {
+    if (!state.running || state.paused) {
+      return;
+    }
+
+    const station = getNearestStation();
+
+    if (!station) {
+      showToast("再靠近工作台一點");
+      return;
+    }
+
+    const stationType = station.dataset.st;
+    const item = station.dataset.item;
+
+    if (item) {
+      if (state.held) {
+        showToast("手上已經有東西了");
+        return;
+      }
+
+      state.held = item;
+
+      const itemNames = {
+        bun: "麵包",
+        lettuce: "生菜",
+        raw: "生肉排",
+        drink: "飲料"
+      };
+
+      showToast(`拿起${itemNames[item]}`);
+    } else if (stationType === "pan") {
+      if (state.held === "raw") {
+        state.held = "cooked";
+        showToast("肉排煎好了！");
+      } else {
+        showToast("煎台只能處理生肉排");
+      }
+    } else if (stationType === "assembly") {
+      assembleFood();
+    } else if (stationType === "serve") {
+      serveFood();
+    } else if (stationType === "trash") {
+      if (state.held || state.plate.length) {
+        state.held = null;
+        state.plate = [];
+        showToast("已清空食材");
+      } else {
+        showToast("目前沒有可丟棄的東西");
+      }
+    } else if (stationType === "board") {
+      showToast("本關砧板尚未啟用");
+    }
+
+    render();
+  }
+
+  function assembleFood() {
+    const validIngredients = [
+      "bun",
+      "lettuce",
+      "cooked"
+    ];
+
+    if (
+      state.held &&
+      validIngredients.includes(state.held)
+    ) {
+      state.plate.push(state.held);
+
+      showToast(
+        `放上組裝台：${getItemIcon(state.held)}`
+      );
+
+      state.held = null;
+
+      const ingredientSet = new Set(state.plate);
+
+      const hasBun = ingredientSet.has("bun");
+      const hasCookedMeat = ingredientSet.has("cooked");
+      const hasLettuce = ingredientSet.has("lettuce");
+
+      if (hasBun && hasCookedMeat) {
+        state.held = hasLettuce
+          ? "greenBurger"
+          : "burger";
+
+        state.plate = [];
+
+        showToast("漢堡完成！");
+      }
+    } else {
+      showToast("這項食材不能在此組裝");
+    }
+  }
+
+  function serveFood() {
+    const currentOrder = state.orders[0];
+
+    if (!currentOrder) {
+      showToast("目前沒有訂單");
+      return;
+    }
+
+    if (state.held === currentOrder.type) {
+      const earnedScore = Math.round(
+        120 +
+        currentOrder.patience * 1.3 +
+        state.combo * 25
+      );
+
+      state.score += earnedScore;
+      state.served += 1;
+      state.combo += 1;
+      state.maxCombo = Math.max(
+        state.maxCombo,
+        state.combo
+      );
+
+      state.held = null;
+      state.orders.shift();
+
+      createOrder();
+      showCombo();
+      showToast(`完美出餐！+${earnedScore}`);
+
+      renderOrders();
+    } else {
+      state.combo = 0;
+      state.score = Math.max(0, state.score - 40);
+
+      showToast("餐點不符合目前訂單");
+    }
+  }
+
+  function showCombo() {
+    if (state.combo < 2) {
+      return;
+    }
+
+    const combo = $("#combo");
+
+    combo.textContent = `COMBO ×${state.combo}`;
+    combo.classList.remove("show");
+
+    void combo.offsetWidth;
+
+    combo.classList.add("show");
+  }
+
+  function gameLoop(currentTime) {
+    if (!state.running) {
+      return;
+    }
+
+    const deltaTime = Math.min(
+      0.033,
+      (currentTime - state.lastFrame) / 1000
+    );
+
+    state.lastFrame = currentTime;
+
+    if (!state.paused) {
+      moveChef(deltaTime);
+
+      state.time -= deltaTime;
+      state.spawnTimer += deltaTime;
+
+      state.orders.forEach((order, index) => {
+        order.patience -= deltaTime * (
+          index === 0 ? 4.5 : 2.6
+        );
+      });
+
+      if (state.orders[0]?.patience <= 0) {
+        state.orders.shift();
+
+        state.combo = 0;
+        state.score = Math.max(0, state.score - 75);
+
+        createOrder();
+
+        showToast("客人等不及離開了");
+        renderOrders();
+      }
+
+      if (
+        state.spawnTimer > 10 &&
+        state.orders.length < 3
+      ) {
+        state.spawnTimer = 0;
+        createOrder();
+        renderOrders();
+      }
+
+      if (state.time <= 0) {
+        endGame();
+        return;
+      }
+
+      renderOrders();
+      render();
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function moveChef(deltaTime) {
+    let directionX = 0;
+    let directionY = 0;
+
+    if (
+      state.keys.ArrowLeft ||
+      state.keys.a ||
+      state.keys.A
+    ) {
+      directionX -= 1;
+    }
+
+    if (
+      state.keys.ArrowRight ||
+      state.keys.d ||
+      state.keys.D
+    ) {
+      directionX += 1;
+    }
+
+    if (
+      state.keys.ArrowUp ||
+      state.keys.w ||
+      state.keys.W
+    ) {
+      directionY -= 1;
+    }
+
+    if (
+      state.keys.ArrowDown ||
+      state.keys.s ||
+      state.keys.S
+    ) {
+      directionY += 1;
+    }
+
+    if (directionX || directionY) {
+      const vectorLength = Math.hypot(
+        directionX,
+        directionY
+      );
+
+      const speed = 260;
+
+      state.chef.x = Math.max(
+        280,
+        Math.min(
+          910,
+          state.chef.x +
+          directionX / vectorLength *
+          speed *
+          deltaTime
+        )
+      );
+
+      state.chef.y = Math.max(
+        170,
+        Math.min(
+          480,
+          state.chef.y +
+          directionY / vectorLength *
+          speed *
+          deltaTime
+        )
+      );
+    }
+  }
+
+  function endGame() {
+    state.running = false;
+
+    let starCount = 0;
+
+    if (state.score >= 1500) {
+      starCount = 3;
+    } else if (state.score >= 800) {
+      starCount = 2;
+    } else if (state.score >= 300) {
+      starCount = 1;
+    }
+
+    $("#stars").textContent =
+      "★".repeat(starCount) +
+      "☆".repeat(3 - starCount);
+
+    $("#finalScore").textContent = state.score;
+    $("#finalServed").textContent = state.served;
+    $("#finalCombo").textContent = state.maxCombo;
+
+    $("#resultTitle").textContent =
+      starCount >= 2
+        ? "今日營業成功！"
+        : "營業結束";
+
+    $("#resultText").textContent =
+      starCount >= 2
+        ? "尖峰時段順利撐過去了。"
+        : "再熟悉工作台動線，就能服務更多客人。";
+
+    $("#result").classList.add("show");
+  }
+
+  function returnHome() {
+    if (state) {
+      state.running = false;
+    }
+
+    $("#pauseOverlay").classList.remove("show");
+    $("#result").classList.remove("show");
+
+    showScreen(title);
+  }
+
+  function togglePause() {
+    if (!state?.running) {
+      return;
+    }
+
+    state.paused = !state.paused;
+
+    $("#pauseOverlay").classList.toggle(
+      "show",
+      state.paused
+    );
+
+    state.lastFrame = performance.now();
+  }
+
+  window.addEventListener("keydown", event => {
+    const blockedKeys = [
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      " ",
+      "e",
+      "E"
+    ];
+
+    if (blockedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+
+    if (!state) {
+      return;
+    }
+
+    state.keys[event.key] = true;
+
+    if (
+      (
+        event.key === "e" ||
+        event.key === "E" ||
+        event.key === " "
+      ) &&
+      !event.repeat
+    ) {
+      interact();
+    }
+
+    if (
+      event.key === "Escape" &&
+      state.running
+    ) {
+      togglePause();
+    }
+  });
+
+  window.addEventListener("keyup", event => {
+    if (state) {
+      state.keys[event.key] = false;
+    }
+  });
+
+  $("#startBtn").addEventListener(
+    "click",
+    startGame
+  );
+
+  $("#retryBtn").addEventListener(
+    "click",
+    startGame
+  );
+
+  $("#pauseBtn").addEventListener(
+    "click",
+    togglePause
+  );
+
+  $("#resumeBtn").addEventListener(
+    "click",
+    togglePause
+  );
+
+  $("#homeBtn").addEventListener(
+    "click",
+    returnHome
+  );
+
+  $("#resultHomeBtn").addEventListener(
+    "click",
+    returnHome
+  );
+
+  $("#howBtn").addEventListener(
+    "click",
+    () => {
+      $("#how").classList.add("show");
+    }
+  );
+
+  $("#closeHow").addEventListener(
+    "click",
+    () => {
+      $("#how").classList.remove("show");
+    }
+  );
+
+  $$(".station").forEach(station => {
+    station.addEventListener("click", () => {
+      if (!state?.running || state.paused) {
+        return;
+      }
+
+      const stationCenterX =
+        station.offsetLeft +
+        station.offsetWidth / 2;
+
+      const stationCenterY =
+        station.offsetTop +
+        station.offsetHeight / 2;
+
+      const chefCenterX = state.chef.x + 43;
+      const chefCenterY = state.chef.y + 72;
+
+      const distance = Math.hypot(
+        chefCenterX - stationCenterX,
+        chefCenterY - stationCenterY
+      );
+
+      if (distance < 115) {
+        interact();
+      } else {
+        showToast("請先移動到工作台旁邊");
+      }
+    });
+  });
+
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (
+        document.hidden &&
+        state?.running &&
+        !state.paused
+      ) {
+        togglePause();
+      }
+    }
+  );
+})();
+</script>
+
 </body>
 </html>
