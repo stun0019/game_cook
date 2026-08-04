@@ -26,6 +26,10 @@
 
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
+  user-select:none;
+  -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
 
@@ -33,7 +37,6 @@ html,
 body{
   width:100%;
   height:100%;
-  margin:0;
   overflow:hidden;
   background:#17120f;
   color:var(--ink);
@@ -43,6 +46,14 @@ body{
     "Microsoft JhengHei",
     system-ui,
     sans-serif;
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 button{
@@ -55,6 +66,10 @@ button:focus-visible{
   outline-offset:3px;
 }
 
+/* =========================================================
+   直向提示
+========================================================= */
+
 #rotate{
   display:none;
   position:fixed;
@@ -64,6 +79,7 @@ button:focus-visible{
   color:#fff;
   align-items:center;
   justify-content:center;
+  flex-direction:column;
   text-align:center;
   padding:32px;
 }
@@ -75,6 +91,16 @@ button:focus-visible{
   border-radius:12px;
   margin:0 auto 20px;
   animation:turn 1.8s ease-in-out infinite;
+}
+
+#rotate h2{
+  margin-bottom:8px;
+  font-size:28px;
+}
+
+#rotate p{
+  color:#d7c5b9;
+  line-height:1.6;
 }
 
 @keyframes turn{
@@ -89,29 +115,43 @@ button:focus-visible{
   }
 }
 
-#viewport{
-  position:fixed;
-  inset:0;
-  display:grid;
-  place-items:center;
-  background:
-    radial-gradient(circle at 20% 20%,#613b2b 0 2px,transparent 3px),
-    radial-gradient(circle at 80% 75%,#43291f 0 2px,transparent 3px),
-    #1a1210;
-  background-size:36px 36px,44px 44px;
-}
+/* =========================================================
+   16:9 遊戲容器
+========================================================= */
 
-#game{
+#viewport{
   position:relative;
-  width:1280px;
-  height:720px;
+
+  width:min(100vw,calc(100vh * 16 / 9));
+  height:min(100vh,calc(100vw * 9 / 16));
+
+  max-width:1280px;
+  max-height:720px;
+
   overflow:hidden;
-  background:#f2d6a1;
-  transform-origin:center;
+
+  background:#1a1210;
+
   border-radius:22px;
+
   box-shadow:
     0 32px 90px #000b,
     0 0 0 4px #5b382d;
+}
+
+#game{
+  position:absolute;
+  left:0;
+  top:0;
+
+  width:1280px;
+  height:720px;
+
+  overflow:hidden;
+
+  background:#f2d6a1;
+
+  transform-origin:top left;
 }
 
 .screen{
@@ -130,8 +170,15 @@ button:focus-visible{
 
 #loading{
   display:block;
-  background:linear-gradient(#222 0 52%,#16110f 52%);
+
+  background:
+    linear-gradient(
+      #222 0 52%,
+      #16110f 52%
+    );
+
   color:#fff;
+
   z-index:50;
 }
 
@@ -140,13 +187,16 @@ button:focus-visible{
   left:0;
   right:0;
   bottom:0;
+
   height:48%;
+
   background:
     linear-gradient(
       #8f4d32 0 10%,
       #d58a4a 10% 18%,
       #7e3e2d 18%
     );
+
   border-top:8px solid #301c16;
 }
 
@@ -155,23 +205,36 @@ button:focus-visible{
   left:130px;
   right:130px;
   bottom:80px;
+
   height:150px;
+
   border:6px solid #321d17;
   border-radius:22px 22px 8px 8px;
-  background:linear-gradient(#f4d694 0 24%,#a94b32 24%);
-  box-shadow:inset 0 -12px #873626;
+
+  background:
+    linear-gradient(
+      #f4d694 0 24%,
+      #a94b32 24%
+    );
+
+  box-shadow:
+    inset 0 -12px #873626;
 }
 
 .loading-counter::before,
 .loading-counter::after{
   content:"";
+
   position:absolute;
   top:45px;
+
   width:205px;
   height:88px;
+
   border:5px solid #562a22;
-  background:#c7613d;
   border-radius:10px;
+
+  background:#c7613d;
 }
 
 .loading-counter::before{
@@ -186,15 +249,21 @@ button:focus-visible{
   position:absolute;
   left:50%;
   bottom:100px;
+
   width:160px;
   height:220px;
+
   transform:translateX(-50%);
-  animation:chefBob .8s ease-in-out infinite alternate;
+
+  animation:
+    chefBob .8s ease-in-out infinite alternate;
 }
 
 @keyframes chefBob{
   to{
-    transform:translateX(-50%) translateY(-7px);
+    transform:
+      translateX(-50%)
+      translateY(-7px);
   }
 }
 
@@ -202,9 +271,12 @@ button:focus-visible{
   position:absolute;
   left:26px;
   top:0;
+
   width:108px;
   height:65px;
+
   background:#fff7e7;
+
   border:6px solid #38231e;
   border-radius:55% 55% 30% 30%;
 }
@@ -212,16 +284,21 @@ button:focus-visible{
 .hat::before,
 .hat::after{
   content:"";
+
   position:absolute;
+
   background:#fff7e7;
+
   border:6px solid #38231e;
   border-bottom:0;
+
   border-radius:50% 50% 0 0;
 }
 
 .hat::before{
   width:48px;
   height:52px;
+
   left:-12px;
   top:-24px;
 }
@@ -229,6 +306,7 @@ button:focus-visible{
 .hat::after{
   width:52px;
   height:58px;
+
   right:-12px;
   top:-30px;
 }
@@ -237,9 +315,12 @@ button:focus-visible{
   position:absolute;
   left:33px;
   top:52px;
+
   width:94px;
   height:82px;
+
   background:#cc7b48;
+
   border:6px solid #38231e;
   border-radius:48% 48% 42% 42%;
 }
@@ -247,11 +328,15 @@ button:focus-visible{
 .chef-head::before,
 .chef-head::after{
   content:"";
+
   position:absolute;
   top:27px;
+
   width:9px;
   height:12px;
+
   background:#34201b;
+
   border-radius:50%;
 }
 
@@ -267,42 +352,56 @@ button:focus-visible{
   position:absolute;
   left:30px;
   top:44px;
+
   width:34px;
   height:25px;
+
   border-radius:50%;
+
   background:#fff0d4;
+
   border:4px solid #38231e;
 }
 
 .muzzle::after{
   content:"";
+
   position:absolute;
-  width:9px;
-  height:7px;
-  border-radius:50%;
-  background:#34201b;
   left:9px;
   top:3px;
+
+  width:9px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#34201b;
 }
 
 .chef-body{
   position:absolute;
   left:20px;
   top:125px;
+
   width:120px;
   height:90px;
+
   background:#fff0d4;
+
   border:6px solid #38231e;
   border-radius:35px 35px 22px 22px;
 }
 
 .chef-body::before{
   content:"";
+
   position:absolute;
   left:49px;
   top:0;
+
   width:14px;
   height:82px;
+
   background:#e15e45;
 }
 
@@ -311,32 +410,43 @@ button:focus-visible{
   left:0;
   right:0;
   top:54px;
+
   text-align:center;
 }
 
 .loading-title small{
   display:block;
-  letter-spacing:.38em;
+
   color:#ffd776;
-  font-weight:900;
+
   font-size:16px;
+  font-weight:900;
+
+  letter-spacing:.38em;
 }
 
 .loading-title h1{
   margin:5px 0 0;
+
+  color:#fff4d0;
+
   font-size:68px;
   line-height:1;
+
+  letter-spacing:.06em;
+
   text-shadow:
     0 6px #71251f,
     0 9px #1d100e;
-  letter-spacing:.06em;
-  color:#fff4d0;
 }
 
 .loading-title p{
   margin:13px 0 0;
-  font-weight:800;
+
   color:#f7c97b;
+
+  font-weight:800;
+
   letter-spacing:.18em;
 }
 
@@ -344,61 +454,137 @@ button:focus-visible{
   position:absolute;
   left:205px;
   right:205px;
-  bottom:30px;
+  bottom:24px;
+
   text-align:center;
 }
 
 .loading-track{
   height:24px;
+
   padding:4px;
+
   border:4px solid #fff0d0;
   border-radius:20px;
+
   background:#281712;
-  box-shadow:0 5px #0006;
+
+  box-shadow:
+    0 5px #0006;
 }
 
 .loading-fill{
-  height:100%;
   width:0;
+  height:100%;
+
   border-radius:12px;
+
   background:
     repeating-linear-gradient(
       135deg,
       #ffd467 0 15px,
       #f29a3d 15px 30px
     );
-  transition:width .12s linear;
+
+  transition:
+    width .12s linear;
 }
 
 .loading-meta{
   display:flex;
   justify-content:space-between;
+
   margin-top:10px;
-  font-weight:900;
+
   color:#fff1ce;
+
+  font-weight:900;
+
   letter-spacing:.12em;
 }
 
+.loading-enter{
+  margin-top:18px;
+
+  min-width:240px;
+
+  padding:12px 28px;
+
+  border:4px solid #fff0d0;
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      #ffd86a,
+      #f29a3d
+    );
+
+  color:#3a211a;
+
+  font-size:22px;
+  font-weight:1000;
+
+  letter-spacing:.12em;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 7px #8f3e2b;
+
+  opacity:0;
+  visibility:hidden;
+
+  transform:translateY(12px);
+
+  transition:
+    opacity .35s ease,
+    visibility .35s ease,
+    transform .35s ease;
+}
+
+.loading-enter.visible{
+  opacity:1;
+  visibility:visible;
+
+  transform:translateY(0);
+}
+
+.loading-enter:active{
+  transform:translateY(6px);
+
+  box-shadow:
+    0 1px #8f3e2b;
+}
+
 /* =========================================================
-   Title screen
+   標題首頁
 ========================================================= */
 
 #title{
-  background:linear-gradient(#7fc6c2 0 58%,#dfbd7f 58%);
   overflow:hidden;
+
+  background:
+    linear-gradient(
+      #7fc6c2 0 58%,
+      #dfbd7f 58%
+    );
 }
 
 .title-cloud{
   position:absolute;
+
   background:#eaf7ee;
+
   border:5px solid #3f6f6c;
   border-radius:50%;
+
   opacity:.95;
 }
 
 .c1{
   width:230px;
   height:65px;
+
   left:70px;
   top:72px;
 }
@@ -406,6 +592,7 @@ button:focus-visible{
 .c2{
   width:190px;
   height:55px;
+
   right:70px;
   top:110px;
 }
@@ -415,11 +602,16 @@ button:focus-visible{
   left:80px;
   right:80px;
   bottom:65px;
+
   height:430px;
+
   background:#f6d49b;
+
   border:7px solid #4b2d23;
   border-radius:28px 28px 12px 12px;
-  box-shadow:0 17px #7d3f2c;
+
+  box-shadow:
+    0 17px #7d3f2c;
 }
 
 .awning{
@@ -427,44 +619,69 @@ button:focus-visible{
   left:-7px;
   right:-7px;
   top:62px;
+
   height:76px;
+
   border:7px solid #4b2d23;
+
   background:
     repeating-linear-gradient(
       90deg,
       #e85c48 0 70px,
       #fff1cf 70px 140px
     );
-  clip-path:polygon(0 0,100% 0,97% 100%,3% 100%);
+
+  clip-path:
+    polygon(
+      0 0,
+      100% 0,
+      97% 100%,
+      3% 100%
+    );
 }
 
 .cafe-sign{
   position:absolute;
   left:50%;
   top:-52px;
+
   transform:translateX(-50%);
+
   width:630px;
   height:120px;
+
   background:#6f3428;
+
   border:7px solid #3a211a;
   border-radius:22px;
-  box-shadow:0 11px #4c281f;
+
+  box-shadow:
+    0 11px #4c281f;
+
   text-align:center;
+
   color:#fff1ce;
 }
 
 .cafe-sign h1{
-  font-size:57px;
   margin:8px 0 -3px;
+
+  font-size:57px;
+
   letter-spacing:.08em;
-  text-shadow:0 5px #321713;
+
+  text-shadow:
+    0 5px #321713;
 }
 
 .cafe-sign p{
   margin:0;
+
   color:#ffd86a;
+
   font-size:15px;
   font-weight:900;
+
   letter-spacing:.22em;
 }
 
@@ -472,27 +689,40 @@ button:focus-visible{
   position:absolute;
   left:85px;
   top:165px;
+
   width:390px;
   height:185px;
+
   background:#8fd0c9;
+
   border:7px solid #4b2d23;
   border-radius:12px;
-  box-shadow:inset 0 0 0 10px #d5f0df;
+
+  box-shadow:
+    inset 0 0 0 10px #d5f0df;
 }
 
 .cafe-window::before{
   content:"TODAY'S SPECIAL";
+
   position:absolute;
   left:34px;
   right:34px;
   top:29px;
+
+  padding:13px;
+
   background:#fff2ce;
+
   border:5px solid #4b2d23;
   border-radius:10px;
-  padding:13px;
-  text-align:center;
-  font-weight:1000;
+
   color:#bb4435;
+
+  text-align:center;
+
+  font-weight:1000;
+
   transform:rotate(-2deg);
 }
 
@@ -500,63 +730,98 @@ button:focus-visible{
   position:absolute;
   right:95px;
   top:155px;
+
   width:220px;
   height:255px;
+
   background:#7d4b34;
+
   border:7px solid #4b2d23;
   border-radius:12px 12px 0 0;
 }
 
 .cafe-door::before{
   content:"OPEN";
+
   position:absolute;
   left:32px;
   right:32px;
   top:35px;
+
+  padding:14px;
+
   background:#fff2ce;
+
   border:5px solid #4b2d23;
   border-radius:9px;
-  padding:14px;
-  text-align:center;
-  font-weight:1000;
+
   color:#4b8b67;
+
+  text-align:center;
+
+  font-weight:1000;
+
   transform:rotate(3deg);
 }
 
 .cafe-door::after{
   content:"";
+
   position:absolute;
-  width:19px;
-  height:19px;
-  border-radius:50%;
-  background:#ffd86a;
-  border:4px solid #4b2d23;
   right:20px;
   top:132px;
+
+  width:19px;
+  height:19px;
+
+  border-radius:50%;
+
+  background:#ffd86a;
+
+  border:4px solid #4b2d23;
 }
 
 .title-menu{
   position:absolute;
   left:50%;
   bottom:40px;
-  transform:translateX(-50%);
-  display:flex;
-  gap:18px;
+
   z-index:4;
+
+  display:flex;
+
+  gap:18px;
+
+  transform:translateX(-50%);
 }
 
 .big-btn{
   min-width:260px;
+
+  padding:16px 30px;
+
   border:5px solid #48271f;
   border-radius:18px;
-  padding:16px 30px;
-  background:linear-gradient(#ffdc72,#f29a3d);
-  box-shadow:0 9px #9c432c;
-  font-weight:1000;
+
+  background:
+    linear-gradient(
+      #ffdc72,
+      #f29a3d
+    );
+
+  box-shadow:
+    0 9px #9c432c;
+
   font-size:25px;
+  font-weight:1000;
+
   letter-spacing:.08em;
+
   cursor:pointer;
-  transition:.12s;
+
+  transition:
+    transform .12s ease,
+    box-shadow .12s ease;
 }
 
 .big-btn:hover{
@@ -565,48 +830,67 @@ button:focus-visible{
 
 .big-btn:active{
   transform:translateY(7px);
-  box-shadow:0 2px #9c432c;
+
+  box-shadow:
+    0 2px #9c432c;
 }
 
 .big-btn.secondary{
   min-width:90px;
-  background:linear-gradient(#fff6dc,#e8cda2);
-  box-shadow:0 9px #8b684d;
+
   padding-inline:22px;
+
+  background:
+    linear-gradient(
+      #fff6dc,
+      #e8cda2
+    );
+
+  box-shadow:
+    0 9px #8b684d;
 }
 
 .title-chef{
   position:absolute;
   left:135px;
   bottom:45px;
-  transform:scale(.9);
+
   z-index:3;
+
+  transform:scale(.9);
 }
 
 .title-bubble{
   position:absolute;
   right:145px;
   bottom:280px;
+
+  padding:18px 24px;
+
   background:#fff6dc;
+
   border:5px solid #4b2d23;
   border-radius:22px;
-  padding:18px 24px;
-  font-weight:900;
+
   font-size:20px;
+  font-weight:900;
+
   transform:rotate(2deg);
 }
 
 .title-bubble::after{
   content:"";
+
   position:absolute;
   right:35px;
   bottom:-22px;
+
   border:12px solid transparent;
   border-top-color:#4b2d23;
 }
 
 /* =========================================================
-   Gameplay
+   遊戲畫面
 ========================================================= */
 
 #play{
@@ -618,14 +902,26 @@ button:focus-visible{
   left:0;
   right:0;
   top:0;
+
+  z-index:20;
+
   height:94px;
-  background:linear-gradient(#fff2d2,#eec68d);
-  border-bottom:6px solid #553328;
+
   display:flex;
   align-items:center;
+
   padding:13px 23px;
-  z-index:20;
-  box-shadow:0 8px #0002;
+
+  background:
+    linear-gradient(
+      #fff2d2,
+      #eec68d
+    );
+
+  border-bottom:6px solid #553328;
+
+  box-shadow:
+    0 8px #0002;
 }
 
 .hud-brand{
@@ -634,39 +930,53 @@ button:focus-visible{
 
 .hud-brand b{
   display:block;
-  font-size:25px;
+
   color:#b93b32;
+
+  font-size:25px;
 }
 
 .hud-brand small{
-  font-weight:900;
   color:#684536;
+
+  font-weight:900;
+
   letter-spacing:.12em;
 }
 
 .order-strip{
   flex:1;
+
   display:flex;
   justify-content:center;
+
   gap:12px;
 }
 
 .order-card{
+  position:relative;
+
   width:148px;
   height:66px;
-  background:#fff8e9;
-  border:4px solid #563429;
-  border-radius:15px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   gap:6px;
-  box-shadow:0 5px #b37b50;
-  position:relative;
+
+  background:#fff8e9;
+
+  border:4px solid #563429;
+  border-radius:15px;
+
+  box-shadow:
+    0 5px #b37b50;
 }
 
 .order-card.active{
-  animation:orderPulse 1s ease-in-out infinite alternate;
+  animation:
+    orderPulse 1s ease-in-out infinite alternate;
 }
 
 @keyframes orderPulse{
@@ -677,7 +987,9 @@ button:focus-visible{
 
 .food-icon{
   font-size:31px;
-  filter:drop-shadow(0 2px #fff);
+
+  filter:
+    drop-shadow(0 2px #fff);
 }
 
 .order-card .patience{
@@ -685,44 +997,60 @@ button:focus-visible{
   left:7px;
   right:7px;
   bottom:5px;
+
   height:7px;
-  border-radius:7px;
-  background:#d8c4a7;
+
   overflow:hidden;
+
+  background:#d8c4a7;
+
+  border-radius:7px;
 }
 
 .order-card .patience i{
   display:block;
-  height:100%;
-  background:#65aa6b;
+
   width:100%;
+  height:100%;
+
+  background:#65aa6b;
 }
 
 .hud-stats{
   width:300px;
+
   display:flex;
   justify-content:flex-end;
+
   gap:10px;
 }
 
 .stat{
   min-width:92px;
   height:58px;
-  background:#fff8e9;
-  border:4px solid #563429;
-  border-radius:17px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   gap:8px;
+
+  background:#fff8e9;
+
+  border:4px solid #563429;
+  border-radius:17px;
+
+  box-shadow:
+    0 5px #b37b50;
+
   font-size:23px;
   font-weight:1000;
-  box-shadow:0 5px #b37b50;
 }
 
 .pause{
   width:58px;
   min-width:58px;
+
   cursor:pointer;
 }
 
@@ -732,12 +1060,23 @@ button:focus-visible{
   right:0;
   top:94px;
   bottom:0;
-  background:
-    linear-gradient(90deg,#deb175 1px,transparent 1px),
-    linear-gradient(#deb175 1px,transparent 1px),
-    #f0d29c;
-  background-size:64px 64px;
+
   overflow:hidden;
+
+  background:
+    linear-gradient(
+      90deg,
+      #deb175 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      #deb175 1px,
+      transparent 1px
+    ),
+    #f0d29c;
+
+  background-size:
+    64px 64px;
 }
 
 .wall-top{
@@ -745,83 +1084,127 @@ button:focus-visible{
   left:0;
   right:0;
   top:0;
+
   height:106px;
-  background:linear-gradient(#8fc5b9,#71aa9f);
+
+  background:
+    linear-gradient(
+      #8fc5b9,
+      #71aa9f
+    );
+
   border-bottom:6px solid #4b2d23;
 }
 
 .tiles{
   position:absolute;
   inset:0;
+
   background:
-    linear-gradient(90deg,#fff3 1px,transparent 1px),
-    linear-gradient(#fff3 1px,transparent 1px);
-  background-size:45px 45px;
+    linear-gradient(
+      90deg,
+      #fff3 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      #fff3 1px,
+      transparent 1px
+    );
+
+  background-size:
+    45px 45px;
 }
 
 .counter{
   position:absolute;
+
   background:#a84e35;
+
   border:6px solid #4a2b22;
   border-radius:16px;
+
   box-shadow:
     inset 0 12px #d8874c,
-    0 10px #6d3025;
+    0 10px #6a3429;
 }
 
 .counter.top{
-  left:180px;
-  right:180px;
-  top:82px;
-  height:96px;
+  left:80px;
+  right:80px;
+  top:38px;
+
+  height:150px;
 }
 
 .counter.left{
-  left:90px;
-  top:80px;
-  width:140px;
-  height:405px;
+  left:80px;
+  top:172px;
+
+  width:150px;
+  height:310px;
 }
 
 .counter.right{
-  right:90px;
-  top:80px;
-  width:140px;
-  height:405px;
+  right:80px;
+  top:172px;
+
+  width:150px;
+  height:310px;
 }
 
 .counter.bottom{
   left:260px;
   right:260px;
   bottom:40px;
+
   height:94px;
 }
 
 .kitchen-label{
   position:absolute;
   left:50%;
-  top:25px;
+  top:12px;
+
   transform:translateX(-50%);
+
   color:#fff6dd;
+
   font-weight:1000;
+
   letter-spacing:.17em;
-  text-shadow:0 3px #345f59;
+
+  text-shadow:
+    0 3px #345f59;
 }
 
 .station{
   position:absolute;
+
   width:112px;
   height:84px;
-  border:5px solid #4a2b22;
-  border-radius:15px;
-  background:linear-gradient(#fff4d5,#dba76d);
-  box-shadow:0 7px #7b3b2c;
+
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+
+  background:
+    linear-gradient(
+      #fff4d5,
+      #dba76d
+    );
+
+  border:5px solid #4a2b22;
+  border-radius:15px;
+
+  box-shadow:
+    0 7px #7b3b2c;
+
   cursor:pointer;
-  transition:.12s;
+
+  transition:
+    transform .12s ease,
+    filter .12s ease;
 }
 
 .station span{
@@ -831,12 +1214,14 @@ button:focus-visible{
 
 .station small{
   margin-top:5px;
-  font-weight:1000;
+
   font-size:15px;
+  font-weight:1000;
 }
 
 .station.glow{
   transform:translateY(-4px);
+
   filter:
     drop-shadow(0 0 7px #fff)
     drop-shadow(0 0 14px #ffd86a);
@@ -891,33 +1276,44 @@ button:focus-visible{
   position:absolute;
   left:600px;
   top:410px;
+
+  z-index:10;
+
   width:86px;
   height:120px;
-  z-index:10;
-  transition:filter .15s;
+
+  transition:
+    filter .15s ease;
 }
 
 #chef.near{
-  filter:drop-shadow(0 0 8px #fff8c5);
+  filter:
+    drop-shadow(0 0 8px #fff8c5);
 }
 
 .player-shadow{
   position:absolute;
   left:11px;
   bottom:1px;
+
   width:66px;
   height:17px;
-  border-radius:50%;
+
   background:#4e302650;
+
+  border-radius:50%;
 }
 
 .mini-hat{
   position:absolute;
   left:16px;
   top:0;
+
   width:55px;
   height:36px;
+
   background:#fff7e7;
+
   border:4px solid #3c261f;
   border-radius:50% 50% 25% 25%;
 }
@@ -925,13 +1321,18 @@ button:focus-visible{
 .mini-hat::before,
 .mini-hat::after{
   content:"";
+
   position:absolute;
   top:-16px;
+
   width:28px;
   height:28px;
+
   background:#fff7e7;
+
   border:4px solid #3c261f;
   border-bottom:0;
+
   border-radius:50% 50% 0 0;
 }
 
@@ -947,9 +1348,12 @@ button:focus-visible{
   position:absolute;
   left:21px;
   top:30px;
+
   width:46px;
   height:43px;
+
   background:#cd7a47;
+
   border:4px solid #3c261f;
   border-radius:46%;
 }
@@ -957,11 +1361,15 @@ button:focus-visible{
 .mini-head::before,
 .mini-head::after{
   content:"";
+
   position:absolute;
   top:14px;
+
   width:5px;
   height:7px;
+
   background:#36211c;
+
   border-radius:50%;
 }
 
@@ -977,20 +1385,26 @@ button:focus-visible{
   position:absolute;
   left:12px;
   top:67px;
+
   width:65px;
   height:51px;
+
   background:#fff0d4;
+
   border:4px solid #3c261f;
   border-radius:19px 19px 12px 12px;
 }
 
 .mini-body::before{
   content:"";
+
   position:absolute;
   left:27px;
   top:0;
+
   width:7px;
   height:44px;
+
   background:#e25c44;
 }
 
@@ -998,25 +1412,36 @@ button:focus-visible{
   position:absolute;
   right:-16px;
   top:57px;
+
+  z-index:5;
+
   min-width:42px;
   min-height:42px;
+
   display:grid;
   place-items:center;
+
   font-size:34px;
-  filter:drop-shadow(0 3px #fff);
-  z-index:5;
+
+  filter:
+    drop-shadow(0 3px #fff);
 }
 
 .interact-ring{
   display:none;
+
   position:absolute;
   left:-16px;
   top:73px;
+
   width:120px;
   height:53px;
+
   border:4px solid #ffd86a;
   border-radius:50%;
-  animation:ringPulse .7s ease-in-out infinite alternate;
+
+  animation:
+    ringPulse .7s ease-in-out infinite alternate;
 }
 
 #chef.near .interact-ring{
@@ -1026,71 +1451,109 @@ button:focus-visible{
 @keyframes ringPulse{
   to{
     transform:scale(1.09);
+
     opacity:.55;
   }
 }
 
 .controls-help{
   position:absolute;
-  left:18px;
-  bottom:16px;
-  padding:9px 14px;
-  border:3px solid #4a2b22;
+  left:28px;
+  bottom:20px;
+
+  z-index:18;
+
+  padding:8px 12px;
+
+  background:#fff3d7bb;
+
+  border:3px solid #6b4738;
   border-radius:12px;
-  background:#fff4d7dc;
+
+  color:#684536;
+
   font-weight:900;
-  color:#6b4132;
 }
 
 #message{
   position:absolute;
   left:50%;
-  bottom:14px;
-  transform:translateX(-50%);
-  min-width:390px;
-  padding:12px 22px;
-  border:4px solid #4a2b22;
+  bottom:16px;
+
+  z-index:20;
+
+  min-width:430px;
+
+  padding:11px 22px;
+
+  background:#fff7df;
+
+  border:4px solid #6d4232;
   border-radius:14px;
-  background:#fff5dc;
-  box-shadow:0 6px #9f6d48;
-  text-align:center;
+
+  box-shadow:
+    0 7px #8f5a3c;
+
   font-weight:1000;
+  text-align:center;
+
+  transform:translateX(-50%);
 }
 
 .combo{
   position:absolute;
-  right:34px;
+  right:26px;
   top:116px;
-  z-index:30;
+
+  z-index:35;
+
   padding:10px 18px;
-  border:4px solid #4a2b22;
-  border-radius:14px;
-  background:#ffd86a;
-  font-size:25px;
+
+  background:#ffd25c;
+
+  border:5px solid #5d3426;
+  border-radius:15px;
+
+  color:#7b2b24;
+
+  font-size:24px;
   font-weight:1000;
-  transform:translateX(220px) rotate(5deg);
+
   opacity:0;
+
+  transform:
+    translateY(-30px)
+    scale(.8);
 }
 
 .combo.show{
-  animation:comboPop 1.15s ease;
+  animation:
+    comboPop 1.15s ease;
 }
 
 @keyframes comboPop{
   0%{
-    transform:translateX(220px) rotate(5deg);
     opacity:0;
+
+    transform:
+      translateY(-30px)
+      scale(.8);
   }
 
-  18%,
-  70%{
-    transform:translateX(0) rotate(-3deg);
+  20%,
+  75%{
     opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1.18);
   }
 
   100%{
-    transform:translateX(220px) rotate(5deg);
     opacity:0;
+
+    transform:
+      translateY(-30px);
   }
 }
 
@@ -1099,117 +1562,153 @@ button:focus-visible{
 ========================================================= */
 
 .overlay{
-  display:none;
   position:absolute;
   inset:0;
+
   z-index:100;
-  background:#180f0db8;
-  align-items:center;
-  justify-content:center;
+
+  display:none;
+  place-items:center;
+
+  background:#211411b8;
+
   backdrop-filter:blur(4px);
 }
 
 .overlay.show{
-  display:flex;
+  display:grid;
 }
 
 .panel{
-  width:620px;
-  border:7px solid #4a2b22;
-  border-radius:24px;
-  background:#fff1d2;
-  box-shadow:0 16px #7b3d2c;
+  width:690px;
+
   padding:34px;
+
+  background:
+    linear-gradient(
+      #fff7e3,
+      #efd2a5
+    );
+
+  border:7px solid #4a2a20;
+  border-radius:28px;
+
+  box-shadow:
+    0 18px #321a15,
+    0 35px 80px #0007;
+
   text-align:center;
 }
 
 .panel h2{
-  margin:0 0 15px;
-  font-size:43px;
-  color:#bd4034;
+  margin:0 0 12px;
+
+  color:#b53a31;
+
+  font-size:46px;
+
+  text-shadow:
+    0 3px #fff;
 }
 
 .panel p{
-  margin:0;
-  line-height:1.8;
   font-size:19px;
   font-weight:800;
-  color:#6a4436;
+  line-height:1.6;
 }
 
 .panel-actions{
   display:flex;
   justify-content:center;
-  gap:18px;
-  margin-top:28px;
-}
 
-.stars{
-  margin:16px 0;
-  color:#f2aa31;
-  font-size:60px;
-  letter-spacing:.1em;
-  text-shadow:
-    0 4px #8e4e25,
-    0 0 2px #fff;
+  gap:16px;
+
+  margin-top:24px;
 }
 
 .result-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
+
   gap:12px;
-  margin:18px 0;
+
+  margin:20px 0;
 }
 
 .result-grid div{
-  padding:17px 10px;
-  background:#fff9e8;
-  border:4px solid #6a4436;
-  border-radius:15px;
+  padding:13px;
+
+  background:#fff8e8;
+
+  border:4px solid #6d4434;
+  border-radius:14px;
 }
 
 .result-grid small{
   display:block;
-  margin-bottom:6px;
-  color:#805343;
+
+  color:#795746;
+
   font-weight:900;
 }
 
 .result-grid b{
-  font-size:30px;
-  color:#bd4034;
+  font-size:29px;
+}
+
+.stars{
+  color:#ffc943;
+
+  font-size:52px;
+
+  letter-spacing:.14em;
+
+  text-shadow:
+    0 4px #9b5d26;
 }
 
 #toast{
   position:absolute;
   left:50%;
-  top:118px;
-  z-index:150;
-  transform:translate(-50%,-30px);
-  padding:13px 24px;
-  border:4px solid #4a2b22;
-  border-radius:14px;
-  background:#fff5d9;
-  box-shadow:0 6px #9f6d48;
-  font-weight:1000;
-  font-size:19px;
+  top:125px;
+
+  z-index:130;
+
+  padding:10px 19px;
+
+  background:#34201de8;
+
+  border:4px solid #fff0c8;
+  border-radius:13px;
+
+  color:#fff5d4;
+
+  font-weight:900;
+
   opacity:0;
-  pointer-events:none;
-  transition:.2s;
+
+  transform:
+    translate(-50%,-20px);
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
 }
 
 #toast.show{
-  transform:translate(-50%,0);
   opacity:1;
-}
 
-/* =========================================================
-   Responsive
-========================================================= */
+  transform:
+    translate(-50%,0);
+}
 
 @media (orientation:portrait) and (max-width:900px){
   #rotate{
     display:flex;
+  }
+
+  #viewport{
+    display:none;
   }
 }
 </style>
@@ -1217,58 +1716,91 @@ button:focus-visible{
 
 <body>
 
-<div id="rotate">
-  <div>
-    <div class="phone"></div>
-    <h2>請將裝置轉為橫向</h2>
-    <p>灶咖大亂鬥採用 16:9 橫向遊戲畫面。</p>
-  </div>
-</div>
+<section id="rotate">
+  <div class="phone"></div>
+
+  <h2>請將手機轉為橫向</h2>
+
+  <p>
+    橫向模式可獲得最佳遊戲體驗
+  </p>
+</section>
 
 <div id="viewport">
+
 <main id="game">
 
-  <!-- Loading -->
-  <section id="loading" class="screen active">
+  <section
+    id="loading"
+    class="screen active"
+    aria-label="遊戲讀取畫面"
+  >
     <div class="loading-title">
       <small>KITCHEN CLASH CAFÉ</small>
+
       <h1>灶咖大亂鬥</h1>
-      <p>キッチン大騒動</p>
+
+      <p>
+        キッチン大騒動
+      </p>
     </div>
 
     <div class="loading-kitchen">
       <div class="loading-counter"></div>
+    </div>
 
-      <div class="loading-chef">
-        <div class="hat"></div>
-        <div class="chef-head">
-          <div class="muzzle"></div>
-        </div>
-        <div class="chef-body"></div>
+    <div class="loading-chef">
+      <div class="hat"></div>
+
+      <div class="chef-head">
+        <i class="muzzle"></i>
       </div>
+
+      <div class="chef-body"></div>
     </div>
 
     <div class="loading-ui">
       <div class="loading-track">
-        <div class="loading-fill" id="loadingFill"></div>
+        <div
+          class="loading-fill"
+          id="loadingFill"
+        ></div>
       </div>
 
       <div class="loading-meta">
-        <span id="loadingText">正在準備咖啡廳</span>
-        <span id="loadingPercent">0%</span>
+        <span id="loadingText">
+          準備食材中
+        </span>
+
+        <b id="loadingPercent">
+          0%
+        </b>
       </div>
+
+      <button
+        class="loading-enter"
+        id="enterCafeBtn"
+        type="button"
+      >
+        進入咖啡廳
+      </button>
     </div>
   </section>
 
-  <!-- Title -->
-  <section id="title" class="screen">
-    <div class="title-cloud c1"></div>
-    <div class="title-cloud c2"></div>
+  <section
+    id="title"
+    class="screen"
+  >
+    <i class="title-cloud c1"></i>
+    <i class="title-cloud c2"></i>
 
     <div class="title-cafe">
       <div class="cafe-sign">
         <h1>灶咖大亂鬥</h1>
-        <p>KITCHEN CLASH CAFÉ</p>
+
+        <p>
+          KITCHEN CLASH CAFÉ · キッチン大騒動
+        </p>
       </div>
 
       <div class="awning"></div>
@@ -1278,50 +1810,73 @@ button:focus-visible{
 
     <div class="title-chef loading-chef">
       <div class="hat"></div>
+
       <div class="chef-head">
-        <div class="muzzle"></div>
+        <i class="muzzle"></i>
       </div>
+
       <div class="chef-body"></div>
     </div>
 
     <div class="title-bubble">
-      尖峰時段要開始了！
+      客人已經排到門外啦！
     </div>
 
     <div class="title-menu">
-      <button class="big-btn" id="startBtn">
+      <button
+        class="big-btn"
+        id="startBtn"
+        type="button"
+      >
         開始營業
       </button>
 
-      <button class="big-btn secondary" id="howBtn">
-        ？
+      <button
+        class="big-btn secondary"
+        id="howBtn"
+        type="button"
+        aria-label="遊戲說明"
+      >
+        ?
       </button>
     </div>
   </section>
 
-  <!-- Gameplay -->
-  <section id="play" class="screen">
-
+  <section
+    id="play"
+    class="screen"
+  >
     <header id="hud">
       <div class="hud-brand">
         <b>灶咖大亂鬥</b>
-        <small>第一天・午間尖峰</small>
+
+        <small>
+          DAY 01 · 午餐尖峰
+        </small>
       </div>
 
-      <div class="order-strip" id="orders"></div>
+      <div
+        class="order-strip"
+        id="orders"
+      ></div>
 
       <div class="hud-stats">
         <div class="stat">
-          <span>⭐</span>
+          ★
           <b id="score">0</b>
         </div>
 
         <div class="stat">
-          <span>⏱️</span>
+          ⏱
           <b id="time">75</b>
         </div>
 
-        <button class="stat pause" id="pauseBtn" aria-label="暫停">
+        <button
+          class="stat pause"
+          id="pauseBtn"
+          type="button"
+          aria-label="暫停遊戲"
+        >
           Ⅱ
         </button>
       </div>
@@ -1341,58 +1896,103 @@ button:focus-visible{
         SUNNY PAW CAFÉ · OPEN KITCHEN
       </div>
 
-      <button class="station" data-st="bun" data-item="bun">
+      <button
+        class="station"
+        data-st="bun"
+        data-item="bun"
+        type="button"
+      >
         <span>🍞</span>
         <small>麵包</small>
       </button>
 
-      <button class="station" data-st="lettuce" data-item="lettuce">
+      <button
+        class="station"
+        data-st="lettuce"
+        data-item="lettuce"
+        type="button"
+      >
         <span>🥬</span>
         <small>生菜</small>
       </button>
 
-      <button class="station" data-st="meat" data-item="raw">
+      <button
+        class="station"
+        data-st="meat"
+        data-item="raw"
+        type="button"
+      >
         <span>🥩</span>
         <small>肉排</small>
       </button>
 
-      <button class="station" data-st="board">
+      <button
+        class="station"
+        data-st="board"
+        type="button"
+      >
         <span>🔪</span>
         <small>砧板</small>
       </button>
 
-      <button class="station" data-st="pan">
+      <button
+        class="station"
+        data-st="pan"
+        type="button"
+      >
         <span>🍳</span>
         <small>煎台</small>
       </button>
 
-      <button class="station" data-st="assembly">
+      <button
+        class="station"
+        data-st="assembly"
+        type="button"
+      >
         <span>🍽️</span>
         <small>組裝台</small>
       </button>
 
-      <button class="station" data-st="serve">
+      <button
+        class="station"
+        data-st="serve"
+        type="button"
+      >
         <span>🔔</span>
         <small>出餐口</small>
       </button>
 
-      <button class="station" data-st="trash">
+      <button
+        class="station"
+        data-st="trash"
+        type="button"
+      >
         <span>🗑️</span>
         <small>丟棄</small>
       </button>
 
-      <button class="station" data-st="drink" data-item="drink">
+      <button
+        class="station"
+        data-st="drink"
+        data-item="drink"
+        type="button"
+      >
         <span>🥤</span>
         <small>飲料機</small>
       </button>
 
       <div id="chef">
         <i class="interact-ring"></i>
+
         <div class="player-shadow"></div>
         <div class="mini-hat"></div>
         <div class="mini-head"></div>
         <div class="mini-body"></div>
-        <span class="held" id="held"></span>
+
+        <span
+          class="held"
+          id="held"
+        ></span>
       </div>
 
       <div class="controls-help">
@@ -1404,13 +2004,18 @@ button:focus-visible{
       </div>
     </div>
 
-    <div class="combo" id="combo">
+    <div
+      class="combo"
+      id="combo"
+    >
       COMBO ×2
     </div>
   </section>
 
-  <!-- How to play -->
-  <div class="overlay" id="how">
+  <div
+    class="overlay"
+    id="how"
+  >
     <div class="panel">
       <h2>營業守則</h2>
 
@@ -1422,15 +2027,21 @@ button:focus-visible{
       </p>
 
       <div class="panel-actions">
-        <button class="big-btn" id="closeHow">
+        <button
+          class="big-btn"
+          id="closeHow"
+          type="button"
+        >
           知道了
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Pause -->
-  <div class="overlay" id="pauseOverlay">
+  <div
+    class="overlay"
+    id="pauseOverlay"
+  >
     <div class="panel">
       <h2>暫停營業</h2>
 
@@ -1439,23 +2050,38 @@ button:focus-visible{
       </p>
 
       <div class="panel-actions">
-        <button class="big-btn" id="resumeBtn">
+        <button
+          class="big-btn"
+          id="resumeBtn"
+          type="button"
+        >
           繼續營業
         </button>
 
-        <button class="big-btn secondary" id="homeBtn">
+        <button
+          class="big-btn secondary"
+          id="homeBtn"
+          type="button"
+        >
           首頁
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Result -->
-  <div class="overlay" id="result">
+  <div
+    class="overlay"
+    id="result"
+  >
     <div class="panel">
-      <h2 id="resultTitle">營業結束</h2>
+      <h2 id="resultTitle">
+        營業結束
+      </h2>
 
-      <div class="stars" id="stars">
+      <div
+        class="stars"
+        id="stars"
+      >
         ★★★
       </div>
 
@@ -1481,11 +2107,19 @@ button:focus-visible{
       </p>
 
       <div class="panel-actions">
-        <button class="big-btn" id="retryBtn">
+        <button
+          class="big-btn"
+          id="retryBtn"
+          type="button"
+        >
           再玩一次
         </button>
 
-        <button class="big-btn secondary" id="resultHomeBtn">
+        <button
+          class="big-btn secondary"
+          id="resultHomeBtn"
+          type="button"
+        >
           首頁
         </button>
       </div>
@@ -1495,34 +2129,50 @@ button:focus-visible{
   <div id="toast"></div>
 
 </main>
+
 </div>
 
 <script>
 (() => {
   "use strict";
 
-  const $ = selector => document.querySelector(selector);
-  const $$ = selector => [...document.querySelectorAll(selector)];
+  const $ = selector =>
+    document.querySelector(selector);
+
+  const $$ = selector =>
+    [...document.querySelectorAll(selector)];
 
   const game = $("#game");
-  const loading = $("#loading");
   const title = $("#title");
   const play = $("#play");
+  const viewport = $("#viewport");
 
   function fitGame() {
     const scale = Math.min(
-      window.innerWidth / 1280,
-      window.innerHeight / 720
+      viewport.clientWidth / 1280,
+      viewport.clientHeight / 720
     );
 
-    game.style.transform = `scale(${scale})`;
+    game.style.transform =
+      `scale(${scale})`;
   }
 
-  window.addEventListener("resize", fitGame);
+  window.addEventListener(
+    "resize",
+    fitGame
+  );
+
+  const resizeObserver =
+    new ResizeObserver(fitGame);
+
+  resizeObserver.observe(viewport);
+
   fitGame();
 
   const sleep = milliseconds =>
-    new Promise(resolve => setTimeout(resolve, milliseconds));
+    new Promise(resolve => {
+      setTimeout(resolve, milliseconds);
+    });
 
   async function boot() {
     const steps = [
@@ -1533,22 +2183,36 @@ button:focus-visible{
       "準備開門"
     ];
 
-    for (let progress = 0; progress <= 100; progress += 2) {
-      $("#loadingFill").style.width = `${progress}%`;
-      $("#loadingPercent").textContent = `${progress}%`;
+    for (
+      let progress = 0;
+      progress <= 100;
+      progress += 2
+    ) {
+      $("#loadingFill").style.width =
+        `${progress}%`;
+
+      $("#loadingPercent").textContent =
+        `${progress}%`;
 
       const stepIndex = Math.min(
         steps.length - 1,
         Math.floor(progress / 21)
       );
 
-      $("#loadingText").textContent = steps[stepIndex];
+      $("#loadingText").textContent =
+        steps[stepIndex];
 
-      await sleep(progress < 70 ? 24 : 34);
+      await sleep(
+        progress < 70 ? 24 : 34
+      );
     }
 
-    await sleep(300);
-    showScreen(title);
+    $("#loadingText").textContent =
+      "準備完成";
+
+    $("#enterCafeBtn").classList.add(
+      "visible"
+    );
   }
 
   function showScreen(element) {
@@ -1565,19 +2229,19 @@ button:focus-visible{
 
   const recipes = [
     {
-      name: "經典漢堡",
-      icons: ["🍞", "🥩"],
-      type: "burger"
+      name:"經典漢堡",
+      icons:["🍞","🥩"],
+      type:"burger"
     },
     {
-      name: "生菜漢堡",
-      icons: ["🍞", "🥬", "🥩"],
-      type: "greenBurger"
+      name:"生菜漢堡",
+      icons:["🍞","🥬","🥩"],
+      type:"greenBurger"
     },
     {
-      name: "冰涼飲料",
-      icons: ["🥤"],
-      type: "drink"
+      name:"冰涼飲料",
+      icons:["🥤"],
+      type:"drink"
     }
   ];
 
@@ -1585,73 +2249,102 @@ button:focus-visible{
 
   function createFreshState() {
     return {
-      running: false,
-      paused: false,
-      time: 75,
-      score: 0,
-      served: 0,
-      combo: 0,
-      maxCombo: 0,
-      orders: [],
-      held: null,
-      plate: [],
-      chef: {
-        x: 600,
-        y: 410
+      running:false,
+      paused:false,
+      time:75,
+      score:0,
+      served:0,
+      combo:0,
+      maxCombo:0,
+      orders:[],
+      held:null,
+      plate:[],
+      chef:{
+        x:600,
+        y:410
       },
-      keys: {},
-      lastFrame: performance.now(),
-      spawnTimer: 0
+      keys:{},
+      lastFrame:performance.now(),
+      spawnTimer:0
     };
   }
 
   function createOrder() {
     const recipe =
-      recipes[Math.floor(Math.random() * recipes.length)];
+      recipes[
+        Math.floor(
+          Math.random() *
+          recipes.length
+        )
+      ];
 
     state.orders.push({
-      id: Date.now() + Math.random(),
+      id:
+        Date.now() +
+        Math.random(),
       ...recipe,
-      patience: 100
+      patience:100
     });
   }
 
   function renderOrders() {
-    const orderContainer = $("#orders");
+    const orderContainer =
+      $("#orders");
 
-    orderContainer.innerHTML = state.orders
-      .slice(0, 3)
-      .map((order, index) => {
-        const icons = order.icons
-          .map(icon => `<span class="food-icon">${icon}</span>`)
-          .join("");
+    orderContainer.innerHTML =
+      state.orders
+        .slice(0,3)
+        .map((order,index) => {
+          const icons =
+            order.icons
+              .map(icon => {
+                return `
+                  <span class="food-icon">
+                    ${icon}
+                  </span>
+                `;
+              })
+              .join("");
 
-        const patienceColor =
-          order.patience < 35 ? "#df4b3f" : "#65aa6b";
+          const patienceColor =
+            order.patience < 35
+              ? "#df4b3f"
+              : "#65aa6b";
 
-        return `
-          <div
-            class="order-card ${index === 0 ? "active" : ""}"
-            title="${order.name}"
-          >
-            ${icons}
+          return `
+            <div
+              class="order-card ${
+                index === 0
+                  ? "active"
+                  : ""
+              }"
+              title="${order.name}"
+            >
+              ${icons}
 
-            <div class="patience">
-              <i
-                style="
-                  width:${Math.max(0, order.patience)}%;
-                  background:${patienceColor};
-                "
-              ></i>
+              <div class="patience">
+                <i
+                  style="
+                    width:${Math.max(
+                      0,
+                      order.patience
+                    )}%;
+
+                    background:
+                      ${patienceColor};
+                  "
+                ></i>
+              </div>
             </div>
-          </div>
-        `;
-      })
-      .join("");
+          `;
+        })
+        .join("");
   }
 
   function startGame() {
-    state = createFreshState();
+    state =
+      createFreshState();
+
     state.running = true;
 
     createOrder();
@@ -1659,26 +2352,42 @@ button:focus-visible{
 
     showScreen(play);
 
-    $("#result").classList.remove("show");
-    $("#pauseOverlay").classList.remove("show");
+    $("#result").classList.remove(
+      "show"
+    );
+
+    $("#pauseOverlay").classList.remove(
+      "show"
+    );
 
     renderOrders();
     render();
 
-    state.lastFrame = performance.now();
+    state.lastFrame =
+      performance.now();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+      gameLoop
+    );
   }
 
   function render() {
     const chef = $("#chef");
 
-    chef.style.left = `${state.chef.x}px`;
-    chef.style.top = `${state.chef.y}px`;
+    chef.style.left =
+      `${state.chef.x}px`;
 
-    $("#held").textContent = getItemIcon(state.held);
-    $("#score").textContent = state.score;
-    $("#time").textContent = Math.ceil(state.time);
+    chef.style.top =
+      `${state.chef.y}px`;
+
+    $("#held").textContent =
+      getItemIcon(state.held);
+
+    $("#score").textContent =
+      state.score;
+
+    $("#time").textContent =
+      Math.ceil(state.time);
 
     highlightNearestStation();
     updateMessage();
@@ -1686,13 +2395,13 @@ button:focus-visible{
 
   function getItemIcon(item) {
     const icons = {
-      bun: "🍞",
-      lettuce: "🥬",
-      raw: "🥩",
-      cooked: "🍖",
-      drink: "🥤",
-      burger: "🍔",
-      greenBurger: "🍔"
+      bun:"🍞",
+      lettuce:"🥬",
+      raw:"🥩",
+      cooked:"🍖",
+      drink:"🥤",
+      burger:"🍔",
+      greenBurger:"🍔"
     };
 
     return icons[item] || "";
@@ -1700,42 +2409,72 @@ button:focus-visible{
 
   function getElementRect(element) {
     return {
-      left: element.offsetLeft,
-      top: element.offsetTop,
-      right: element.offsetLeft + element.offsetWidth,
-      bottom: element.offsetTop + element.offsetHeight
+      left:element.offsetLeft,
+      top:element.offsetTop,
+      right:
+        element.offsetLeft +
+        element.offsetWidth,
+      bottom:
+        element.offsetTop +
+        element.offsetHeight
     };
   }
 
   function getNearestStation() {
-    const chefCenterX = state.chef.x + 43;
-    const chefCenterY = state.chef.y + 72;
+    const chefCenterX =
+      state.chef.x + 43;
+
+    const chefCenterY =
+      state.chef.y + 72;
 
     let nearest = null;
     let nearestDistance = Infinity;
 
     $$(".station").forEach(station => {
-      const rect = getElementRect(station);
+      const rect =
+        getElementRect(station);
 
-      const stationCenterX = (rect.left + rect.right) / 2;
-      const stationCenterY = (rect.top + rect.bottom) / 2;
+      const stationCenterX =
+        (
+          rect.left +
+          rect.right
+        ) / 2;
 
-      const distance = Math.hypot(
-        chefCenterX - stationCenterX,
-        chefCenterY - stationCenterY
-      );
+      const stationCenterY =
+        (
+          rect.top +
+          rect.bottom
+        ) / 2;
 
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearest = station;
+      const distance =
+        Math.hypot(
+          chefCenterX -
+          stationCenterX,
+
+          chefCenterY -
+          stationCenterY
+        );
+
+      if (
+        distance <
+        nearestDistance
+      ) {
+        nearestDistance =
+          distance;
+
+        nearest =
+          station;
       }
     });
 
-    return nearestDistance < 115 ? nearest : null;
+    return nearestDistance < 115
+      ? nearest
+      : null;
   }
 
   function highlightNearestStation() {
-    const nearest = getNearestStation();
+    const nearest =
+      getNearestStation();
 
     $$(".station").forEach(station => {
       station.classList.toggle(
@@ -1744,96 +2483,169 @@ button:focus-visible{
       );
     });
 
-    $("#chef").classList.toggle("near", Boolean(nearest));
+    $("#chef").classList.toggle(
+      "near",
+      Boolean(nearest)
+    );
   }
 
   function updateMessage() {
-    let message = "靠近工作台後按 E 或空白鍵互動。";
+    let message =
+      "靠近工作台後按 E 或空白鍵互動。";
 
     if (!state.held) {
-      message = "接單後，先拿取訂單需要的食材。";
-    } else if (state.held === "raw") {
-      message = "生肉需要先放到煎台。";
+      message =
+        "接單後，先拿取訂單需要的食材。";
+    } else if (
+      state.held === "raw"
+    ) {
+      message =
+        "生肉需要先放到煎台。";
     } else if (
       state.held === "cooked" ||
       state.held === "bun" ||
       state.held === "lettuce"
     ) {
-      message = "把食材送到組裝台。";
+      message =
+        "把食材送到組裝台。";
     } else if (
-      ["burger", "greenBurger", "drink"].includes(state.held)
+      [
+        "burger",
+        "greenBurger",
+        "drink"
+      ].includes(state.held)
     ) {
-      message = "餐點完成，送到右上方出餐口！";
+      message =
+        "餐點完成，送到右上方出餐口！";
     }
 
-    $("#message").textContent = message;
+    $("#message").textContent =
+      message;
   }
 
   function showToast(text) {
-    const toast = $("#toast");
+    const toast =
+      $("#toast");
 
-    toast.textContent = text;
-    toast.classList.add("show");
+    toast.textContent =
+      text;
 
-    clearTimeout(toast.timer);
+    toast.classList.add(
+      "show"
+    );
 
-    toast.timer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 1200);
+    clearTimeout(
+      showToast.timer
+    );
+
+    showToast.timer =
+      setTimeout(() => {
+        toast.classList.remove(
+          "show"
+        );
+      },1200);
   }
 
   function interact() {
-    if (!state.running || state.paused) {
+    if (
+      !state.running ||
+      state.paused
+    ) {
       return;
     }
 
-    const station = getNearestStation();
+    const station =
+      getNearestStation();
 
     if (!station) {
-      showToast("再靠近工作台一點");
+      showToast(
+        "再靠近工作台一點"
+      );
+
       return;
     }
 
-    const stationType = station.dataset.st;
-    const item = station.dataset.item;
+    const stationType =
+      station.dataset.st;
+
+    const item =
+      station.dataset.item;
 
     if (item) {
       if (state.held) {
-        showToast("手上已經有東西了");
+        showToast(
+          "手上已經有東西了"
+        );
+
         return;
       }
 
-      state.held = item;
+      state.held =
+        item;
 
       const itemNames = {
-        bun: "麵包",
-        lettuce: "生菜",
-        raw: "生肉排",
-        drink: "飲料"
+        bun:"麵包",
+        lettuce:"生菜",
+        raw:"生肉排",
+        drink:"飲料"
       };
 
-      showToast(`拿起${itemNames[item]}`);
-    } else if (stationType === "pan") {
-      if (state.held === "raw") {
-        state.held = "cooked";
-        showToast("肉排煎好了！");
+      showToast(
+        `拿起${itemNames[item]}`
+      );
+    } else if (
+      stationType === "pan"
+    ) {
+      if (
+        state.held === "raw"
+      ) {
+        state.held =
+          "cooked";
+
+        showToast(
+          "肉排煎好了！"
+        );
       } else {
-        showToast("煎台只能處理生肉排");
+        showToast(
+          "煎台只能處理生肉排"
+        );
       }
-    } else if (stationType === "assembly") {
+    } else if (
+      stationType ===
+      "assembly"
+    ) {
       assembleFood();
-    } else if (stationType === "serve") {
+    } else if (
+      stationType ===
+      "serve"
+    ) {
       serveFood();
-    } else if (stationType === "trash") {
-      if (state.held || state.plate.length) {
+    } else if (
+      stationType ===
+      "trash"
+    ) {
+      if (
+        state.held ||
+        state.plate.length
+      ) {
         state.held = null;
         state.plate = [];
-        showToast("已清空食材");
+
+        showToast(
+          "已清空食材"
+        );
       } else {
-        showToast("目前沒有可丟棄的東西");
+        showToast(
+          "目前沒有可丟棄的東西"
+        );
       }
-    } else if (stationType === "board") {
-      showToast("本關砧板尚未啟用");
+    } else if (
+      stationType ===
+      "board"
+    ) {
+      showToast(
+        "本關砧板尚未啟用"
+      );
     }
 
     render();
@@ -1848,88 +2660,153 @@ button:focus-visible{
 
     if (
       state.held &&
-      validIngredients.includes(state.held)
+      validIngredients.includes(
+        state.held
+      )
     ) {
-      state.plate.push(state.held);
+      state.plate.push(
+        state.held
+      );
 
       showToast(
-        `放上組裝台：${getItemIcon(state.held)}`
+        `放上組裝台：${
+          getItemIcon(
+            state.held
+          )
+        }`
       );
 
       state.held = null;
 
-      const ingredientSet = new Set(state.plate);
+      const ingredientSet =
+        new Set(
+          state.plate
+        );
 
-      const hasBun = ingredientSet.has("bun");
-      const hasCookedMeat = ingredientSet.has("cooked");
-      const hasLettuce = ingredientSet.has("lettuce");
+      const hasBun =
+        ingredientSet.has(
+          "bun"
+        );
 
-      if (hasBun && hasCookedMeat) {
-        state.held = hasLettuce
-          ? "greenBurger"
-          : "burger";
+      const hasCookedMeat =
+        ingredientSet.has(
+          "cooked"
+        );
+
+      const hasLettuce =
+        ingredientSet.has(
+          "lettuce"
+        );
+
+      if (
+        hasBun &&
+        hasCookedMeat
+      ) {
+        state.held =
+          hasLettuce
+            ? "greenBurger"
+            : "burger";
 
         state.plate = [];
 
-        showToast("漢堡完成！");
+        showToast(
+          "漢堡完成！"
+        );
       }
     } else {
-      showToast("這項食材不能在此組裝");
+      showToast(
+        "這項食材不能在此組裝"
+      );
     }
   }
 
   function serveFood() {
-    const currentOrder = state.orders[0];
+    const currentOrder =
+      state.orders[0];
 
     if (!currentOrder) {
-      showToast("目前沒有訂單");
+      showToast(
+        "目前沒有訂單"
+      );
+
       return;
     }
 
-    if (state.held === currentOrder.type) {
-      const earnedScore = Math.round(
-        120 +
-        currentOrder.patience * 1.3 +
-        state.combo * 25
-      );
+    if (
+      state.held ===
+      currentOrder.type
+    ) {
+      const earnedScore =
+        Math.round(
+          120 +
+          currentOrder.patience *
+          1.3 +
+          state.combo *
+          25
+        );
 
-      state.score += earnedScore;
+      state.score +=
+        earnedScore;
+
       state.served += 1;
       state.combo += 1;
-      state.maxCombo = Math.max(
-        state.maxCombo,
-        state.combo
-      );
 
-      state.held = null;
+      state.maxCombo =
+        Math.max(
+          state.maxCombo,
+          state.combo
+        );
+
+      state.held =
+        null;
+
       state.orders.shift();
 
       createOrder();
       showCombo();
-      showToast(`完美出餐！+${earnedScore}`);
+
+      showToast(
+        `完美出餐！+${earnedScore}`
+      );
 
       renderOrders();
     } else {
       state.combo = 0;
-      state.score = Math.max(0, state.score - 40);
 
-      showToast("餐點不符合目前訂單");
+      state.score =
+        Math.max(
+          0,
+          state.score - 40
+        );
+
+      showToast(
+        "餐點不符合目前訂單"
+      );
     }
   }
 
   function showCombo() {
-    if (state.combo < 2) {
+    if (
+      state.combo < 2
+    ) {
       return;
     }
 
-    const combo = $("#combo");
+    const combo =
+      $("#combo");
 
-    combo.textContent = `COMBO ×${state.combo}`;
-    combo.classList.remove("show");
+    combo.textContent =
+      `COMBO ×${state.combo}`;
+
+    combo.classList.remove(
+      "show"
+    );
 
     void combo.offsetWidth;
 
-    combo.classList.add("show");
+    combo.classList.add(
+      "show"
+    );
   }
 
   function gameLoop(currentTime) {
@@ -1937,34 +2814,59 @@ button:focus-visible{
       return;
     }
 
-    const deltaTime = Math.min(
-      0.033,
-      (currentTime - state.lastFrame) / 1000
-    );
+    const deltaTime =
+      Math.min(
+        .033,
+        (
+          currentTime -
+          state.lastFrame
+        ) / 1000
+      );
 
-    state.lastFrame = currentTime;
+    state.lastFrame =
+      currentTime;
 
     if (!state.paused) {
       moveChef(deltaTime);
 
-      state.time -= deltaTime;
-      state.spawnTimer += deltaTime;
+      state.time -=
+        deltaTime;
 
-      state.orders.forEach((order, index) => {
-        order.patience -= deltaTime * (
-          index === 0 ? 4.5 : 2.6
-        );
-      });
+      state.spawnTimer +=
+        deltaTime;
 
-      if (state.orders[0]?.patience <= 0) {
+      state.orders.forEach(
+        (order,index) => {
+          order.patience -=
+            deltaTime *
+            (
+              index === 0
+                ? 4.5
+                : 2.6
+            );
+        }
+      );
+
+      if (
+        state.orders[0]
+          ?.patience <= 0
+      ) {
         state.orders.shift();
 
         state.combo = 0;
-        state.score = Math.max(0, state.score - 75);
+
+        state.score =
+          Math.max(
+            0,
+            state.score - 75
+          );
 
         createOrder();
 
-        showToast("客人等不及離開了");
+        showToast(
+          "客人等不及離開了"
+        );
+
         renderOrders();
       }
 
@@ -1973,11 +2875,14 @@ button:focus-visible{
         state.orders.length < 3
       ) {
         state.spawnTimer = 0;
+
         createOrder();
         renderOrders();
       }
 
-      if (state.time <= 0) {
+      if (
+        state.time <= 0
+      ) {
         endGame();
         return;
       }
@@ -1986,7 +2891,9 @@ button:focus-visible{
       render();
     }
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+      gameLoop
+    );
   }
 
   function moveChef(deltaTime) {
@@ -2025,35 +2932,43 @@ button:focus-visible{
       directionY += 1;
     }
 
-    if (directionX || directionY) {
-      const vectorLength = Math.hypot(
-        directionX,
-        directionY
-      );
+    if (
+      directionX ||
+      directionY
+    ) {
+      const vectorLength =
+        Math.hypot(
+          directionX,
+          directionY
+        );
 
       const speed = 260;
 
-      state.chef.x = Math.max(
-        280,
-        Math.min(
-          910,
-          state.chef.x +
-          directionX / vectorLength *
-          speed *
-          deltaTime
-        )
-      );
+      state.chef.x =
+        Math.max(
+          280,
+          Math.min(
+            910,
+            state.chef.x +
+            directionX /
+            vectorLength *
+            speed *
+            deltaTime
+          )
+        );
 
-      state.chef.y = Math.max(
-        170,
-        Math.min(
-          480,
-          state.chef.y +
-          directionY / vectorLength *
-          speed *
-          deltaTime
-        )
-      );
+      state.chef.y =
+        Math.max(
+          170,
+          Math.min(
+            480,
+            state.chef.y +
+            directionY /
+            vectorLength *
+            speed *
+            deltaTime
+          )
+        );
     }
   }
 
@@ -2062,21 +2977,34 @@ button:focus-visible{
 
     let starCount = 0;
 
-    if (state.score >= 1500) {
+    if (
+      state.score >= 1500
+    ) {
       starCount = 3;
-    } else if (state.score >= 800) {
+    } else if (
+      state.score >= 800
+    ) {
       starCount = 2;
-    } else if (state.score >= 300) {
+    } else if (
+      state.score >= 300
+    ) {
       starCount = 1;
     }
 
     $("#stars").textContent =
       "★".repeat(starCount) +
-      "☆".repeat(3 - starCount);
+      "☆".repeat(
+        3 - starCount
+      );
 
-    $("#finalScore").textContent = state.score;
-    $("#finalServed").textContent = state.served;
-    $("#finalCombo").textContent = state.maxCombo;
+    $("#finalScore").textContent =
+      state.score;
+
+    $("#finalServed").textContent =
+      state.served;
+
+    $("#finalCombo").textContent =
+      state.maxCombo;
 
     $("#resultTitle").textContent =
       starCount >= 2
@@ -2088,7 +3016,9 @@ button:focus-visible{
         ? "尖峰時段順利撐過去了。"
         : "再熟悉工作台動線，就能服務更多客人。";
 
-    $("#result").classList.add("show");
+    $("#result").classList.add(
+      "show"
+    );
   }
 
   function returnHome() {
@@ -2096,72 +3026,101 @@ button:focus-visible{
       state.running = false;
     }
 
-    $("#pauseOverlay").classList.remove("show");
-    $("#result").classList.remove("show");
+    $("#pauseOverlay").classList.remove(
+      "show"
+    );
+
+    $("#result").classList.remove(
+      "show"
+    );
 
     showScreen(title);
   }
 
   function togglePause() {
-    if (!state?.running) {
+    if (
+      !state?.running
+    ) {
       return;
     }
 
-    state.paused = !state.paused;
+    state.paused =
+      !state.paused;
 
     $("#pauseOverlay").classList.toggle(
       "show",
       state.paused
     );
 
-    state.lastFrame = performance.now();
+    state.lastFrame =
+      performance.now();
   }
 
-  window.addEventListener("keydown", event => {
-    const blockedKeys = [
-      "ArrowUp",
-      "ArrowDown",
-      "ArrowLeft",
-      "ArrowRight",
-      " ",
-      "e",
-      "E"
-    ];
+  window.addEventListener(
+    "keydown",
+    event => {
+      const blockedKeys = [
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        " ",
+        "e",
+        "E"
+      ];
 
-    if (blockedKeys.includes(event.key)) {
-      event.preventDefault();
+      if (
+        blockedKeys.includes(
+          event.key
+        )
+      ) {
+        event.preventDefault();
+      }
+
+      if (!state) {
+        return;
+      }
+
+      state.keys[event.key] =
+        true;
+
+      if (
+        (
+          event.key === "e" ||
+          event.key === "E" ||
+          event.key === " "
+        ) &&
+        !event.repeat
+      ) {
+        interact();
+      }
+
+      if (
+        event.key ===
+        "Escape" &&
+        state.running
+      ) {
+        togglePause();
+      }
     }
+  );
 
-    if (!state) {
-      return;
+  window.addEventListener(
+    "keyup",
+    event => {
+      if (state) {
+        state.keys[event.key] =
+          false;
+      }
     }
+  );
 
-    state.keys[event.key] = true;
-
-    if (
-      (
-        event.key === "e" ||
-        event.key === "E" ||
-        event.key === " "
-      ) &&
-      !event.repeat
-    ) {
-      interact();
+  $("#enterCafeBtn").addEventListener(
+    "click",
+    () => {
+      showScreen(title);
     }
-
-    if (
-      event.key === "Escape" &&
-      state.running
-    ) {
-      togglePause();
-    }
-  });
-
-  window.addEventListener("keyup", event => {
-    if (state) {
-      state.keys[event.key] = false;
-    }
-  });
+  );
 
   $("#startBtn").addEventListener(
     "click",
@@ -2196,45 +3155,66 @@ button:focus-visible{
   $("#howBtn").addEventListener(
     "click",
     () => {
-      $("#how").classList.add("show");
+      $("#how").classList.add(
+        "show"
+      );
     }
   );
 
   $("#closeHow").addEventListener(
     "click",
     () => {
-      $("#how").classList.remove("show");
+      $("#how").classList.remove(
+        "show"
+      );
     }
   );
 
   $$(".station").forEach(station => {
-    station.addEventListener("click", () => {
-      if (!state?.running || state.paused) {
-        return;
+    station.addEventListener(
+      "click",
+      () => {
+        if (
+          !state?.running ||
+          state.paused
+        ) {
+          return;
+        }
+
+        const stationCenterX =
+          station.offsetLeft +
+          station.offsetWidth / 2;
+
+        const stationCenterY =
+          station.offsetTop +
+          station.offsetHeight / 2;
+
+        const chefCenterX =
+          state.chef.x + 43;
+
+        const chefCenterY =
+          state.chef.y + 72;
+
+        const distance =
+          Math.hypot(
+            chefCenterX -
+            stationCenterX,
+
+            chefCenterY -
+            stationCenterY
+          );
+
+        if (
+          distance < 115
+        ) {
+          interact();
+        } else {
+          showToast(
+            "請先移動到工作台旁邊"
+          );
+        }
       }
-
-      const stationCenterX =
-        station.offsetLeft +
-        station.offsetWidth / 2;
-
-      const stationCenterY =
-        station.offsetTop +
-        station.offsetHeight / 2;
-
-      const chefCenterX = state.chef.x + 43;
-      const chefCenterY = state.chef.y + 72;
-
-      const distance = Math.hypot(
-        chefCenterX - stationCenterX,
-        chefCenterY - stationCenterY
-      );
-
-      if (distance < 115) {
-        interact();
-      } else {
-        showToast("請先移動到工作台旁邊");
-      }
-    });
+    );
   });
 
   document.addEventListener(
