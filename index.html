@@ -3,27 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0e1717">
+<meta name="theme-color" content="#101820">
+
 <title>灶咖大亂鬥｜Kitchen Clash Café</title>
 
 <style>
 :root{
-  --ink:#182323;
-  --paper:#fff7e7;
-  --cream:#f2e1be;
-  --caramel:#b66a3c;
-  --coral:#db5d4c;
-  --sage:#81a99a;
-  --mint:#b8d7c9;
-  --deep:#27413f;
-  --line:#3b2a25;
-  --gold:#f5bf55;
+  --ink:#2a211c;
+  --cream:#fff3d6;
+  --paper:#fffaf0;
+  --orange:#f09a45;
+  --orange-dark:#aa5629;
+  --red:#e45f48;
+  --red-dark:#96392d;
+  --blue:#5fa6b7;
+  --teal:#4f8f8c;
+  --green:#6ca868;
+  --gold:#f6c350;
+  --shadow:rgba(25,17,13,.34);
 }
 
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
+
   user-select:none;
   -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
@@ -33,16 +37,20 @@ html,
 body{
   width:100%;
   height:100%;
+
   overflow:hidden;
-  background:#0d1515;
+
+  background:#0b1115;
+
+  touch-action:none;
+  overscroll-behavior:none;
+
   font-family:
     "Noto Sans TC",
     "PingFang TC",
     "Microsoft JhengHei",
     system-ui,
     sans-serif;
-  touch-action:none;
-  overscroll-behavior:none;
 }
 
 body{
@@ -55,7 +63,11 @@ button{
   font:inherit;
 }
 
-#game-wrapper{
+/* =========================================================
+   1280 × 720 / 16:9
+========================================================= */
+
+#game-shell{
   position:relative;
 
   width:min(
@@ -73,78 +85,22 @@ button{
 
   overflow:hidden;
 
-  background:#142120;
+  background:#111b20;
+
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.48);
 }
 
-#game-canvas{
+#game{
   display:block;
 
   width:100%;
   height:100%;
 
-  background:#142120;
+  background:#111b20;
 }
 
-/* ==================================================
-   手機直向提示
-================================================== */
-
-#orientation{
-  position:absolute;
-  inset:0;
-  z-index:1000;
-
-  display:none;
-  align-items:center;
-  justify-content:center;
-
-  padding:28px;
-
-  background:
-    radial-gradient(
-      circle at center,
-      #1d302e,
-      #0b1212 72%
-    );
-
-  color:white;
-
-  text-align:center;
-}
-
-.phone{
-  width:64px;
-  height:108px;
-
-  margin:0 auto 22px;
-
-  border:4px solid #fff;
-  border-radius:14px;
-
-  animation:
-    turn 2s ease-in-out infinite;
-}
-
-@keyframes turn{
-  0%,
-  25%{
-    transform:rotate(-12deg);
-  }
-
-  70%,
-  100%{
-    transform:rotate(78deg);
-  }
-}
-
-/* ==================================================
-   共用畫面
-================================================== */
-
-#loading,
-#menu,
-#pause,
-#result{
+.screen{
   position:absolute;
   inset:0;
 
@@ -153,129 +109,179 @@ button{
   justify-content:center;
 }
 
-/* ==================================================
-   Loading
-================================================== */
+/* =========================================================
+   旋轉提示
+========================================================= */
 
-#loading{
-  z-index:500;
+#rotate-screen{
+  z-index:1000;
+
+  display:none;
+
+  padding:30px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #273942,
+      #0b1216 72%
+    );
+
+  color:#ffffff;
+
+  text-align:center;
+}
+
+.rotate-phone{
+  width:62px;
+  height:106px;
+
+  margin:0 auto 22px;
+
+  border:4px solid #ffffff;
+  border-radius:14px;
+
+  animation:
+    phoneTurn 2s ease-in-out infinite;
+}
+
+@keyframes phoneTurn{
+  0%,
+  25%{
+    transform:rotate(-10deg);
+  }
+
+  70%,
+  100%{
+    transform:rotate(80deg);
+  }
+}
+
+/* =========================================================
+   Loading
+========================================================= */
+
+#loading-screen{
+  z-index:800;
 
   background:
     radial-gradient(
       circle at 50% 42%,
-      #27413f 0,
-      #172625 52%,
-      #0d1716 100%
+      #2a4850 0,
+      #172830 52%,
+      #0c151a 100%
     );
 
   color:white;
 }
 
-#loading::before{
+#loading-screen::before{
   content:"";
 
   position:absolute;
   inset:0;
 
-  opacity:.14;
+  opacity:.13;
 
   background-image:
     linear-gradient(
-      rgba(255,255,255,.06) 1px,
+      rgba(255,255,255,.07) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(255,255,255,.06) 1px,
+      rgba(255,255,255,.07) 1px,
       transparent 1px
     );
 
-  background-size:52px 52px;
+  background-size:48px 48px;
 
   animation:
-    gridMove 12s linear infinite;
+    gridMove 11s linear infinite;
 }
 
 @keyframes gridMove{
   to{
     background-position:
-      52px 52px;
+      48px 48px;
   }
 }
 
 .loading-card{
   position:relative;
-  z-index:1;
+  z-index:2;
 
-  width:min(76%,620px);
+  width:min(72%,600px);
 
   text-align:center;
 }
 
-.brand-ja{
-  color:#e9c67a;
+.loading-jp{
+  color:#ffd17c;
 
-  font-size:14px;
-  font-weight:800;
+  font-size:15px;
+  font-weight:900;
 
-  letter-spacing:.38em;
+  letter-spacing:.34em;
 }
 
-.brand-title{
+.loading-title{
   margin-top:8px;
 
-  font-size:clamp(48px,7vw,86px);
+  font-size:clamp(48px,7vw,84px);
+  font-weight:1000;
   line-height:1;
 
   letter-spacing:.08em;
 
   text-shadow:
-    0 7px 0 rgba(0,0,0,.25);
+    0 7px 0 rgba(0,0,0,.28);
 }
 
-.brand-en{
-  margin-top:12px;
+.loading-en{
+  margin-top:13px;
 
-  color:#b8d7c9;
+  color:#b8dbe1;
 
-  font-size:clamp(14px,1.8vw,22px);
-  font-weight:800;
+  font-size:clamp(14px,1.8vw,21px);
+  font-weight:900;
 
   letter-spacing:.34em;
 }
 
 .loading-status{
-  margin-top:58px;
+  margin-top:54px;
 }
 
-.loading-row{
+.loading-line{
   display:flex;
   justify-content:space-between;
 
-  gap:20px;
+  gap:18px;
 
-  margin-bottom:12px;
+  margin-bottom:11px;
 
-  color:#edf6ef;
+  color:#edf7f6;
 
-  font-size:16px;
+  font-size:15px;
+  font-weight:800;
 }
 
-.track{
+.loading-track{
   height:16px;
 
   overflow:hidden;
 
-  background:
-    rgba(0,0,0,.34);
-
   border:
-    1px solid rgba(255,255,255,.25);
+    1px solid rgba(255,255,255,.28);
 
-  border-radius:999px;
+  border-radius:99px;
+
+  background:
+    rgba(0,0,0,.4);
 }
 
-.bar{
+#loading-bar{
   position:relative;
 
   width:0;
@@ -286,68 +292,69 @@ button{
   background:
     linear-gradient(
       90deg,
-      #9fc9b8,
-      #f2d58c,
-      #d87858
+      #54a5b8,
+      #ffd16f,
+      #f07952
     );
 
   transition:
     width .08s linear;
 }
 
-.bar::after{
+#loading-bar::after{
   content:"";
 
   position:absolute;
-  inset:0 auto 0 -120px;
+  inset:0 auto 0 -110px;
 
-  width:120px;
+  width:110px;
 
   background:
     linear-gradient(
       90deg,
       transparent,
-      rgba(255,255,255,.65),
+      rgba(255,255,255,.7),
       transparent
     );
 
   animation:
-    shine 1.3s linear infinite;
+    shine 1.25s linear infinite;
 }
 
 @keyframes shine{
   to{
     transform:
-      translateX(760px);
+      translateX(720px);
   }
 }
 
 #enter-btn{
-  min-width:240px;
+  min-width:230px;
 
-  margin-top:28px;
-  padding:14px 28px;
+  margin-top:26px;
+  padding:13px 28px;
+
+  border:
+    3px solid rgba(255,255,255,.68);
+
+  border-radius:14px;
 
   background:
     linear-gradient(
-      #d87558,
-      #aa4f3e
+      #f59c50,
+      #cb6531
     );
 
-  border:
-    2px solid rgba(255,255,255,.5);
-
-  border-radius:12px;
-
   box-shadow:
-    0 10px 25px rgba(0,0,0,.28);
+    0 8px 0 #75361f,
+    0 18px 36px rgba(0,0,0,.3);
 
   color:white;
 
-  font-size:22px;
-  font-weight:900;
+  font-size:21px;
+  font-weight:1000;
 
-  letter-spacing:.12em;
+  letter-spacing:.1em;
 
   cursor:pointer;
 
@@ -355,86 +362,93 @@ button{
   visibility:hidden;
 
   transform:
-    translateY(14px);
+    translateY(12px);
 
   transition:.35s;
 }
 
-#enter-btn.show{
+#enter-btn.visible{
   opacity:1;
   visibility:visible;
 
   transform:none;
 }
 
-/* ==================================================
+/* =========================================================
    首頁
-================================================== */
+========================================================= */
 
-#menu{
-  z-index:300;
+#menu-screen{
+  z-index:600;
+
+  display:none;
+  align-items:flex-start;
+  justify-content:flex-start;
+
+  padding:
+    64px 0 0 72px;
 
   background:
     linear-gradient(
-      180deg,
-      rgba(23,38,37,.10),
-      rgba(23,38,37,.42)
+      90deg,
+      rgba(9,16,20,.64),
+      rgba(9,16,20,.08) 64%,
+      rgba(9,16,20,.18)
     );
 }
 
-.menu-panel{
-  position:absolute;
-  left:7%;
-  top:10%;
+.menu-card{
+  width:475px;
 
-  width:41%;
+  padding:
+    32px 34px 34px;
 
-  padding:28px 30px 30px;
+  border:
+    5px solid #513629;
+
+  border-radius:28px;
 
   background:
     linear-gradient(
       180deg,
-      rgba(255,249,234,.96),
-      rgba(239,220,179,.96)
+      rgba(255,250,238,.98),
+      rgba(239,216,170,.98)
     );
 
-  border:
-    4px solid rgba(58,42,35,.8);
-
-  border-radius:26px;
-
   box-shadow:
-    0 18px 0 rgba(73,45,35,.45),
-    0 34px 70px rgba(0,0,0,.28);
+    0 16px 0 rgba(80,48,35,.62),
+    0 34px 70px rgba(0,0,0,.34);
 }
 
 .menu-kicker{
-  color:#a35a43;
+  color:#ba6244;
 
   font-size:14px;
-  font-weight:900;
+  font-weight:1000;
 
   letter-spacing:.28em;
 }
 
 .menu-title{
-  margin-top:6px;
+  margin-top:7px;
 
-  color:#2d4a46;
+  color:#23434a;
 
-  font-size:54px;
-  line-height:1.05;
+  font-size:58px;
+  font-weight:1000;
+  line-height:1.06;
 
-  letter-spacing:.05em;
+  letter-spacing:.04em;
 }
 
-.menu-sub{
-  margin-top:10px;
+.menu-description{
+  margin-top:17px;
 
-  color:#87614f;
+  color:#785746;
 
+  font-size:18px;
   font-weight:800;
-  line-height:1.7;
+  line-height:1.75;
 }
 
 .menu-actions{
@@ -442,61 +456,65 @@ button{
 
   gap:14px;
 
-  margin-top:26px;
+  margin-top:28px;
 }
 
-.menu-btn{
-  min-width:190px;
+.ui-btn{
+  min-height:58px;
 
-  padding:15px 24px;
-
-  background:
-    linear-gradient(
-      #e4775d,
-      #ba5545
-    );
+  padding:
+    13px 25px;
 
   border:0;
   border-radius:14px;
 
-  box-shadow:
-    0 8px 0 #7d3b31;
-
-  color:white;
-
-  font-size:21px;
-  font-weight:900;
+  font-size:20px;
+  font-weight:1000;
 
   cursor:pointer;
 }
 
-.menu-btn.secondary{
-  min-width:62px;
+.ui-btn.primary{
+  min-width:210px;
 
   background:
     linear-gradient(
-      #f8e9c8,
-      #d2b88a
+      #f68f51,
+      #d15a33
     );
 
   box-shadow:
-    0 8px 0 #8c7455;
+    0 8px 0 #843520;
 
-  color:#4f392e;
+  color:white;
 }
 
-/* ==================================================
-   暫停與結算
-================================================== */
+.ui-btn.secondary{
+  min-width:66px;
 
-#pause,
-#result{
-  z-index:700;
+  background:
+    linear-gradient(
+      #ffe7ad,
+      #d6b36d
+    );
+
+  box-shadow:
+    0 8px 0 #80613c;
+
+  color:#4a3327;
+}
+
+/* =========================================================
+   暫停／結算
+========================================================= */
+
+.overlay{
+  z-index:900;
 
   display:none;
 
   background:
-    rgba(10,17,17,.66);
+    rgba(8,14,17,.72);
 
   backdrop-filter:
     blur(5px);
@@ -505,37 +523,38 @@ button{
 .overlay-card{
   width:min(72%,650px);
 
-  padding:34px;
+  padding:36px;
+
+  border:
+    5px solid #503428;
+
+  border-radius:26px;
 
   background:
     linear-gradient(
-      #fff8e8,
-      #ead3a7
+      #fff8e7,
+      #efd09c
     );
 
-  border:
-    5px solid #4a3229;
-
-  border-radius:24px;
-
   box-shadow:
-    0 18px 0 #2c1d18,
-    0 40px 90px rgba(0,0,0,.4);
+    0 16px 0 #281914,
+    0 40px 90px rgba(0,0,0,.42);
 
   text-align:center;
 }
 
 .overlay-card h2{
-  margin-bottom:12px;
+  color:#bc4e3a;
 
-  color:#a94f3f;
-
-  font-size:44px;
+  font-size:46px;
 }
 
 .overlay-card p{
-  color:#60483c;
+  margin-top:13px;
 
+  color:#65493a;
+
+  font-size:18px;
   font-weight:800;
   line-height:1.7;
 }
@@ -546,28 +565,30 @@ button{
 
   gap:14px;
 
-  margin-top:24px;
+  margin-top:26px;
 }
 
-/* ==================================================
-   手機操作
-================================================== */
+/* =========================================================
+   觸控操作
+========================================================= */
 
 #touch-controls{
   position:absolute;
   inset:0;
-  z-index:250;
+  z-index:500;
+
+  display:none;
 
   pointer-events:none;
 }
 
 #joystick-zone{
   position:absolute;
-  left:24px;
-  bottom:22px;
+  left:2.4%;
+  bottom:3.4%;
 
-  width:154px;
-  height:154px;
+  width:min(13.5%,128px);
+  aspect-ratio:1;
 
   pointer-events:auto;
 }
@@ -576,16 +597,17 @@ button{
   position:absolute;
   inset:0;
 
-  background:
-    rgba(20,40,38,.42);
-
   border:
-    4px solid rgba(255,255,255,.58);
+    4px solid rgba(255,255,255,.7);
 
   border-radius:50%;
 
+  background:
+    rgba(20,31,36,.44);
+
   box-shadow:
-    inset 0 0 0 9px rgba(255,255,255,.07);
+    inset 0 0 0 8px
+    rgba(255,255,255,.07);
 }
 
 #joystick-stick{
@@ -593,99 +615,110 @@ button{
   left:50%;
   top:50%;
 
-  width:72px;
-  height:72px;
-
-  background:
-    linear-gradient(
-      #f9e9c9,
-      #c79b67
-    );
+  width:48%;
+  aspect-ratio:1;
 
   border:
-    4px solid #51382d;
+    4px solid #4a3025;
 
   border-radius:50%;
 
+  background:
+    linear-gradient(
+      #ffe4a8,
+      #d89b56
+    );
+
   box-shadow:
-    0 7px 0 rgba(68,45,36,.5);
+    0 7px 0
+    rgba(70,41,29,.62);
 
   transform:
     translate(-50%,-50%);
 }
 
-#action-zone{
+#action-buttons{
   position:absolute;
-  right:28px;
-  bottom:28px;
+  right:2.7%;
+  bottom:3.8%;
 
   display:flex;
   align-items:flex-end;
 
-  gap:16px;
+  gap:12px;
 
   pointer-events:auto;
 }
 
 .action-btn{
-  width:104px;
-  height:104px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  background:
-    linear-gradient(
-      #ef7a61,
-      #b64f41
-    );
+  aspect-ratio:1;
 
   border:
-    5px solid rgba(255,255,255,.7);
+    4px solid rgba(255,255,255,.78);
 
   border-radius:50%;
 
-  box-shadow:
-    0 9px 0 #73372f;
-
-  color:white;
-
-  font-size:20px;
   font-weight:1000;
 
-  letter-spacing:.08em;
+  cursor:pointer;
 }
 
-.action-btn.secondary{
-  width:76px;
-  height:76px;
+#discard-btn{
+  width:min(7.5vw,68px);
 
   background:
     linear-gradient(
-      #f0d8a6,
-      #be986a
+      #ffe3a6,
+      #c89654
     );
 
   box-shadow:
-    0 8px 0 #755b42;
+    0 7px 0 #70502f;
 
-  color:#3c2c25;
+  color:#493021;
+
+  font-size:15px;
 }
 
-.desktop-help{
-  position:absolute;
-  left:50%;
-  bottom:14px;
-  z-index:230;
-
-  padding:8px 14px;
+#interact-btn{
+  width:min(10.2vw,96px);
 
   background:
-    rgba(255,248,231,.88);
+    linear-gradient(
+      #f47a56,
+      #c84233
+    );
+
+  box-shadow:
+    0 8px 0 #7f2c25;
+
+  color:white;
+
+  font-size:19px;
+}
+
+#desktop-help{
+  position:absolute;
+  left:50%;
+  bottom:10px;
+  z-index:480;
+
+  padding:
+    7px 14px;
 
   border:
-    2px solid rgba(65,45,38,.7);
+    2px solid rgba(64,43,34,.78);
 
-  border-radius:12px;
+  border-radius:10px;
 
-  color:#4f392e;
+  background:
+    rgba(255,250,237,.92);
+
+  color:#51382c;
 
   font-size:14px;
   font-weight:900;
@@ -696,20 +729,18 @@ button{
     translateX(-50%);
 }
 
-@media (pointer:fine){
-  #touch-controls{
-    display:none;
-  }
-}
-
 @media (pointer:coarse){
-  .desktop-help{
+  #touch-controls.active{
+    display:block;
+  }
+
+  #desktop-help{
     display:none;
   }
 }
 
 @media (orientation:portrait) and (max-width:900px){
-  #orientation{
+  #rotate-screen{
     display:flex;
   }
 }
@@ -718,18 +749,21 @@ button{
 
 <body>
 
-<main id="game-wrapper">
+<main id="game-shell">
 
   <canvas
-    id="game-canvas"
+    id="game"
     width="1280"
     height="720"
     aria-label="灶咖大亂鬥遊戲畫面"
   ></canvas>
 
-  <section id="orientation">
+  <section
+    id="rotate-screen"
+    class="screen"
+  >
     <div>
-      <div class="phone"></div>
+      <div class="rotate-phone"></div>
 
       <h2>
         請將手機轉為橫向
@@ -741,24 +775,27 @@ button{
     </div>
   </section>
 
-  <section id="loading">
+  <section
+    id="loading-screen"
+    class="screen"
+  >
     <div class="loading-card">
 
-      <div class="brand-ja">
+      <div class="loading-jp">
         キッチン大騒動
       </div>
 
-      <div class="brand-title">
+      <div class="loading-title">
         灶咖大亂鬥
       </div>
 
-      <div class="brand-en">
+      <div class="loading-en">
         KITCHEN CLASH CAFÉ
       </div>
 
       <div class="loading-status">
 
-        <div class="loading-row">
+        <div class="loading-line">
           <span id="loading-message">
             正在準備咖啡廳……
           </span>
@@ -768,11 +805,8 @@ button{
           </span>
         </div>
 
-        <div class="track">
-          <div
-            id="loading-bar"
-            class="bar"
-          ></div>
+        <div class="loading-track">
+          <div id="loading-bar"></div>
         </div>
 
         <button
@@ -786,27 +820,31 @@ button{
     </div>
   </section>
 
-  <section id="menu">
-    <div class="menu-panel">
+  <section
+    id="menu-screen"
+    class="screen"
+  >
+    <div class="menu-card">
 
       <div class="menu-kicker">
         SUNNY PAW CAFÉ
       </div>
 
-      <div class="menu-title">
+      <h1 class="menu-title">
         灶咖大亂鬥
-      </div>
+      </h1>
 
-      <div class="menu-sub">
-        午餐尖峰即將開始。依照訂單備料、烹調、
-        組裝並出餐，在客人失去耐心前完成更多餐點。
-      </div>
+      <p class="menu-description">
+        午餐尖峰即將開始。依照訂單備料、
+        烹調、組裝並出餐，在客人失去耐心前
+        完成更多餐點。
+      </p>
 
       <div class="menu-actions">
 
         <button
           id="start-btn"
-          class="menu-btn"
+          class="ui-btn primary"
           type="button"
         >
           開始營業
@@ -814,7 +852,7 @@ button{
 
         <button
           id="help-btn"
-          class="menu-btn secondary"
+          class="ui-btn secondary"
           type="button"
         >
           ?
@@ -824,7 +862,10 @@ button{
     </div>
   </section>
 
-  <section id="pause">
+  <section
+    id="pause-screen"
+    class="screen overlay"
+  >
     <div class="overlay-card">
 
       <h2>
@@ -832,14 +873,14 @@ button{
       </h2>
 
       <p>
-        時間與訂單耐心已暫停。
+        遊戲時間與訂單耐心已暫停。
       </p>
 
       <div class="overlay-actions">
 
         <button
           id="resume-btn"
-          class="menu-btn"
+          class="ui-btn primary"
           type="button"
         >
           繼續營業
@@ -847,7 +888,7 @@ button{
 
         <button
           id="pause-home-btn"
-          class="menu-btn secondary"
+          class="ui-btn secondary"
           type="button"
         >
           首頁
@@ -857,7 +898,10 @@ button{
     </div>
   </section>
 
-  <section id="result">
+  <section
+    id="result-screen"
+    class="screen overlay"
+  >
     <div class="overlay-card">
 
       <h2 id="result-title">
@@ -872,7 +916,7 @@ button{
 
         <button
           id="retry-btn"
-          class="menu-btn"
+          class="ui-btn primary"
           type="button"
         >
           再玩一次
@@ -880,7 +924,7 @@ button{
 
         <button
           id="result-home-btn"
-          class="menu-btn secondary"
+          class="ui-btn secondary"
           type="button"
         >
           首頁
@@ -898,11 +942,11 @@ button{
       </div>
     </div>
 
-    <div id="action-zone">
+    <div id="action-buttons">
 
       <button
         id="discard-btn"
-        class="action-btn secondary"
+        class="action-btn"
         type="button"
       >
         丟棄
@@ -919,7 +963,7 @@ button{
     </div>
   </div>
 
-  <div class="desktop-help">
+  <div id="desktop-help">
     WASD／方向鍵移動　E／空白鍵互動　Q 丟棄　Esc 暫停
   </div>
 
@@ -930,43 +974,290 @@ button{
   "use strict";
 
   const canvas =
-    document.getElementById("game-canvas");
+    document.getElementById("game");
 
   const ctx =
     canvas.getContext("2d");
 
-  const loading =
-    document.getElementById("loading");
+  const loadingScreen =
+    document.getElementById(
+      "loading-screen"
+    );
 
-  const menu =
-    document.getElementById("menu");
+  const menuScreen =
+    document.getElementById(
+      "menu-screen"
+    );
 
-  const pause =
-    document.getElementById("pause");
+  const pauseScreen =
+    document.getElementById(
+      "pause-screen"
+    );
 
-  const result =
-    document.getElementById("result");
+  const resultScreen =
+    document.getElementById(
+      "result-screen"
+    );
 
   const touchControls =
-    document.getElementById("touch-controls");
+    document.getElementById(
+      "touch-controls"
+    );
 
   const W = 1280;
   const H = 720;
 
-  const COLORS = {
-    ink:"#182323",
-    paper:"#fff7e7",
-    cream:"#f2e1be",
-    caramel:"#b66a3c",
-    coral:"#db5d4c",
-    sage:"#81a99a",
-    mint:"#b8d7c9",
-    deep:"#27413f",
-    line:"#3b2a25",
-    gold:"#f5bf55",
-    floor:"#d9c394",
-    wall:"#9dc5b8"
+  const C = {
+    outline:"#33251f",
+    wall:"#78afb2",
+    wallDark:"#4e8084",
+    floor:"#d9b877",
+    floorLine:"#b58d50",
+    counterTop:"#ef9c4d",
+    counterFront:"#b35f35",
+    counterSide:"#81432e",
+    counterEdge:"#713421",
+    cream:"#fff2d1",
+    paper:"#fffaf0",
+    red:"#e45b45",
+    green:"#68a96d",
+    blue:"#57a1b5",
+    gold:"#f5bf4c",
+    dark:"#1d3037",
+    shadow:"rgba(41,27,20,.25)"
   };
+
+  const TILE = 96;
+
+  /* =======================================================
+     餐台底層
+
+     每個 tile 是一個完整餐台模組：
+     桌面、正面櫃體、內凹面、陰影。
+  ======================================================= */
+
+  const counterTiles = [
+    {
+      x:208,
+      y:188
+    },
+    {
+      x:304,
+      y:188
+    },
+    {
+      x:400,
+      y:188
+    },
+    {
+      x:496,
+      y:188
+    },
+    {
+      x:592,
+      y:188
+    },
+    {
+      x:688,
+      y:188
+    },
+    {
+      x:784,
+      y:188
+    },
+    {
+      x:880,
+      y:188
+    },
+    {
+      x:976,
+      y:188
+    },
+
+    {
+      x:208,
+      y:284
+    },
+    {
+      x:208,
+      y:380
+    },
+    {
+      x:208,
+      y:476
+    },
+
+    {
+      x:976,
+      y:284
+    },
+    {
+      x:976,
+      y:380
+    },
+    {
+      x:976,
+      y:476
+    },
+
+    {
+      x:400,
+      y:548
+    },
+    {
+      x:496,
+      y:548
+    },
+    {
+      x:592,
+      y:548
+    },
+    {
+      x:688,
+      y:548
+    },
+    {
+      x:784,
+      y:548
+    }
+  ];
+
+  /* =======================================================
+     餐台物件層
+
+     所有物件直接固定在對應餐台 tile 上。
+  ======================================================= */
+
+  const stations = [
+    {
+      id:"bun",
+      label:"麵包",
+      icon:"bun",
+      x:220,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"lettuce",
+      label:"生菜",
+      icon:"lettuce",
+      x:316,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"meat",
+      label:"肉排",
+      icon:"rawMeat",
+      x:412,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"board",
+      label:"砧板",
+      icon:"board",
+      x:508,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"pan",
+      label:"煎台",
+      icon:"pan",
+      x:700,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"drink",
+      label:"飲料",
+      icon:"drink",
+      x:796,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"plates",
+      label:"盤子",
+      icon:"plate",
+      x:892,
+      y:196,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"assembly",
+      label:"組裝",
+      icon:"assembly",
+      x:220,
+      y:398,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"serve",
+      label:"出餐",
+      icon:"bell",
+      x:988,
+      y:398,
+      w:72,
+      h:62
+    },
+
+    {
+      id:"trash",
+      label:"丟棄",
+      icon:"trash",
+      x:604,
+      y:556,
+      w:72,
+      h:62
+    }
+  ];
+
+  const recipes = [
+    {
+      name:"經典漢堡",
+      result:"burger",
+      ingredients:[
+        "bun",
+        "cookedMeat"
+      ]
+    },
+
+    {
+      name:"生菜漢堡",
+      result:"lettuceBurger",
+      ingredients:[
+        "bun",
+        "lettuce",
+        "cookedMeat"
+      ]
+    },
+
+    {
+      name:"冰飲",
+      result:"drink",
+      ingredients:[
+        "drink"
+      ]
+    }
+  ];
 
   const state = {
     screen:"menu",
@@ -974,176 +1265,64 @@ button{
     running:false,
     paused:false,
 
-    time:60,
+    time:75,
 
     score:0,
     served:0,
     combo:0,
-    bestCombo:0,
+    maxCombo:0,
 
     held:null,
 
-    pan:null,
+    panState:"empty",
     panTimer:0,
 
-    prep:[],
+    assembly:[],
 
     orders:[],
     orderSpawn:0,
 
     chef:{
       x:640,
-      y:470,
-      vx:0,
-      vy:0,
-      dir:"down"
+      y:410
     },
 
     keys:{},
 
-    joy:{
+    joystick:{
       x:0,
       y:0
     },
 
     nearest:null,
 
+    message:
+      "依照訂單開始準備餐點",
+
+    messageTimer:0,
+
     last:
-      performance.now(),
-
-    toast:"",
-    toastTime:0
+      performance.now()
   };
-
-  const stations = [
-    {
-      id:"bun",
-      x:180,
-      y:210,
-      w:120,
-      h:90,
-      label:"麵包",
-      icon:"bun"
-    },
-
-    {
-      id:"lettuce",
-      x:330,
-      y:210,
-      w:120,
-      h:90,
-      label:"生菜",
-      icon:"lettuce"
-    },
-
-    {
-      id:"meat",
-      x:480,
-      y:210,
-      w:120,
-      h:90,
-      label:"肉排",
-      icon:"meat"
-    },
-
-    {
-      id:"pan",
-      x:830,
-      y:210,
-      w:130,
-      h:90,
-      label:"煎台",
-      icon:"pan"
-    },
-
-    {
-      id:"drink",
-      x:990,
-      y:210,
-      w:120,
-      h:90,
-      label:"飲料",
-      icon:"drink"
-    },
-
-    {
-      id:"assembly",
-      x:140,
-      y:425,
-      w:140,
-      h:105,
-      label:"組裝",
-      icon:"plate"
-    },
-
-    {
-      id:"serve",
-      x:1000,
-      y:425,
-      w:140,
-      h:105,
-      label:"出餐",
-      icon:"bell"
-    },
-
-    {
-      id:"trash",
-      x:570,
-      y:590,
-      w:140,
-      h:80,
-      label:"丟棄",
-      icon:"trash"
-    }
-  ];
-
-  const recipes = [
-    {
-      name:"經典漢堡",
-      type:"burger",
-      items:[
-        "bun",
-        "cooked"
-      ]
-    },
-
-    {
-      name:"生菜漢堡",
-      type:"greenBurger",
-      items:[
-        "bun",
-        "lettuce",
-        "cooked"
-      ]
-    },
-
-    {
-      name:"冰飲",
-      type:"drink",
-      items:[
-        "drink"
-      ]
-    }
-  ];
 
   function roundedRect(
     x,
     y,
-    w,
-    h,
-    r,
+    width,
+    height,
+    radius,
     fill,
     stroke,
-    line = 1
+    lineWidth = 1
   ){
     ctx.beginPath();
 
     ctx.roundRect(
       x,
       y,
-      w,
-      h,
-      r
+      width,
+      height,
+      radius
     );
 
     if(fill){
@@ -1158,13 +1337,13 @@ button{
         stroke;
 
       ctx.lineWidth =
-        line;
+        lineWidth;
 
       ctx.stroke();
     }
   }
 
-  function text(
+  function drawText(
     content,
     x,
     y,
@@ -1173,11 +1352,11 @@ button{
     align = "left",
     weight = 700
   ){
-    ctx.fillStyle =
-      color;
-
     ctx.font =
       `${weight} ${size}px "Microsoft JhengHei", sans-serif`;
+
+    ctx.fillStyle =
+      color;
 
     ctx.textAlign =
       align;
@@ -1191,6 +1370,10 @@ button{
       y
     );
   }
+
+  /* =======================================================
+     統一物件圖示
+  ======================================================= */
 
   function drawIcon(
     type,
@@ -1210,51 +1393,51 @@ button{
       scale
     );
 
-    ctx.lineCap =
-      "round";
-
-    ctx.lineJoin =
-      "round";
-
     ctx.strokeStyle =
-      COLORS.line;
+      C.outline;
 
     ctx.lineWidth =
       4;
 
+    ctx.lineJoin =
+      "round";
+
+    ctx.lineCap =
+      "round";
+
     if(type === "bun"){
       ctx.fillStyle =
-        "#e9b96e";
+        "#e9ad56";
 
       ctx.beginPath();
 
       ctx.roundRect(
-        -30,
-        -19,
-        60,
-        38,
-        16
+        -28,
+        -17,
+        56,
+        34,
+        14
       );
 
       ctx.fill();
       ctx.stroke();
 
       ctx.strokeStyle =
-        "#c88947";
+        "#bd7737";
 
       ctx.lineWidth =
         3;
 
-      [-14,0,14].forEach(value => {
+      [-12,0,12].forEach(offset => {
         ctx.beginPath();
 
         ctx.moveTo(
-          value - 5,
-          -7
+          offset - 5,
+          -6
         );
 
         ctx.lineTo(
-          value + 4,
+          offset + 4,
           4
         );
 
@@ -1262,49 +1445,49 @@ button{
       });
     }
 
-    else if(type === "lettuce"){
+    if(type === "lettuce"){
       ctx.fillStyle =
-        "#79ad6e";
+        "#6fac63";
 
       ctx.beginPath();
 
       ctx.moveTo(
-        -28,
-        10
+        -25,
+        11
       );
 
       ctx.bezierCurveTo(
-        -24,
-        -28,
-        -4,
-        -20,
-        0,
-        -32
-      );
-
-      ctx.bezierCurveTo(
-        7,
+        -22,
         -18,
-        26,
-        -28,
-        29,
-        7
+        -8,
+        -18,
+        0,
+        -29
+      );
+
+      ctx.bezierCurveTo(
+        10,
+        -17,
+        23,
+        -18,
+        27,
+        9
       );
 
       ctx.bezierCurveTo(
         12,
-        26,
-        -13,
         25,
-        -28,
-        10
+        -12,
+        25,
+        -25,
+        11
       );
 
       ctx.fill();
       ctx.stroke();
 
       ctx.strokeStyle =
-        "#4f7f52";
+        "#477d49";
 
       ctx.lineWidth =
         3;
@@ -1313,34 +1496,34 @@ button{
 
       ctx.moveTo(
         0,
-        -25
+        -23
       );
 
       ctx.lineTo(
         0,
-        19
+        18
       );
 
       ctx.stroke();
     }
 
-    else if(
-      type === "meat" ||
-      type === "cooked"
+    if(
+      type === "rawMeat" ||
+      type === "cookedMeat"
     ){
       ctx.fillStyle =
-        type === "meat"
-          ? "#c8544f"
-          : "#8d5c42";
+        type === "rawMeat"
+          ? "#d7554e"
+          : "#80503b";
 
       ctx.beginPath();
 
       ctx.ellipse(
         0,
         0,
-        31,
-        22,
-        -.2,
+        29,
+        20,
+        -.18,
         0,
         Math.PI * 2
       );
@@ -1349,9 +1532,9 @@ button{
       ctx.stroke();
 
       ctx.strokeStyle =
-        type === "meat"
-          ? "#f2b2aa"
-          : "#c58a66";
+        type === "rawMeat"
+          ? "#f5afa5"
+          : "#bd7f5d";
 
       ctx.lineWidth =
         3;
@@ -1359,32 +1542,85 @@ button{
       ctx.beginPath();
 
       ctx.moveTo(
-        -16,
-        -5
+        -15,
+        -4
       );
 
       ctx.bezierCurveTo(
         -6,
-        -16,
-        9,
-        -14,
-        17,
+        -13,
+        8,
+        -12,
+        15,
         -4
       );
 
       ctx.stroke();
     }
 
-    else if(type === "pan"){
+    if(type === "board"){
       ctx.fillStyle =
-        "#33413f";
+        "#d99b56";
+
+      ctx.beginPath();
+
+      ctx.roundRect(
+        -28,
+        -21,
+        56,
+        42,
+        7
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#80563c";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        18,
+        0,
+        4,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+
+      ctx.strokeStyle =
+        "#f2d09b";
+
+      ctx.lineWidth =
+        3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -18,
+        -10
+      );
+
+      ctx.lineTo(
+        10,
+        11
+      );
+
+      ctx.stroke();
+    }
+
+    if(type === "pan"){
+      ctx.fillStyle =
+        "#2b3b40";
 
       ctx.beginPath();
 
       ctx.arc(
         -5,
-        0,
-        24,
+        -2,
+        22,
         0,
         Math.PI * 2
       );
@@ -1395,17 +1631,14 @@ button{
       ctx.beginPath();
 
       ctx.moveTo(
-        17,
-        13
+        14,
+        12
       );
 
       ctx.lineTo(
-        39,
-        31
+        35,
+        29
       );
-
-      ctx.strokeStyle =
-        COLORS.line;
 
       ctx.lineWidth =
         8;
@@ -1413,14 +1646,14 @@ button{
       ctx.stroke();
 
       ctx.fillStyle =
-        "#f2c85d";
+        "#f1b944";
 
       ctx.beginPath();
 
       ctx.arc(
         -5,
-        0,
-        10,
+        -2,
+        8,
         0,
         Math.PI * 2
       );
@@ -1428,30 +1661,30 @@ button{
       ctx.fill();
     }
 
-    else if(type === "drink"){
+    if(type === "drink"){
       ctx.fillStyle =
-        "#d65d4b";
+        "#e45745";
 
       ctx.beginPath();
 
       ctx.moveTo(
-        -18,
-        -24
+        -17,
+        -23
       );
 
       ctx.lineTo(
-        18,
-        -24
+        17,
+        -23
       );
 
       ctx.lineTo(
-        13,
-        25
+        12,
+        23
       );
 
       ctx.lineTo(
-        -13,
-        25
+        -12,
+        23
       );
 
       ctx.closePath();
@@ -1460,27 +1693,27 @@ button{
       ctx.stroke();
 
       ctx.strokeStyle =
-        "#f7eee2";
+        "#fff3dd";
 
       ctx.lineWidth =
-        6;
+        5;
 
       ctx.beginPath();
 
       ctx.moveTo(
-        -12,
+        -11,
         -2
       );
 
       ctx.lineTo(
-        14,
+        12,
         -2
       );
 
       ctx.stroke();
 
       ctx.strokeStyle =
-        "#e7e0d4";
+        "#e9e4db";
 
       ctx.lineWidth =
         4;
@@ -1488,29 +1721,29 @@ button{
       ctx.beginPath();
 
       ctx.moveTo(
-        6,
-        -24
+        5,
+        -23
       );
 
       ctx.lineTo(
-        14,
-        -38
+        12,
+        -36
       );
 
       ctx.stroke();
     }
 
-    else if(type === "plate"){
+    if(type === "plate"){
       ctx.fillStyle =
-        "#f7f1dd";
+        "#f8f3e7";
 
       ctx.beginPath();
 
       ctx.ellipse(
         0,
-        5,
-        30,
-        19,
+        3,
+        28,
+        17,
         0,
         0,
         Math.PI * 2
@@ -1523,14 +1756,14 @@ button{
 
       ctx.arc(
         0,
-        5,
-        16,
+        3,
+        14,
         0,
         Math.PI * 2
       );
 
       ctx.strokeStyle =
-        "#b6c9bd";
+        "#9db9b8";
 
       ctx.lineWidth =
         3;
@@ -1538,29 +1771,68 @@ button{
       ctx.stroke();
     }
 
-    else if(type === "bell"){
-      ctx.fillStyle =
-        "#e9b841";
+    if(type === "assembly"){
+      drawIcon(
+        "plate",
+        0,
+        5,
+        .82
+      );
+
+      ctx.strokeStyle =
+        "#9a6c49";
+
+      ctx.lineWidth =
+        3;
 
       ctx.beginPath();
 
       ctx.moveTo(
-        -26,
-        14
+        -23,
+        -19
+      );
+
+      ctx.lineTo(
+        -23,
+        23
+      );
+
+      ctx.moveTo(
+        23,
+        -19
+      );
+
+      ctx.lineTo(
+        23,
+        23
+      );
+
+      ctx.stroke();
+    }
+
+    if(type === "bell"){
+      ctx.fillStyle =
+        "#f3bd40";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -24,
+        13
       );
 
       ctx.quadraticCurveTo(
-        -20,
-        -24,
+        -18,
+        -23,
         0,
-        -27
+        -26
       );
 
       ctx.quadraticCurveTo(
-        20,
-        -24,
-        26,
-        14
+        18,
+        -23,
+        24,
+        13
       );
 
       ctx.closePath();
@@ -1569,14 +1841,14 @@ button{
       ctx.stroke();
 
       ctx.fillStyle =
-        "#8e5a30";
+        "#7a4a29";
 
       ctx.beginPath();
 
       ctx.arc(
         0,
-        17,
-        6,
+        16,
+        5,
         0,
         Math.PI * 2
       );
@@ -1584,82 +1856,116 @@ button{
       ctx.fill();
     }
 
-    else if(type === "trash"){
+    if(type === "trash"){
       ctx.fillStyle =
-        "#7b8e86";
-
-      ctx.fillRect(
-        -20,
-        -18,
-        40,
-        40
-      );
-
-      ctx.strokeRect(
-        -20,
-        -18,
-        40,
-        40
-      );
-
-      ctx.fillRect(
-        -25,
-        -27,
-        50,
-        8
-      );
-
-      ctx.strokeRect(
-        -25,
-        -27,
-        50,
-        8
-      );
-    }
-
-    else if(
-      type === "burger" ||
-      type === "greenBurger"
-    ){
-      drawIcon(
-        "bun",
-        0,
-        -8,
-        .7
-      );
-
-      ctx.fillStyle =
-        "#7e4f39";
-
-      ctx.fillRect(
-        -22,
-        0,
-        44,
-        10
-      );
-
-      if(type === "greenBurger"){
-        ctx.fillStyle =
-          "#74a965";
-
-        ctx.fillRect(
-          -24,
-          -2,
-          48,
-          6
-        );
-      }
-
-      ctx.fillStyle =
-        "#d99f54";
+        "#748789";
 
       ctx.beginPath();
 
       ctx.roundRect(
-        -25,
-        10,
-        50,
-        18,
+        -19,
+        -17,
+        38,
+        39,
+        4
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillRect(
+        -24,
+        -26,
+        48,
+        9
+      );
+
+      ctx.strokeRect(
+        -24,
+        -26,
+        48,
+        9
+      );
+    }
+
+    if(
+      type === "burger" ||
+      type === "lettuceBurger"
+    ){
+      ctx.fillStyle =
+        "#e9ad56";
+
+      ctx.beginPath();
+
+      ctx.roundRect(
+        -27,
+        -23,
+        54,
+        19,
+        11
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      if(type === "lettuceBurger"){
+        ctx.fillStyle =
+          "#6fac63";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          -27,
+          -5
+        );
+
+        ctx.lineTo(
+          27,
+          -5
+        );
+
+        ctx.lineTo(
+          19,
+          4
+        );
+
+        ctx.lineTo(
+          -19,
+          4
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+      }
+
+      ctx.fillStyle =
+        "#80503b";
+
+      ctx.fillRect(
+        -23,
+        3,
+        46,
+        11
+      );
+
+      ctx.strokeRect(
+        -23,
+        3,
+        46,
+        11
+      );
+
+      ctx.fillStyle =
+        "#d89140";
+
+      ctx.beginPath();
+
+      ctx.roundRect(
+        -26,
+        14,
+        52,
+        17,
         8
       );
 
@@ -1670,9 +1976,13 @@ button{
     ctx.restore();
   }
 
-  function drawBackground(){
+  /* =======================================================
+     Layer 1：BG
+  ======================================================= */
+
+  function drawBackgroundLayer(){
     ctx.fillStyle =
-      "#e7d8b2";
+      "#79b2b3";
 
     ctx.fillRect(
       0,
@@ -1682,17 +1992,17 @@ button{
     );
 
     ctx.fillStyle =
-      COLORS.wall;
+      "#6da3a4";
 
     ctx.fillRect(
       0,
-      88,
+      100,
       W,
-      118
+      92
     );
 
     ctx.strokeStyle =
-      "rgba(255,255,255,.22)";
+      "rgba(255,255,255,.19)";
 
     ctx.lineWidth =
       1;
@@ -1700,27 +2010,27 @@ button{
     for(
       let x = 0;
       x < W;
-      x += 52
+      x += 48
     ){
       ctx.beginPath();
 
       ctx.moveTo(
         x,
-        88
+        100
       );
 
       ctx.lineTo(
         x,
-        206
+        192
       );
 
       ctx.stroke();
     }
 
     for(
-      let y = 88;
-      y < 206;
-      y += 40
+      let y = 100;
+      y <= 192;
+      y += 46
     ){
       ctx.beginPath();
 
@@ -1738,28 +2048,31 @@ button{
     }
 
     ctx.fillStyle =
-      "#ceb984";
+      C.floor;
 
     ctx.fillRect(
       0,
-      206,
+      192,
       W,
-      H - 206
+      H - 192
     );
 
     ctx.strokeStyle =
-      "rgba(106,80,52,.15)";
+      C.floorLine;
+
+    ctx.globalAlpha =
+      .28;
 
     for(
       let x = 0;
-      x < W;
+      x <= W;
       x += 64
     ){
       ctx.beginPath();
 
       ctx.moveTo(
         x,
-        206
+        192
       );
 
       ctx.lineTo(
@@ -1771,8 +2084,8 @@ button{
     }
 
     for(
-      let y = 206;
-      y < H;
+      let y = 192;
+      y <= H;
       y += 64
     ){
       ctx.beginPath();
@@ -1789,274 +2102,263 @@ button{
 
       ctx.stroke();
     }
-  }
 
-  function drawHUD(){
-    ctx.fillStyle =
-      "rgba(255,248,231,.96)";
+    ctx.globalAlpha =
+      1;
 
-    ctx.fillRect(
-      0,
-      0,
-      W,
-      88
-    );
-
-    ctx.fillStyle =
-      COLORS.deep;
-
-    ctx.fillRect(
-      0,
-      82,
-      W,
-      6
-    );
-
-    text(
-      "灶咖大亂鬥",
-      32,
-      30,
-      26,
-      COLORS.coral,
-      "left",
-      900
-    );
-
-    text(
-      "DAY 01 · 午餐尖峰",
-      32,
-      61,
-      14,
-      "#6b5143",
-      "left",
-      900
-    );
-
-    state.orders
-      .slice(0,3)
-      .forEach((order,index) => {
-        const x =
-          415 + index * 168;
-
-        roundedRect(
-          x,
-          14,
-          150,
-          60,
-          15,
-          "#fffaf0",
-          COLORS.line,
-          4
-        );
-
-        order.items.forEach(
-          (item,itemIndex) => {
-            drawIcon(
-              item,
-              x + 38 + itemIndex * 37,
-              38,
-              .48
-            );
-          }
-        );
-
-        ctx.fillStyle =
-          "#d7c8a7";
-
-        ctx.fillRect(
-          x + 15,
-          62,
-          120,
-          6
-        );
-
-        ctx.fillStyle =
-          order.patience < 35
-            ? "#d9584a"
-            : "#69a66f";
-
-        ctx.fillRect(
-          x + 15,
-          62,
-          120 *
-          (
-            order.patience /
-            100
-          ),
-          6
-        );
-      });
-
-    roundedRect(
-      1060,
-      16,
-      88,
-      56,
-      16,
-      "#fffaf0",
-      COLORS.line,
-      4
-    );
-
-    text(
-      "★",
-      1082,
-      44,
-      24,
-      COLORS.gold,
+    drawText(
+      "SUNNY PAW CAFÉ · OPEN KITCHEN",
+      640,
+      143,
+      18,
+      "#fff4d6",
       "center",
-      900
-    );
-
-    text(
-      String(state.score),
-      1120,
-      44,
-      24,
-      COLORS.ink,
-      "center",
-      900
-    );
-
-    roundedRect(
-      1160,
-      16,
-      88,
-      56,
-      16,
-      "#fffaf0",
-      COLORS.line,
-      4
-    );
-
-    text(
-      String(
-        Math.ceil(
-          state.time
-        )
-      ),
-      1204,
-      44,
-      24,
-      COLORS.ink,
-      "center",
-      900
+      1000
     );
   }
 
-  function drawCounters(){
-    roundedRect(
-      115,
-      175,
-      1050,
-      155,
-      24,
-      "#8b4e36",
-      COLORS.line,
-      6
-    );
+  /* =======================================================
+     Layer 2：餐台
+  ======================================================= */
 
-    roundedRect(
-      95,
-      190,
-      170,
-      360,
-      22,
-      "#8b4e36",
-      COLORS.line,
-      6
-    );
+  function drawCounterTile(
+    tile
+  ){
+    const x =
+      tile.x;
 
-    roundedRect(
-      1015,
-      190,
-      170,
-      360,
-      22,
-      "#8b4e36",
-      COLORS.line,
-      6
-    );
-
-    roundedRect(
-      330,
-      560,
-      620,
-      112,
-      22,
-      "#8b4e36",
-      COLORS.line,
-      6
-    );
+    const y =
+      tile.y;
 
     ctx.fillStyle =
-      "#bb6d44";
+      C.shadow;
 
-    ctx.fillRect(
-      125,
-      189,
-      1030,
-      20
+    ctx.beginPath();
+
+    ctx.roundRect(
+      x + 8,
+      y + 13,
+      TILE - 4,
+      TILE - 1,
+      15
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      C.counterFront;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      x,
+      y + 22,
+      TILE,
+      TILE - 22,
+      13
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle =
+      C.outline;
+
+    ctx.lineWidth =
+      5;
+
+    ctx.stroke();
+
+    ctx.fillStyle =
+      C.counterSide;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      x + 8,
+      y + 32,
+      TILE - 16,
+      TILE - 42,
+      9
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      C.counterTop;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      x,
+      y,
+      TILE,
+      38,
+      14
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle =
+      C.outline;
+
+    ctx.lineWidth =
+      5;
+
+    ctx.stroke();
+
+    ctx.fillStyle =
+      "#ffc06c";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      x + 8,
+      y + 7,
+      TILE - 16,
+      12,
+      6
+    );
+
+    ctx.fill();
+  }
+
+  function drawCounterLayer(){
+    counterTiles.forEach(
+      drawCounterTile
     );
   }
 
-  function drawStation(station){
+  /* =======================================================
+     Layer 3：餐台物件
+  ======================================================= */
+
+  function drawStation(
+    station
+  ){
     const near =
-      state.nearest === station.id;
+      state.nearest ===
+      station.id;
+
+    if(near){
+      ctx.save();
+
+      ctx.shadowColor =
+        "rgba(255,213,86,.95)";
+
+      ctx.shadowBlur =
+        22;
+
+      roundedRect(
+        station.x - 5,
+        station.y - 5,
+        station.w + 10,
+        station.h + 10,
+        14,
+        "#ffe58d",
+        null
+      );
+
+      ctx.restore();
+    }
 
     roundedRect(
       station.x,
       station.y,
       station.w,
       station.h,
-      18,
-      near
-        ? "#fff7db"
-        : "#f2e3c2",
-      COLORS.line,
-      5
+      12,
+      "#f8dfaa",
+      C.outline,
+      4
     );
 
-    if(near){
-      ctx.strokeStyle =
-        COLORS.gold;
+    ctx.fillStyle =
+      "#fff4d4";
 
-      ctx.lineWidth =
-        5;
+    ctx.beginPath();
 
-      ctx.strokeRect(
-        station.x - 6,
-        station.y - 6,
-        station.w + 12,
-        station.h + 12
-      );
-    }
+    ctx.roundRect(
+      station.x + 7,
+      station.y + 6,
+      station.w - 14,
+      station.h - 18,
+      9
+    );
+
+    ctx.fill();
 
     drawIcon(
       station.icon,
       station.x +
       station.w / 2,
-      station.y + 35,
-      .72
+      station.y + 24,
+      .56
     );
 
-    text(
+    drawText(
       station.label,
       station.x +
       station.w / 2,
-      station.y + 72,
-      16,
-      COLORS.ink,
+      station.y + 49,
+      13,
+      C.dark,
       "center",
-      900
+      1000
+    );
+
+    if(
+      station.id === "pan" &&
+      state.panState !== "empty"
+    ){
+      const progress =
+        state.panState === "cooking"
+          ? 1 -
+            state.panTimer / 3
+          : 1;
+
+      ctx.fillStyle =
+        "#5b4034";
+
+      ctx.fillRect(
+        station.x + 10,
+        station.y + 54,
+        station.w - 20,
+        5
+      );
+
+      ctx.fillStyle =
+        state.panState === "done"
+          ? C.green
+          : C.gold;
+
+      ctx.fillRect(
+        station.x + 10,
+        station.y + 54,
+        (
+          station.w - 20
+        ) *
+        progress,
+        5
+      );
+    }
+  }
+
+  function drawObjectLayer(){
+    stations.forEach(
+      drawStation
     );
   }
 
-  function drawChef(){
+  /* =======================================================
+     Layer 4：角色
+  ======================================================= */
+
+  function drawChefLayer(){
     const {
       x,
       y
-    } = state.chef;
+    } =
+      state.chef;
 
     ctx.save();
 
@@ -2066,13 +2368,13 @@ button{
     );
 
     ctx.fillStyle =
-      "rgba(30,40,35,.18)";
+      "rgba(38,31,26,.25)";
 
     ctx.beginPath();
 
     ctx.ellipse(
       0,
-      40,
+      35,
       31,
       10,
       0,
@@ -2083,10 +2385,10 @@ button{
     ctx.fill();
 
     ctx.fillStyle =
-      "#fff7e9";
+      "#fff8e9";
 
     ctx.strokeStyle =
-      COLORS.line;
+      C.outline;
 
     ctx.lineWidth =
       4;
@@ -2095,17 +2397,17 @@ button{
 
     ctx.roundRect(
       -28,
-      -18,
+      -15,
       56,
-      62,
-      18
+      58,
+      17
     );
 
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle =
-      "#cf7a49";
+      "#c97844";
 
     ctx.beginPath();
 
@@ -2121,15 +2423,15 @@ button{
     ctx.stroke();
 
     ctx.fillStyle =
-      "#fff7e9";
+      "#fff8e9";
 
     ctx.beginPath();
 
     ctx.roundRect(
-      -30,
-      -55,
-      60,
-      30,
+      -31,
+      -56,
+      62,
+      31,
       13
     );
 
@@ -2137,17 +2439,17 @@ button{
     ctx.stroke();
 
     ctx.fillStyle =
-      COLORS.coral;
+      C.red;
 
     ctx.fillRect(
       -4,
-      -3,
+      -2,
       8,
-      42
+      40
     );
 
     ctx.fillStyle =
-      COLORS.line;
+      C.outline;
 
     ctx.beginPath();
 
@@ -2176,188 +2478,386 @@ button{
     if(state.held){
       drawIcon(
         state.held,
-        35,
-        5,
-        .65
+        38,
+        1,
+        .62
       );
     }
 
     ctx.restore();
   }
 
-  function drawOrdersTip(){
-    roundedRect(
-      430,
-      638,
-      420,
-      54,
-      15,
-      "rgba(255,250,238,.95)",
-      COLORS.line,
-      4
-    );
+  /* =======================================================
+     Layer 5：HUD / 訂單
+  ======================================================= */
 
-    const message =
-      state.held
-        ? "前往對應工作台繼續處理餐點"
-        : "先依照訂單拿取需要的食材";
-
-    text(
-      message,
-      640,
-      665,
-      17,
-      COLORS.ink,
-      "center",
-      900
-    );
-  }
-
-  function drawGame(){
-    drawBackground();
-    drawHUD();
-    drawCounters();
-
-    text(
-      "SUNNY PAW CAFÉ · OPEN KITCHEN",
-      640,
-      128,
-      18,
-      "#f7f2df",
-      "center",
-      900
-    );
-
-    stations.forEach(
-      drawStation
-    );
-
-    drawChef();
-    drawOrdersTip();
-
-    if(state.toastTime > 0){
-      roundedRect(
-        465,
-        105,
-        350,
-        48,
-        14,
-        "rgba(31,48,45,.94)",
-        "#fff3d5",
-        3
-      );
-
-      text(
-        state.toast,
-        640,
-        130,
-        17,
-        "#fff7e8",
-        "center",
-        900
-      );
-    }
-  }
-
-  function drawMenuScene(){
-    drawBackground();
-
+  function drawHudLayer(){
     ctx.fillStyle =
-      "#6f9f92";
+      "#fff6df";
 
     ctx.fillRect(
       0,
       0,
       W,
-      270
+      100
     );
 
     ctx.fillStyle =
-      "#f2d8a3";
+      C.dark;
 
     ctx.fillRect(
-      660,
-      110,
-      500,
-      440
+      0,
+      94,
+      W,
+      6
     );
 
-    ctx.fillStyle =
-      "#704333";
+    drawText(
+      "灶咖大亂鬥",
+      28,
+      31,
+      27,
+      C.red,
+      "left",
+      1000
+    );
 
-    ctx.fillRect(
-      700,
-      180,
+    drawText(
+      "DAY 01 · 午餐尖峰",
+      28,
+      65,
+      14,
+      "#6c4e3c",
+      "left",
+      900
+    );
+
+    state.orders
+      .slice(0,3)
+      .forEach((order,index) => {
+        const x =
+          330 +
+          index * 232;
+
+        roundedRect(
+          x,
+          12,
+          216,
+          76,
+          17,
+          C.paper,
+          C.outline,
+          4
+        );
+
+        drawIcon(
+          order.result,
+          x + 46,
+          42,
+          .58
+        );
+
+        const spacing =
+          34;
+
+        const startX =
+          x +
+          106 -
+          (
+            order.ingredients.length - 1
+          ) *
+          spacing /
+          2;
+
+        order.ingredients.forEach(
+          (
+            ingredient,
+            ingredientIndex
+          ) => {
+            drawIcon(
+              ingredient,
+              startX +
+              ingredientIndex *
+              spacing,
+              39,
+              .4
+            );
+          }
+        );
+
+        ctx.fillStyle =
+          "#d8c39c";
+
+        ctx.fillRect(
+          x + 18,
+          72,
+          180,
+          7
+        );
+
+        ctx.fillStyle =
+          order.patience < 35
+            ? "#dc5143"
+            : "#64a96e";
+
+        ctx.fillRect(
+          x + 18,
+          72,
+          180 *
+          Math.max(
+            0,
+            order.patience
+          ) /
+          100,
+          7
+        );
+      });
+
+    roundedRect(
+      1048,
+      17,
+      92,
+      64,
+      16,
+      C.paper,
+      C.outline,
+      4
+    );
+
+    drawText(
+      "★",
+      1071,
+      49,
+      25,
+      C.gold,
+      "center",
+      1000
+    );
+
+    drawText(
+      String(
+        state.score
+      ),
+      1111,
+      49,
+      22,
+      C.dark,
+      "center",
+      1000
+    );
+
+    roundedRect(
+      1152,
+      17,
+      100,
+      64,
+      16,
+      C.paper,
+      C.outline,
+      4
+    );
+
+    drawText(
+      String(
+        Math.ceil(
+          state.time
+        )
+      ),
+      1202,
+      49,
+      25,
+      C.dark,
+      "center",
+      1000
+    );
+  }
+
+  function drawMessageLayer(){
+    roundedRect(
+      430,
+      646,
       420,
-      220
+      48,
+      13,
+      "rgba(255,250,238,.96)",
+      C.outline,
+      4
+    );
+
+    drawText(
+      state.message,
+      640,
+      670,
+      16,
+      C.dark,
+      "center",
+      1000
+    );
+  }
+
+  function drawGame(){
+    drawBackgroundLayer();
+    drawCounterLayer();
+    drawObjectLayer();
+    drawChefLayer();
+    drawHudLayer();
+    drawMessageLayer();
+  }
+
+  function drawMenu(){
+    ctx.fillStyle =
+      "#6ca5a7";
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      H
     );
 
     ctx.fillStyle =
-      "#a7d2c6";
+      "#d3b57c";
 
     ctx.fillRect(
-      740,
-      215,
-      340,
-      145
+      0,
+      300,
+      W,
+      H - 300
+    );
+
+    ctx.strokeStyle =
+      "rgba(105,82,52,.18)";
+
+    for(
+      let x = 0;
+      x <= W;
+      x += 64
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x,
+        300
+      );
+
+      ctx.lineTo(
+        x,
+        H
+      );
+
+      ctx.stroke();
+    }
+
+    for(
+      let y = 300;
+      y <= H;
+      y += 64
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        0,
+        y
+      );
+
+      ctx.lineTo(
+        W,
+        y
+      );
+
+      ctx.stroke();
+    }
+
+    roundedRect(
+      730,
+      106,
+      450,
+      440,
+      18,
+      "#e7c57e",
+      C.outline,
+      6
     );
 
     ctx.fillStyle =
-      "#e8c77f";
+      "#754332";
 
     ctx.fillRect(
-      705,
-      135,
-      410,
-      56
+      770,
+      200,
+      370,
+      230
+    );
+
+    ctx.fillStyle =
+      "#8bc4c4";
+
+    ctx.fillRect(
+      810,
+      245,
+      290,
+      140
     );
 
     for(
-      let i = 0;
-      i < 8;
-      i++
+      let index = 0;
+      index < 7;
+      index++
     ){
       ctx.fillStyle =
-        i % 2
-          ? COLORS.paper
-          : COLORS.coral;
+        index % 2 === 0
+          ? C.red
+          : "#fff0d0";
 
       ctx.fillRect(
-        705 + i * 51,
-        191,
-        51,
+        770 +
+        index * 53,
+        196,
+        53,
         44
       );
     }
 
     roundedRect(
-      800,
-      90,
-      260,
-      80,
+      835,
+      82,
+      240,
+      84,
       18,
-      "#6e3a2f",
-      COLORS.line,
+      "#71392f",
+      C.outline,
       5
     );
 
-    text(
+    drawText(
       "SUNNY PAW CAFÉ",
-      930,
-      130,
+      955,
+      125,
       25,
-      "#fff1cd",
+      "#fff2cf",
       "center",
-      900
+      1000
     );
 
+    const originalX =
+      state.chef.x;
+
+    const originalY =
+      state.chef.y;
+
     state.chef.x =
-      930;
+      950;
 
     state.chef.y =
-      500;
+      520;
 
-    drawChef();
+    drawChefLayer();
+
+    state.chef.x =
+      originalX;
+
+    state.chef.y =
+      originalY;
   }
 
   function render(){
@@ -2369,7 +2869,7 @@ button{
     );
 
     if(state.screen === "menu"){
-      drawMenuScene();
+      drawMenu();
     }
     else{
       drawGame();
@@ -2387,9 +2887,24 @@ button{
 
     state.orders.push({
       ...recipe,
-      patience:100,
-      id:Math.random()
+
+      id:
+        Date.now() +
+        Math.random(),
+
+      patience:100
     });
+  }
+
+  function setMessage(
+    text,
+    duration = 1.5
+  ){
+    state.message =
+      text;
+
+    state.messageTimer =
+      duration;
   }
 
   function startGame(){
@@ -2401,61 +2916,62 @@ button{
         running:true,
         paused:false,
 
-        time:60,
+        time:75,
 
         score:0,
         served:0,
         combo:0,
-        bestCombo:0,
+        maxCombo:0,
 
         held:null,
 
-        pan:null,
+        panState:"empty",
         panTimer:0,
 
-        prep:[],
+        assembly:[],
 
         orders:[],
         orderSpawn:0,
 
         chef:{
           x:640,
-          y:470,
-          vx:0,
-          vy:0,
-          dir:"down"
+          y:420
         },
 
         nearest:null,
 
-        last:
-          performance.now(),
+        message:
+          "依照訂單開始準備餐點",
 
-        toast:"",
-        toastTime:0
+        messageTimer:0,
+
+        last:
+          performance.now()
       }
     );
 
     addOrder();
     addOrder();
 
-    menu.style.display =
+    menuScreen.style.display =
       "none";
 
-    result.style.display =
+    pauseScreen.style.display =
       "none";
 
-    touchControls.style.display =
-      "";
+    resultScreen.style.display =
+      "none";
 
-    render();
+    touchControls.classList.add(
+      "active"
+    );
 
     requestAnimationFrame(
-      loop
+      gameLoop
     );
   }
 
-  function nearestStation(){
+  function getNearestStation(){
     let best =
       null;
 
@@ -2463,24 +2979,19 @@ button{
       Infinity;
 
     stations.forEach(station => {
-      const deltaX =
-        state.chef.x -
-        (
-          station.x +
-          station.w / 2
-        );
-
-      const deltaY =
-        state.chef.y -
-        (
-          station.y +
-          station.h / 2
-        );
-
       const currentDistance =
         Math.hypot(
-          deltaX,
-          deltaY
+          state.chef.x -
+          (
+            station.x +
+            station.w / 2
+          ),
+
+          state.chef.y -
+          (
+            station.y +
+            station.h / 2
+          )
         );
 
       if(currentDistance < distance){
@@ -2492,17 +3003,9 @@ button{
       }
     });
 
-    return distance < 135
+    return distance <= 120
       ? best
       : null;
-  }
-
-  function toast(message){
-    state.toast =
-      message;
-
-    state.toastTime =
-      1.4;
   }
 
   function interact(){
@@ -2514,11 +3017,11 @@ button{
     }
 
     const station =
-      nearestStation();
+      getNearestStation();
 
     if(!station){
-      toast(
-        "再靠近工作台一點"
+      setMessage(
+        "請再靠近工作台"
       );
 
       return;
@@ -2533,8 +3036,8 @@ button{
       ].includes(station.id)
     ){
       if(state.held){
-        toast(
-          "手上已經有食材"
+        setMessage(
+          "手上已經有物品"
         );
 
         return;
@@ -2542,112 +3045,129 @@ button{
 
       state.held =
         station.id === "meat"
-          ? "meat"
+          ? "rawMeat"
           : station.id;
 
-      toast(
+      setMessage(
         `已拿取${station.label}`
       );
+
+      return;
     }
 
-    else if(station.id === "pan"){
-      if(state.held === "meat"){
+    if(station.id === "pan"){
+      if(
+        state.held === "rawMeat" &&
+        state.panState === "empty"
+      ){
         state.held =
           null;
 
-        state.pan =
+        state.panState =
           "cooking";
 
         state.panTimer =
-          2.5;
+          3;
 
-        toast(
+        setMessage(
           "肉排開始烹調"
         );
       }
-
-      else if(state.pan === "done"){
+      else if(
+        state.panState === "done" &&
+        !state.held
+      ){
         state.held =
-          "cooked";
+          "cookedMeat";
 
-        state.pan =
-          null;
+        state.panState =
+          "empty";
 
-        toast(
+        setMessage(
           "已拿起熟肉排"
         );
       }
-
-      else{
-        toast(
-          state.pan === "cooking"
-            ? "肉排還在烹調"
-            : "需要先放入生肉排"
+      else if(
+        state.panState === "cooking"
+      ){
+        setMessage(
+          "肉排仍在烹調"
         );
       }
+      else{
+        setMessage(
+          "需要先放入生肉排"
+        );
+      }
+
+      return;
     }
 
-    else if(station.id === "assembly"){
+    if(station.id === "assembly"){
       if(
-        [
+        ![
           "bun",
           "lettuce",
-          "cooked"
+          "cookedMeat"
         ].includes(state.held)
       ){
-        state.prep.push(
-          state.held
+        setMessage(
+          "請放入可組裝食材"
         );
 
+        return;
+      }
+
+      state.assembly.push(
+        state.held
+      );
+
+      state.held =
+        null;
+
+      const ingredientSet =
+        new Set(
+          state.assembly
+        );
+
+      if(
+        ingredientSet.has("bun") &&
+        ingredientSet.has("cookedMeat")
+      ){
         state.held =
-          null;
+          ingredientSet.has("lettuce")
+            ? "lettuceBurger"
+            : "burger";
 
-        const ingredientSet =
-          new Set(
-            state.prep
-          );
+        state.assembly =
+          [];
 
-        if(
-          ingredientSet.has("bun") &&
-          ingredientSet.has("cooked")
-        ){
-          state.held =
-            ingredientSet.has("lettuce")
-              ? "greenBurger"
-              : "burger";
-
-          state.prep =
-            [];
-
-          toast(
-            "餐點組裝完成"
-          );
-        }
-        else{
-          toast(
-            "食材已放上組裝台"
-          );
-        }
+        setMessage(
+          "漢堡組裝完成"
+        );
       }
       else{
-        toast(
-          "這項食材不能在此組裝"
+        setMessage(
+          "食材已放上組裝台"
         );
       }
+
+      return;
     }
 
-    else if(station.id === "serve"){
-      const order =
+    if(station.id === "serve"){
+      const currentOrder =
         state.orders[0];
 
       if(
-        order &&
-        state.held === order.type
+        currentOrder &&
+        state.held ===
+        currentOrder.result
       ){
         const earnedScore =
           Math.round(
-            120 +
-            order.patience +
+            140 +
+            currentOrder.patience +
             state.combo * 25
           );
 
@@ -2660,9 +3180,9 @@ button{
         state.combo +=
           1;
 
-        state.bestCombo =
+        state.maxCombo =
           Math.max(
-            state.bestCombo,
+            state.maxCombo,
             state.combo
           );
 
@@ -2673,7 +3193,7 @@ button{
 
         addOrder();
 
-        toast(
+        setMessage(
           `出餐成功 +${earnedScore}`
         );
       }
@@ -2687,234 +3207,241 @@ button{
             state.score - 40
           );
 
-        toast(
+        setMessage(
           "餐點與目前訂單不符"
         );
       }
+
+      return;
     }
 
-    else if(station.id === "trash"){
+    if(station.id === "trash"){
       discard();
+    }
+
+    if(station.id === "board"){
+      setMessage(
+        "本關食材不需要切割"
+      );
+    }
+
+    if(station.id === "plates"){
+      setMessage(
+        "盤子已備妥"
+      );
     }
   }
 
   function discard(){
     if(
       state.held ||
-      state.prep.length
+      state.assembly.length
     ){
       state.held =
         null;
 
-      state.prep =
+      state.assembly =
         [];
 
-      toast(
-        "已丟棄手上內容"
+      setMessage(
+        "已丟棄目前內容"
       );
     }
     else{
-      toast(
+      setMessage(
         "目前沒有可丟棄的內容"
       );
     }
   }
 
-  function loop(now){
-    if(!state.running){
+  function updateMovement(
+    deltaTime
+  ){
+    let movementX =
+      state.joystick.x;
+
+    let movementY =
+      state.joystick.y;
+
+    if(
+      state.keys.ArrowLeft ||
+      state.keys.a ||
+      state.keys.A
+    ){
+      movementX -=
+        1;
+    }
+
+    if(
+      state.keys.ArrowRight ||
+      state.keys.d ||
+      state.keys.D
+    ){
+      movementX +=
+        1;
+    }
+
+    if(
+      state.keys.ArrowUp ||
+      state.keys.w ||
+      state.keys.W
+    ){
+      movementY -=
+        1;
+    }
+
+    if(
+      state.keys.ArrowDown ||
+      state.keys.s ||
+      state.keys.S
+    ){
+      movementY +=
+        1;
+    }
+
+    const movementLength =
+      Math.hypot(
+        movementX,
+        movementY
+      );
+
+    if(movementLength > 1){
+      movementX /=
+        movementLength;
+
+      movementY /=
+        movementLength;
+    }
+
+    const speed =
+      250;
+
+    state.chef.x =
+      Math.max(
+        320,
+        Math.min(
+          960,
+          state.chef.x +
+          movementX *
+          speed *
+          deltaTime
+        )
+      );
+
+    state.chef.y =
+      Math.max(
+        315,
+        Math.min(
+          535,
+          state.chef.y +
+          movementY *
+          speed *
+          deltaTime
+        )
+      );
+
+    state.nearest =
+      getNearestStation()?.id ||
+      null;
+  }
+
+  function updateOrders(
+    deltaTime
+  ){
+    state.time -=
+      deltaTime;
+
+    state.orderSpawn +=
+      deltaTime;
+
+    state.orders.forEach(
+      (
+        order,
+        index
+      ) => {
+        order.patience -=
+          deltaTime *
+          (
+            index === 0
+              ? 4.1
+              : 2
+          );
+      }
+    );
+
+    if(
+      state.orders[0]
+        ?.patience <= 0
+    ){
+      state.orders.shift();
+
+      state.combo =
+        0;
+
+      state.score =
+        Math.max(
+          0,
+          state.score - 60
+        );
+
+      addOrder();
+
+      setMessage(
+        "客人等不及離開了"
+      );
+    }
+
+    if(
+      state.orderSpawn >= 12 &&
+      state.orders.length < 3
+    ){
+      state.orderSpawn =
+        0;
+
+      addOrder();
+    }
+  }
+
+  function updateCooking(
+    deltaTime
+  ){
+    if(
+      state.panState !==
+      "cooking"
+    ){
       return;
     }
 
-    const deltaTime =
-      Math.min(
-        .033,
-        (
-          now -
-          state.last
-        ) /
-        1000
+    state.panTimer -=
+      deltaTime;
+
+    if(state.panTimer <= 0){
+      state.panState =
+        "done";
+
+      state.panTimer =
+        0;
+
+      setMessage(
+        "肉排烹調完成"
       );
-
-    state.last =
-      now;
-
-    if(!state.paused){
-      let movementX =
-        state.joy.x;
-
-      let movementY =
-        state.joy.y;
-
-      if(
-        state.keys.ArrowLeft ||
-        state.keys.a
-      ){
-        movementX -=
-          1;
-      }
-
-      if(
-        state.keys.ArrowRight ||
-        state.keys.d
-      ){
-        movementX +=
-          1;
-      }
-
-      if(
-        state.keys.ArrowUp ||
-        state.keys.w
-      ){
-        movementY -=
-          1;
-      }
-
-      if(
-        state.keys.ArrowDown ||
-        state.keys.s
-      ){
-        movementY +=
-          1;
-      }
-
-      const movementLength =
-        Math.hypot(
-          movementX,
-          movementY
-        );
-
-      if(movementLength > 1){
-        movementX /=
-          movementLength;
-
-        movementY /=
-          movementLength;
-      }
-
-      state.chef.x =
-        Math.max(
-          315,
-          Math.min(
-            965,
-            state.chef.x +
-            movementX *
-            250 *
-            deltaTime
-          )
-        );
-
-      state.chef.y =
-        Math.max(
-          330,
-          Math.min(
-            550,
-            state.chef.y +
-            movementY *
-            250 *
-            deltaTime
-          )
-        );
-
-      state.nearest =
-        nearestStation()?.id ||
-        null;
-
-      state.time -=
-        deltaTime;
-
-      state.orderSpawn +=
-        deltaTime;
-
-      state.orders.forEach(
-        (order,index) => {
-          order.patience -=
-            deltaTime *
-            (
-              index === 0
-                ? 4.5
-                : 2.2
-            );
-        }
-      );
-
-      if(
-        state.orders[0]
-          ?.patience <= 0
-      ){
-        state.orders.shift();
-
-        state.combo =
-          0;
-
-        state.score =
-          Math.max(
-            0,
-            state.score - 60
-          );
-
-        addOrder();
-
-        toast(
-          "客人等不及離開了"
-        );
-      }
-
-      if(
-        state.orderSpawn > 11 &&
-        state.orders.length < 3
-      ){
-        state.orderSpawn =
-          0;
-
-        addOrder();
-      }
-
-      if(state.pan === "cooking"){
-        state.panTimer -=
-          deltaTime;
-
-        if(state.panTimer <= 0){
-          state.pan =
-            "done";
-
-          toast(
-            "肉排烹調完成"
-          );
-        }
-      }
-
-      if(state.toastTime > 0){
-        state.toastTime -=
-          deltaTime;
-      }
-
-      if(state.time <= 0){
-        endGame();
-
-        return;
-      }
     }
-
-    render();
-
-    requestAnimationFrame(
-      loop
-    );
   }
 
   function endGame(){
     state.running =
       false;
 
-    touchControls.style.display =
-      "none";
+    touchControls.classList.remove(
+      "active"
+    );
 
     document
       .getElementById(
         "result-title"
       )
       .textContent =
-        state.score >= 900
+        state.score >= 1000
           ? "今日營業成功"
           : "營業結束";
 
@@ -2923,102 +3450,97 @@ button{
         "result-summary"
       )
       .textContent =
-        `總分 ${state.score}｜完成訂單 ${state.served}｜最高連擊 ${state.bestCombo}`;
+        `總分 ${state.score}｜完成訂單 ${state.served}｜最高連擊 ${state.maxCombo}`;
 
-    result.style.display =
+    resultScreen.style.display =
       "flex";
   }
 
-  function goHome(){
+  function gameLoop(
+    currentTime
+  ){
+    if(!state.running){
+      return;
+    }
+
+    const deltaTime =
+      Math.min(
+        .033,
+        (
+          currentTime -
+          state.last
+        ) /
+        1000
+      );
+
+    state.last =
+      currentTime;
+
+    if(!state.paused){
+      updateMovement(
+        deltaTime
+      );
+
+      updateOrders(
+        deltaTime
+      );
+
+      updateCooking(
+        deltaTime
+      );
+
+      if(state.messageTimer > 0){
+        state.messageTimer -=
+          deltaTime;
+
+        if(state.messageTimer <= 0){
+          state.message =
+            state.held
+              ? "前往下一個工作台繼續處理"
+              : "依照訂單拿取需要的食材";
+        }
+      }
+
+      if(state.time <= 0){
+        state.time =
+          0;
+
+        endGame();
+        render();
+
+        return;
+      }
+    }
+
+    render();
+
+    requestAnimationFrame(
+      gameLoop
+    );
+  }
+
+  function showMenu(){
     state.running =
       false;
 
     state.screen =
       "menu";
 
-    pause.style.display =
+    pauseScreen.style.display =
       "none";
 
-    result.style.display =
+    resultScreen.style.display =
       "none";
 
-    menu.style.display =
+    menuScreen.style.display =
       "flex";
 
-    touchControls.style.display =
-      "none";
+    touchControls.classList.remove(
+      "active"
+    );
 
     render();
   }
-
-  document
-    .getElementById(
-      "start-btn"
-    )
-    .onclick =
-      startGame;
-
-  document
-    .getElementById(
-      "retry-btn"
-    )
-    .onclick =
-      startGame;
-
-  document
-    .getElementById(
-      "pause-home-btn"
-    )
-    .onclick =
-      goHome;
-
-  document
-    .getElementById(
-      "result-home-btn"
-    )
-    .onclick =
-      goHome;
-
-  document
-    .getElementById(
-      "resume-btn"
-    )
-    .onclick =
-      () => {
-        state.paused =
-          false;
-
-        pause.style.display =
-          "none";
-
-        state.last =
-          performance.now();
-      };
-
-  document
-    .getElementById(
-      "help-btn"
-    )
-    .onclick =
-      () => {
-        alert(
-          "依照訂單拿取食材。肉排需要先放入煎台，完成後送到組裝台，最後前往出餐口。"
-        );
-      };
-
-  document
-    .getElementById(
-      "interact-btn"
-    )
-    .onclick =
-      interact;
-
-  document
-    .getElementById(
-      "discard-btn"
-    )
-    .onclick =
-      discard;
 
   window.addEventListener(
     "keydown",
@@ -3065,12 +3587,13 @@ button{
 
       if(
         event.key === "Escape" &&
-        state.running
+        state.running &&
+        !state.paused
       ){
         state.paused =
           true;
 
-        pause.style.display =
+        pauseScreen.style.display =
           "flex";
       }
     }
@@ -3097,7 +3620,9 @@ button{
   let joystickPointer =
     null;
 
-  function joystickMove(event){
+  function moveJoystick(
+    event
+  ){
     const rect =
       joystickZone
         .getBoundingClientRect();
@@ -3119,31 +3644,31 @@ button{
       centerY;
 
     const maximum =
-      rect.width * .29;
+      rect.width * .28;
 
-    const length =
+    const distance =
       Math.hypot(
         deltaX,
         deltaY
       );
 
-    if(length > maximum){
+    if(distance > maximum){
       deltaX =
         deltaX /
-        length *
+        distance *
         maximum;
 
       deltaY =
         deltaY /
-        length *
+        distance *
         maximum;
     }
 
-    state.joy.x =
+    state.joystick.x =
       deltaX /
       maximum;
 
-    state.joy.y =
+    state.joystick.y =
       deltaY /
       maximum;
 
@@ -3154,18 +3679,31 @@ button{
       )`;
   }
 
+  function resetJoystick(){
+    joystickPointer =
+      null;
+
+    state.joystick.x =
+      0;
+
+    state.joystick.y =
+      0;
+
+    joystickStick.style.transform =
+      "translate(-50%,-50%)";
+  }
+
   joystickZone.addEventListener(
     "pointerdown",
     event => {
       joystickPointer =
         event.pointerId;
 
-      joystickZone
-        .setPointerCapture(
-          event.pointerId
-        );
+      joystickZone.setPointerCapture(
+        event.pointerId
+      );
 
-      joystickMove(
+      moveJoystick(
         event
       );
     }
@@ -3178,51 +3716,123 @@ button{
         event.pointerId ===
         joystickPointer
       ){
-        joystickMove(
+        moveJoystick(
           event
         );
       }
     }
   );
 
-  function joystickEnd(event){
-    if(
-      event.pointerId !==
-      joystickPointer
-    ){
-      return;
-    }
-
-    joystickPointer =
-      null;
-
-    state.joy.x =
-      0;
-
-    state.joy.y =
-      0;
-
-    joystickStick.style.transform =
-      "translate(-50%,-50%)";
-  }
-
   joystickZone.addEventListener(
     "pointerup",
-    joystickEnd
+    resetJoystick
   );
 
   joystickZone.addEventListener(
     "pointercancel",
-    joystickEnd
+    resetJoystick
   );
+
+  document
+    .getElementById(
+      "interact-btn"
+    )
+    .addEventListener(
+      "pointerdown",
+      event => {
+        event.preventDefault();
+
+        interact();
+      }
+    );
+
+  document
+    .getElementById(
+      "discard-btn"
+    )
+    .addEventListener(
+      "pointerdown",
+      event => {
+        event.preventDefault();
+
+        discard();
+      }
+    );
+
+  document
+    .getElementById(
+      "start-btn"
+    )
+    .addEventListener(
+      "click",
+      startGame
+    );
+
+  document
+    .getElementById(
+      "retry-btn"
+    )
+    .addEventListener(
+      "click",
+      startGame
+    );
+
+  document
+    .getElementById(
+      "pause-home-btn"
+    )
+    .addEventListener(
+      "click",
+      showMenu
+    );
+
+  document
+    .getElementById(
+      "result-home-btn"
+    )
+    .addEventListener(
+      "click",
+      showMenu
+    );
+
+  document
+    .getElementById(
+      "resume-btn"
+    )
+    .addEventListener(
+      "click",
+      () => {
+        state.paused =
+          false;
+
+        pauseScreen.style.display =
+          "none";
+
+        state.last =
+          performance.now();
+      }
+    );
+
+  document
+    .getElementById(
+      "help-btn"
+    )
+    .addEventListener(
+      "click",
+      () => {
+        alert(
+          "依照訂單拿取食材。肉排需要放到煎台烹調，完成後把食材送到組裝台，最後前往出餐口。"
+        );
+      }
+    );
 
   async function boot(){
     const steps = [
-      "點亮招牌",
-      "清點食材",
-      "預熱煎台",
-      "整理出餐口",
-      "準備開門"
+      "點亮咖啡廳招牌",
+      "清點今日食材",
+      "預熱廚房設備",
+      "整理出餐櫃台",
+      "準備開始營業"
     ];
 
     for(
@@ -3264,7 +3874,7 @@ button{
           resolve,
           progress < 70
             ? 22
-            : 32
+            : 31
         );
       });
     }
@@ -3282,7 +3892,7 @@ button{
       )
       .classList
       .add(
-        "show"
+        "visible"
       );
   }
 
@@ -3290,24 +3900,20 @@ button{
     .getElementById(
       "enter-btn"
     )
-    .onclick =
+    .addEventListener(
+      "click",
       () => {
-        loading.style.display =
+        loadingScreen.style.display =
           "none";
 
-        menu.style.display =
+        menuScreen.style.display =
           "flex";
 
-        touchControls.style.display =
-          "none";
+        showMenu();
+      }
+    );
 
-        render();
-      };
-
-  menu.style.display =
-    "none";
-
-  touchControls.style.display =
+  menuScreen.style.display =
     "none";
 
   render();
