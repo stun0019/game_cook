@@ -2,25 +2,28 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
 <meta name="theme-color" content="#101820">
 
 <title>灶咖大亂鬥｜Kitchen Clash Café</title>
 
 <style>
 :root{
-  --ink:#2a211c;
-  --cream:#fff3d6;
+  --dark:#132027;
+  --dark-2:#0a1115;
+  --cream:#fff4d8;
   --paper:#fffaf0;
-  --orange:#f09a45;
-  --orange-dark:#aa5629;
-  --red:#e45f48;
-  --red-dark:#96392d;
-  --blue:#5fa6b7;
-  --teal:#4f8f8c;
-  --green:#6ca868;
-  --gold:#f6c350;
-  --shadow:rgba(25,17,13,.34);
+  --orange:#f29a46;
+  --orange-dark:#a94f27;
+  --red:#e45a45;
+  --red-dark:#98382d;
+  --gold:#f6c34f;
+  --line:#33251f;
 }
 
 *{
@@ -40,7 +43,7 @@ body{
 
   overflow:hidden;
 
-  background:#0b1115;
+  background:#0b1216;
 
   touch-action:none;
   overscroll-behavior:none;
@@ -85,10 +88,10 @@ button{
 
   overflow:hidden;
 
-  background:#111b20;
+  background:#101a20;
 
   box-shadow:
-    0 24px 70px rgba(0,0,0,.48);
+    0 24px 70px rgba(0,0,0,.5);
 }
 
 #game{
@@ -97,7 +100,7 @@ button{
   width:100%;
   height:100%;
 
-  background:#111b20;
+  background:#101a20;
 }
 
 .screen{
@@ -123,7 +126,7 @@ button{
   background:
     radial-gradient(
       circle at center,
-      #273942,
+      #263a43,
       #0b1216 72%
     );
 
@@ -391,7 +394,7 @@ button{
   background:
     linear-gradient(
       90deg,
-      rgba(9,16,20,.64),
+      rgba(9,16,20,.66),
       rgba(9,16,20,.08) 64%,
       rgba(9,16,20,.18)
     );
@@ -584,10 +587,10 @@ button{
 
 #joystick-zone{
   position:absolute;
-  left:2.4%;
-  bottom:3.4%;
+  left:1.4%;
+  bottom:2.7%;
 
-  width:min(13.5%,128px);
+  width:min(12.5%,122px);
   aspect-ratio:1;
 
   pointer-events:auto;
@@ -598,7 +601,7 @@ button{
   inset:0;
 
   border:
-    4px solid rgba(255,255,255,.7);
+    4px solid rgba(255,255,255,.72);
 
   border-radius:50%;
 
@@ -639,8 +642,8 @@ button{
 
 #action-buttons{
   position:absolute;
-  right:2.7%;
-  bottom:3.8%;
+  right:1.3%;
+  bottom:3.2%;
 
   display:flex;
   align-items:flex-end;
@@ -668,7 +671,7 @@ button{
 }
 
 #discard-btn{
-  width:min(7.5vw,68px);
+  width:min(7vw,66px);
 
   background:
     linear-gradient(
@@ -685,7 +688,7 @@ button{
 }
 
 #interact-btn{
-  width:min(10.2vw,96px);
+  width:min(9.7vw,94px);
 
   background:
     linear-gradient(
@@ -704,11 +707,11 @@ button{
 #desktop-help{
   position:absolute;
   left:50%;
-  bottom:10px;
+  bottom:8px;
   z-index:480;
 
   padding:
-    7px 14px;
+    6px 13px;
 
   border:
     2px solid rgba(64,43,34,.78);
@@ -720,7 +723,7 @@ button{
 
   color:#51382c;
 
-  font-size:14px;
+  font-size:13px;
   font-weight:900;
 
   pointer-events:none;
@@ -1007,16 +1010,18 @@ button{
   const W = 1280;
   const H = 720;
 
+  const HUD_HEIGHT = 150;
+  const TILE = 96;
+
   const C = {
     outline:"#33251f",
-    wall:"#78afb2",
-    wallDark:"#4e8084",
-    floor:"#d9b877",
-    floorLine:"#b58d50",
-    counterTop:"#ef9c4d",
-    counterFront:"#b35f35",
-    counterSide:"#81432e",
-    counterEdge:"#713421",
+    wall:"#72aeb0",
+    floor:"#d7b777",
+    floorLine:"#b48d51",
+    counterTop:"#ef9b4a",
+    counterHighlight:"#ffbd6a",
+    counterFront:"#af5d35",
+    counterInset:"#81432f",
     cream:"#fff2d1",
     paper:"#fffaf0",
     red:"#e45b45",
@@ -1024,108 +1029,65 @@ button{
     blue:"#57a1b5",
     gold:"#f5bf4c",
     dark:"#1d3037",
-    shadow:"rgba(41,27,20,.25)"
+    shadow:"rgba(41,27,20,.26)"
   };
 
-  const TILE = 96;
-
   /* =======================================================
-     餐台底層
+     餐台位置
 
-     每個 tile 是一個完整餐台模組：
-     桌面、正面櫃體、內凹面、陰影。
+     左側貼齊最左
+     右側貼齊最右
+     上方餐台直接接 HUD 下緣
   ======================================================= */
 
-  const counterTiles = [
-    {
-      x:208,
-      y:188
-    },
-    {
-      x:304,
-      y:188
-    },
-    {
-      x:400,
-      y:188
-    },
-    {
-      x:496,
-      y:188
-    },
-    {
-      x:592,
-      y:188
-    },
-    {
-      x:688,
-      y:188
-    },
-    {
-      x:784,
-      y:188
-    },
-    {
-      x:880,
-      y:188
-    },
-    {
-      x:976,
-      y:188
-    },
+  const counterTiles = [];
 
-    {
-      x:208,
-      y:284
-    },
-    {
-      x:208,
-      y:380
-    },
-    {
-      x:208,
-      y:476
-    },
+  for(
+    let x = 96;
+    x <= 1088;
+    x += TILE
+  ){
+    counterTiles.push({
+      x,
+      y:HUD_HEIGHT
+    });
+  }
 
-    {
-      x:976,
-      y:284
-    },
-    {
-      x:976,
-      y:380
-    },
-    {
-      x:976,
-      y:476
-    },
+  for(
+    let y = HUD_HEIGHT + TILE;
+    y <= 438;
+    y += TILE
+  ){
+    counterTiles.push({
+      x:0,
+      y
+    });
 
-    {
-      x:400,
-      y:548
-    },
-    {
-      x:496,
-      y:548
-    },
-    {
-      x:592,
-      y:548
-    },
-    {
-      x:688,
-      y:548
-    },
-    {
-      x:784,
-      y:548
-    }
-  ];
+    counterTiles.push({
+      x:1184,
+      y
+    });
+  }
+
+  for(
+    let x = 400;
+    x <= 784;
+    x += TILE
+  ){
+    counterTiles.push({
+      x,
+      y:552
+    });
+  }
 
   /* =======================================================
-     餐台物件層
+     工作站
 
-     所有物件直接固定在對應餐台 tile 上。
+     visualX / visualY：
+     繪製在餐台上的物件位置
+
+     interactX / interactY：
+     玩家實際需要靠近的位置
   ======================================================= */
 
   const stations = [
@@ -1133,100 +1095,140 @@ button{
       id:"bun",
       label:"麵包",
       icon:"bun",
-      x:220,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:112,
+      visualY:158,
+
+      interactX:148,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"lettuce",
       label:"生菜",
       icon:"lettuce",
-      x:316,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:208,
+      visualY:158,
+
+      interactX:244,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"meat",
       label:"肉排",
       icon:"rawMeat",
-      x:412,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:304,
+      visualY:158,
+
+      interactX:340,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"board",
       label:"砧板",
       icon:"board",
-      x:508,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:400,
+      visualY:158,
+
+      interactX:436,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"pan",
       label:"煎台",
       icon:"pan",
-      x:700,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:688,
+      visualY:158,
+
+      interactX:724,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"drink",
       label:"飲料",
       icon:"drink",
-      x:796,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:784,
+      visualY:158,
+
+      interactX:820,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"plates",
       label:"盤子",
       icon:"plate",
-      x:892,
-      y:196,
-      w:72,
-      h:62
+
+      visualX:880,
+      visualY:158,
+
+      interactX:916,
+      interactY:278,
+
+      side:"top"
     },
 
     {
       id:"assembly",
       label:"組裝",
       icon:"assembly",
-      x:220,
-      y:398,
-      w:72,
-      h:62
+
+      visualX:12,
+      visualY:350,
+
+      interactX:120,
+      interactY:386,
+
+      side:"left"
     },
 
     {
       id:"serve",
       label:"出餐",
       icon:"bell",
-      x:988,
-      y:398,
-      w:72,
-      h:62
+
+      visualX:1196,
+      visualY:350,
+
+      interactX:1160,
+      interactY:386,
+
+      side:"right"
     },
 
     {
       id:"trash",
       label:"丟棄",
       icon:"trash",
-      x:604,
-      y:556,
-      w:72,
-      h:62
+
+      visualX:604,
+      visualY:560,
+
+      interactX:640,
+      interactY:520,
+
+      side:"bottom"
     }
   ];
 
@@ -1284,7 +1286,7 @@ button{
 
     chef:{
       x:640,
-      y:410
+      y:390
     },
 
     keys:{},
@@ -1372,7 +1374,7 @@ button{
   }
 
   /* =======================================================
-     統一物件圖示
+     圖示
   ======================================================= */
 
   function drawIcon(
@@ -1445,7 +1447,7 @@ button{
       });
     }
 
-    if(type === "lettuce"){
+    else if(type === "lettuce"){
       ctx.fillStyle =
         "#6fac63";
 
@@ -1507,7 +1509,7 @@ button{
       ctx.stroke();
     }
 
-    if(
+    else if(
       type === "rawMeat" ||
       type === "cookedMeat"
     ){
@@ -1558,7 +1560,7 @@ button{
       ctx.stroke();
     }
 
-    if(type === "board"){
+    else if(type === "board"){
       ctx.fillStyle =
         "#d99b56";
 
@@ -1611,7 +1613,7 @@ button{
       ctx.stroke();
     }
 
-    if(type === "pan"){
+    else if(type === "pan"){
       ctx.fillStyle =
         "#2b3b40";
 
@@ -1661,7 +1663,7 @@ button{
       ctx.fill();
     }
 
-    if(type === "drink"){
+    else if(type === "drink"){
       ctx.fillStyle =
         "#e45745";
 
@@ -1733,7 +1735,7 @@ button{
       ctx.stroke();
     }
 
-    if(type === "plate"){
+    else if(type === "plate"){
       ctx.fillStyle =
         "#f8f3e7";
 
@@ -1771,7 +1773,7 @@ button{
       ctx.stroke();
     }
 
-    if(type === "assembly"){
+    else if(type === "assembly"){
       drawIcon(
         "plate",
         0,
@@ -1810,7 +1812,7 @@ button{
       ctx.stroke();
     }
 
-    if(type === "bell"){
+    else if(type === "bell"){
       ctx.fillStyle =
         "#f3bd40";
 
@@ -1856,7 +1858,7 @@ button{
       ctx.fill();
     }
 
-    if(type === "trash"){
+    else if(type === "trash"){
       ctx.fillStyle =
         "#748789";
 
@@ -1888,7 +1890,7 @@ button{
       );
     }
 
-    if(
+    else if(
       type === "burger" ||
       type === "lettuceBurger"
     ){
@@ -1982,79 +1984,13 @@ button{
 
   function drawBackgroundLayer(){
     ctx.fillStyle =
-      "#79b2b3";
-
-    ctx.fillRect(
-      0,
-      0,
-      W,
-      H
-    );
-
-    ctx.fillStyle =
-      "#6da3a4";
-
-    ctx.fillRect(
-      0,
-      100,
-      W,
-      92
-    );
-
-    ctx.strokeStyle =
-      "rgba(255,255,255,.19)";
-
-    ctx.lineWidth =
-      1;
-
-    for(
-      let x = 0;
-      x < W;
-      x += 48
-    ){
-      ctx.beginPath();
-
-      ctx.moveTo(
-        x,
-        100
-      );
-
-      ctx.lineTo(
-        x,
-        192
-      );
-
-      ctx.stroke();
-    }
-
-    for(
-      let y = 100;
-      y <= 192;
-      y += 46
-    ){
-      ctx.beginPath();
-
-      ctx.moveTo(
-        0,
-        y
-      );
-
-      ctx.lineTo(
-        W,
-        y
-      );
-
-      ctx.stroke();
-    }
-
-    ctx.fillStyle =
       C.floor;
 
     ctx.fillRect(
       0,
-      192,
+      HUD_HEIGHT,
       W,
-      H - 192
+      H - HUD_HEIGHT
     );
 
     ctx.strokeStyle =
@@ -2072,7 +2008,7 @@ button{
 
       ctx.moveTo(
         x,
-        192
+        HUD_HEIGHT
       );
 
       ctx.lineTo(
@@ -2084,7 +2020,7 @@ button{
     }
 
     for(
-      let y = 192;
+      let y = HUD_HEIGHT;
       y <= H;
       y += 64
     ){
@@ -2105,16 +2041,6 @@ button{
 
     ctx.globalAlpha =
       1;
-
-    drawText(
-      "SUNNY PAW CAFÉ · OPEN KITCHEN",
-      640,
-      143,
-      18,
-      "#fff4d6",
-      "center",
-      1000
-    );
   }
 
   /* =======================================================
@@ -2136,11 +2062,11 @@ button{
     ctx.beginPath();
 
     ctx.roundRect(
-      x + 8,
-      y + 13,
-      TILE - 4,
-      TILE - 1,
-      15
+      x + 7,
+      y + 12,
+      TILE - 3,
+      TILE - 2,
+      14
     );
 
     ctx.fill();
@@ -2169,7 +2095,7 @@ button{
     ctx.stroke();
 
     ctx.fillStyle =
-      C.counterSide;
+      C.counterInset;
 
     ctx.beginPath();
 
@@ -2178,7 +2104,7 @@ button{
       y + 32,
       TILE - 16,
       TILE - 42,
-      9
+      8
     );
 
     ctx.fill();
@@ -2207,7 +2133,7 @@ button{
     ctx.stroke();
 
     ctx.fillStyle =
-      "#ffc06c";
+      C.counterHighlight;
 
     ctx.beginPath();
 
@@ -2215,7 +2141,7 @@ button{
       x + 8,
       y + 7,
       TILE - 16,
-      12,
+      11,
       6
     );
 
@@ -2235,37 +2161,61 @@ button{
   function drawStation(
     station
   ){
-    const near =
+    const isNear =
       state.nearest ===
       station.id;
 
-    if(near){
+    const boxWidth =
+      72;
+
+    const boxHeight =
+      64;
+
+    if(isNear){
       ctx.save();
 
       ctx.shadowColor =
-        "rgba(255,213,86,.95)";
+        "rgba(255,216,82,.98)";
 
       ctx.shadowBlur =
-        22;
+        24;
 
       roundedRect(
-        station.x - 5,
-        station.y - 5,
-        station.w + 10,
-        station.h + 10,
+        station.visualX - 5,
+        station.visualY - 5,
+        boxWidth + 10,
+        boxHeight + 10,
         14,
-        "#ffe58d",
+        "#ffe38d",
         null
       );
 
       ctx.restore();
+
+      ctx.strokeStyle =
+        "#ffd24e";
+
+      ctx.lineWidth =
+        4;
+
+      ctx.beginPath();
+
+      ctx.arc(
+        station.interactX,
+        station.interactY,
+        22,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.stroke();
     }
 
     roundedRect(
-      station.x,
-      station.y,
-      station.w,
-      station.h,
+      station.visualX,
+      station.visualY,
+      boxWidth,
+      boxHeight,
       12,
       "#f8dfaa",
       C.outline,
@@ -2278,10 +2228,10 @@ button{
     ctx.beginPath();
 
     ctx.roundRect(
-      station.x + 7,
-      station.y + 6,
-      station.w - 14,
-      station.h - 18,
+      station.visualX + 7,
+      station.visualY + 6,
+      boxWidth - 14,
+      boxHeight - 18,
       9
     );
 
@@ -2289,17 +2239,15 @@ button{
 
     drawIcon(
       station.icon,
-      station.x +
-      station.w / 2,
-      station.y + 24,
+      station.visualX + 36,
+      station.visualY + 25,
       .56
     );
 
     drawText(
       station.label,
-      station.x +
-      station.w / 2,
-      station.y + 49,
+      station.visualX + 36,
+      station.visualY + 51,
       13,
       C.dark,
       "center",
@@ -2320,9 +2268,9 @@ button{
         "#5b4034";
 
       ctx.fillRect(
-        station.x + 10,
-        station.y + 54,
-        station.w - 20,
+        station.visualX + 10,
+        station.visualY + 56,
+        boxWidth - 20,
         5
       );
 
@@ -2332,10 +2280,10 @@ button{
           : C.gold;
 
       ctx.fillRect(
-        station.x + 10,
-        station.y + 54,
+        station.visualX + 10,
+        station.visualY + 56,
         (
-          station.w - 20
+          boxWidth - 20
         ) *
         progress,
         5
@@ -2488,7 +2436,7 @@ button{
   }
 
   /* =======================================================
-     Layer 5：HUD / 訂單
+     Layer 5：HUD / 大型訂單
   ======================================================= */
 
   function drawHudLayer(){
@@ -2499,7 +2447,7 @@ button{
       0,
       0,
       W,
-      100
+      HUD_HEIGHT
     );
 
     ctx.fillStyle =
@@ -2507,67 +2455,87 @@ button{
 
     ctx.fillRect(
       0,
-      94,
+      HUD_HEIGHT - 6,
       W,
       6
     );
 
-    drawText(
-      "灶咖大亂鬥",
-      28,
-      31,
-      27,
-      C.red,
-      "left",
-      1000
-    );
+    const orderWidth =
+      250;
 
-    drawText(
-      "DAY 01 · 午餐尖峰",
-      28,
-      65,
-      14,
-      "#6c4e3c",
-      "left",
-      900
-    );
+    const orderHeight =
+      116;
+
+    const orderGap =
+      18;
+
+    const orderStartX =
+      120;
 
     state.orders
       .slice(0,3)
       .forEach((order,index) => {
         const x =
-          330 +
-          index * 232;
+          orderStartX +
+          index *
+          (
+            orderWidth +
+            orderGap
+          );
 
         roundedRect(
           x,
-          12,
-          216,
-          76,
-          17,
+          16,
+          orderWidth,
+          orderHeight,
+          20,
           C.paper,
           C.outline,
-          4
+          5
         );
+
+        if(index === 0){
+          ctx.strokeStyle =
+            C.gold;
+
+          ctx.lineWidth =
+            5;
+
+          ctx.beginPath();
+
+          ctx.roundRect(
+            x + 6,
+            22,
+            orderWidth - 12,
+            orderHeight - 12,
+            15
+          );
+
+          ctx.stroke();
+        }
 
         drawIcon(
           order.result,
-          x + 46,
-          42,
-          .58
+          x + 54,
+          62,
+          .72
         );
 
-        const spacing =
-          34;
+        drawText(
+          order.name,
+          x + 102,
+          39,
+          16,
+          C.dark,
+          "left",
+          1000
+        );
 
-        const startX =
-          x +
-          106 -
-          (
-            order.ingredients.length - 1
-          ) *
-          spacing /
-          2;
+        const ingredientSpacing =
+          45;
+
+        const ingredientStartX =
+          x + 112;
 
         order.ingredients.forEach(
           (
@@ -2576,11 +2544,11 @@ button{
           ) => {
             drawIcon(
               ingredient,
-              startX +
+              ingredientStartX +
               ingredientIndex *
-              spacing,
-              39,
-              .4
+              ingredientSpacing,
+              72,
+              .46
             );
           }
         );
@@ -2590,9 +2558,9 @@ button{
 
         ctx.fillRect(
           x + 18,
-          72,
-          180,
-          7
+          113,
+          orderWidth - 36,
+          9
         );
 
         ctx.fillStyle =
@@ -2602,59 +2570,71 @@ button{
 
         ctx.fillRect(
           x + 18,
-          72,
-          180 *
+          113,
+          (
+            orderWidth - 36
+          ) *
           Math.max(
             0,
             order.patience
           ) /
           100,
-          7
+          9
         );
       });
 
     roundedRect(
-      1048,
-      17,
-      92,
-      64,
-      16,
+      930,
+      22,
+      160,
+      104,
+      20,
       C.paper,
       C.outline,
-      4
+      5
     );
 
     drawText(
-      "★",
-      1071,
-      49,
-      25,
-      C.gold,
+      "分數",
+      1010,
+      48,
+      16,
+      "#765444",
       "center",
-      1000
+      900
     );
 
     drawText(
       String(
         state.score
       ),
-      1111,
-      49,
-      22,
+      1010,
+      84,
+      30,
       C.dark,
       "center",
       1000
     );
 
     roundedRect(
-      1152,
-      17,
-      100,
-      64,
-      16,
+      1106,
+      22,
+      140,
+      104,
+      20,
       C.paper,
       C.outline,
-      4
+      5
+    );
+
+    drawText(
+      "時間",
+      1176,
+      48,
+      16,
+      "#765444",
+      "center",
+      900
     );
 
     drawText(
@@ -2663,9 +2643,9 @@ button{
           state.time
         )
       ),
-      1202,
-      49,
-      25,
+      1176,
+      84,
+      32,
       C.dark,
       "center",
       1000
@@ -2675,9 +2655,9 @@ button{
   function drawMessageLayer(){
     roundedRect(
       430,
-      646,
+      656,
       420,
-      48,
+      46,
       13,
       "rgba(255,250,238,.96)",
       C.outline,
@@ -2687,7 +2667,7 @@ button{
     drawText(
       state.message,
       640,
-      670,
+      679,
       16,
       C.dark,
       "center",
@@ -2703,6 +2683,10 @@ button{
     drawHudLayer();
     drawMessageLayer();
   }
+
+  /* =======================================================
+     首頁背景
+  ======================================================= */
 
   function drawMenu(){
     ctx.fillStyle =
@@ -2935,7 +2919,7 @@ button{
 
         chef:{
           x:640,
-          y:420
+          y:390
         },
 
         nearest:null,
@@ -2950,6 +2934,7 @@ button{
       }
     );
 
+    addOrder();
     addOrder();
     addOrder();
 
@@ -2982,16 +2967,10 @@ button{
       const currentDistance =
         Math.hypot(
           state.chef.x -
-          (
-            station.x +
-            station.w / 2
-          ),
+          station.interactX,
 
           state.chef.y -
-          (
-            station.y +
-            station.h / 2
-          )
+          station.interactY
         );
 
       if(currentDistance < distance){
@@ -3003,7 +2982,7 @@ button{
       }
     });
 
-    return distance <= 120
+    return distance <= 72
       ? best
       : null;
   }
@@ -3318,9 +3297,9 @@ button{
 
     state.chef.x =
       Math.max(
-        320,
+        110,
         Math.min(
-          960,
+          1170,
           state.chef.x +
           movementX *
           speed *
@@ -3330,7 +3309,7 @@ button{
 
     state.chef.y =
       Math.max(
-        315,
+        270,
         Math.min(
           535,
           state.chef.y +
