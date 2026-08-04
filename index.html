@@ -2,26 +2,22 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#17120f">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0e1717">
 <title>灶咖大亂鬥｜Kitchen Clash Café</title>
 
 <style>
 :root{
-  --ink:#2a1d18;
-  --cream:#fff4dc;
-  --paper:#f8e7c6;
-  --red:#e3533e;
-  --red2:#b72e28;
-  --orange:#f29a3d;
-  --yellow:#ffd86a;
-  --green:#62a96b;
-  --teal:#4c9b98;
-  --blue:#4f78a8;
-  --shadow:#1a100c66;
-  --line:#4a2b22;
-  --glass:#fff8eccc;
+  --ink:#182323;
+  --paper:#fff7e7;
+  --cream:#f2e1be;
+  --caramel:#b66a3c;
+  --coral:#db5d4c;
+  --sage:#81a99a;
+  --mint:#b8d7c9;
+  --deep:#27413f;
+  --line:#3b2a25;
+  --gold:#f5bf55;
 }
 
 *{
@@ -38,8 +34,7 @@ body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#17120f;
-  color:var(--ink);
+  background:#0d1515;
   font-family:
     "Noto Sans TC",
     "PingFang TC",
@@ -58,1657 +53,664 @@ body{
 
 button{
   font:inherit;
-  color:inherit;
 }
 
-button:focus-visible{
-  outline:4px solid #fff;
-  outline-offset:3px;
-}
-
-/* =========================================================
-   直向提示
-========================================================= */
-
-#rotate{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:999;
-  background:#17120f;
-  color:#fff;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  padding:32px;
-}
-
-#rotate .phone{
-  width:58px;
-  height:94px;
-  border:5px solid #fff;
-  border-radius:12px;
-  margin:0 auto 20px;
-  animation:turn 1.8s ease-in-out infinite;
-}
-
-#rotate h2{
-  margin-bottom:8px;
-  font-size:28px;
-}
-
-#rotate p{
-  color:#d7c5b9;
-  line-height:1.6;
-}
-
-@keyframes turn{
-  0%,
-  25%{
-    transform:rotate(0);
-  }
-
-  70%,
-  100%{
-    transform:rotate(90deg);
-  }
-}
-
-/* =========================================================
-   16:9 遊戲容器
-========================================================= */
-
-#viewport{
+#game-wrapper{
   position:relative;
 
-  width:min(100vw,calc(100vh * 16 / 9));
-  height:min(100vh,calc(100vw * 9 / 16));
+  width:min(
+    100vw,
+    calc(100vh * 16 / 9)
+  );
+
+  height:min(
+    100vh,
+    calc(100vw * 9 / 16)
+  );
 
   max-width:1280px;
   max-height:720px;
 
   overflow:hidden;
 
-  background:#1a1210;
-
-  border-radius:22px;
-
-  box-shadow:
-    0 32px 90px #000b,
-    0 0 0 4px #5b382d;
-}
-
-#game{
-  position:absolute;
-  left:0;
-  top:0;
-
-  width:1280px;
-  height:720px;
-
-  overflow:hidden;
-
-  background:#f2d6a1;
-
-  transform-origin:top left;
-}
-
-.screen{
-  position:absolute;
-  inset:0;
-  display:none;
-}
-
-.screen.active{
-  display:block;
-}
-
-/* =========================================================
-   Loading
-========================================================= */
-
-#loading{
-  display:block;
-
-  background:
-    linear-gradient(
-      #222 0 52%,
-      #16110f 52%
-    );
-
-  color:#fff;
-
-  z-index:50;
-}
-
-.loading-kitchen{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-
-  height:48%;
-
-  background:
-    linear-gradient(
-      #8f4d32 0 10%,
-      #d58a4a 10% 18%,
-      #7e3e2d 18%
-    );
-
-  border-top:8px solid #301c16;
-}
-
-.loading-counter{
-  position:absolute;
-  left:130px;
-  right:130px;
-  bottom:80px;
-
-  height:150px;
-
-  border:6px solid #321d17;
-  border-radius:22px 22px 8px 8px;
-
-  background:
-    linear-gradient(
-      #f4d694 0 24%,
-      #a94b32 24%
-    );
-
-  box-shadow:
-    inset 0 -12px #873626;
-}
-
-.loading-counter::before,
-.loading-counter::after{
-  content:"";
-
-  position:absolute;
-  top:45px;
-
-  width:205px;
-  height:88px;
-
-  border:5px solid #562a22;
-  border-radius:10px;
-
-  background:#c7613d;
-}
-
-.loading-counter::before{
-  left:50px;
-}
-
-.loading-counter::after{
-  right:50px;
-}
-
-.loading-chef{
-  position:absolute;
-  left:50%;
-  bottom:100px;
-
-  width:160px;
-  height:220px;
-
-  transform:translateX(-50%);
-
-  animation:
-    chefBob .8s ease-in-out infinite alternate;
-}
-
-@keyframes chefBob{
-  to{
-    transform:
-      translateX(-50%)
-      translateY(-7px);
-  }
-}
-
-.hat{
-  position:absolute;
-  left:26px;
-  top:0;
-
-  width:108px;
-  height:65px;
-
-  background:#fff7e7;
-
-  border:6px solid #38231e;
-  border-radius:55% 55% 30% 30%;
-}
-
-.hat::before,
-.hat::after{
-  content:"";
-
-  position:absolute;
-
-  background:#fff7e7;
-
-  border:6px solid #38231e;
-  border-bottom:0;
-
-  border-radius:50% 50% 0 0;
-}
-
-.hat::before{
-  width:48px;
-  height:52px;
-
-  left:-12px;
-  top:-24px;
-}
-
-.hat::after{
-  width:52px;
-  height:58px;
-
-  right:-12px;
-  top:-30px;
-}
-
-.chef-head{
-  position:absolute;
-  left:33px;
-  top:52px;
-
-  width:94px;
-  height:82px;
-
-  background:#cc7b48;
-
-  border:6px solid #38231e;
-  border-radius:48% 48% 42% 42%;
-}
-
-.chef-head::before,
-.chef-head::after{
-  content:"";
-
-  position:absolute;
-  top:27px;
-
-  width:9px;
-  height:12px;
-
-  background:#34201b;
-
-  border-radius:50%;
-}
-
-.chef-head::before{
-  left:25px;
-}
-
-.chef-head::after{
-  right:25px;
-}
-
-.muzzle{
-  position:absolute;
-  left:30px;
-  top:44px;
-
-  width:34px;
-  height:25px;
-
-  border-radius:50%;
-
-  background:#fff0d4;
-
-  border:4px solid #38231e;
-}
-
-.muzzle::after{
-  content:"";
-
-  position:absolute;
-  left:9px;
-  top:3px;
-
-  width:9px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:#34201b;
-}
-
-.chef-body{
-  position:absolute;
-  left:20px;
-  top:125px;
-
-  width:120px;
-  height:90px;
-
-  background:#fff0d4;
-
-  border:6px solid #38231e;
-  border-radius:35px 35px 22px 22px;
-}
-
-.chef-body::before{
-  content:"";
-
-  position:absolute;
-  left:49px;
-  top:0;
-
-  width:14px;
-  height:82px;
-
-  background:#e15e45;
-}
-
-.loading-title{
-  position:absolute;
-  left:0;
-  right:0;
-  top:54px;
-
-  text-align:center;
-}
-
-.loading-title small{
-  display:block;
-
-  color:#ffd776;
-
-  font-size:16px;
-  font-weight:900;
-
-  letter-spacing:.38em;
-}
-
-.loading-title h1{
-  margin:5px 0 0;
-
-  color:#fff4d0;
-
-  font-size:68px;
-  line-height:1;
-
-  letter-spacing:.06em;
-
-  text-shadow:
-    0 6px #71251f,
-    0 9px #1d100e;
-}
-
-.loading-title p{
-  margin:13px 0 0;
-
-  color:#f7c97b;
-
-  font-weight:800;
-
-  letter-spacing:.18em;
-}
-
-.loading-ui{
-  position:absolute;
-  left:205px;
-  right:205px;
-  bottom:24px;
-
-  text-align:center;
-}
-
-.loading-track{
-  height:24px;
-
-  padding:4px;
-
-  border:4px solid #fff0d0;
-  border-radius:20px;
-
-  background:#281712;
-
-  box-shadow:
-    0 5px #0006;
-}
-
-.loading-fill{
-  width:0;
-  height:100%;
-
-  border-radius:12px;
-
-  background:
-    repeating-linear-gradient(
-      135deg,
-      #ffd467 0 15px,
-      #f29a3d 15px 30px
-    );
-
-  transition:
-    width .12s linear;
-}
-
-.loading-meta{
-  display:flex;
-  justify-content:space-between;
-
-  margin-top:10px;
-
-  color:#fff1ce;
-
-  font-weight:900;
-
-  letter-spacing:.12em;
-}
-
-.loading-enter{
-  margin-top:18px;
-
-  min-width:240px;
-
-  padding:12px 28px;
-
-  border:4px solid #fff0d0;
-  border-radius:14px;
-
-  background:
-    linear-gradient(
-      #ffd86a,
-      #f29a3d
-    );
-
-  color:#3a211a;
-
-  font-size:22px;
-  font-weight:1000;
-
-  letter-spacing:.12em;
-
-  cursor:pointer;
-
-  box-shadow:
-    0 7px #8f3e2b;
-
-  opacity:0;
-  visibility:hidden;
-
-  transform:translateY(12px);
-
-  transition:
-    opacity .35s ease,
-    visibility .35s ease,
-    transform .35s ease;
-}
-
-.loading-enter.visible{
-  opacity:1;
-  visibility:visible;
-
-  transform:translateY(0);
-}
-
-.loading-enter:active{
-  transform:translateY(6px);
-
-  box-shadow:
-    0 1px #8f3e2b;
-}
-
-/* =========================================================
-   標題首頁
-========================================================= */
-
-#title{
-  overflow:hidden;
-
-  background:
-    linear-gradient(
-      #7fc6c2 0 58%,
-      #dfbd7f 58%
-    );
-}
-
-.title-cloud{
-  position:absolute;
-
-  background:#eaf7ee;
-
-  border:5px solid #3f6f6c;
-  border-radius:50%;
-
-  opacity:.95;
-}
-
-.c1{
-  width:230px;
-  height:65px;
-
-  left:70px;
-  top:72px;
-}
-
-.c2{
-  width:190px;
-  height:55px;
-
-  right:70px;
-  top:110px;
-}
-
-.title-cafe{
-  position:absolute;
-  left:80px;
-  right:80px;
-  bottom:65px;
-
-  height:430px;
-
-  background:#f6d49b;
-
-  border:7px solid #4b2d23;
-  border-radius:28px 28px 12px 12px;
-
-  box-shadow:
-    0 17px #7d3f2c;
-}
-
-.awning{
-  position:absolute;
-  left:-7px;
-  right:-7px;
-  top:62px;
-
-  height:76px;
-
-  border:7px solid #4b2d23;
-
-  background:
-    repeating-linear-gradient(
-      90deg,
-      #e85c48 0 70px,
-      #fff1cf 70px 140px
-    );
-
-  clip-path:
-    polygon(
-      0 0,
-      100% 0,
-      97% 100%,
-      3% 100%
-    );
-}
-
-.cafe-sign{
-  position:absolute;
-  left:50%;
-  top:-52px;
-
-  transform:translateX(-50%);
-
-  width:630px;
-  height:120px;
-
-  background:#6f3428;
-
-  border:7px solid #3a211a;
-  border-radius:22px;
-
-  box-shadow:
-    0 11px #4c281f;
-
-  text-align:center;
-
-  color:#fff1ce;
-}
-
-.cafe-sign h1{
-  margin:8px 0 -3px;
-
-  font-size:57px;
-
-  letter-spacing:.08em;
-
-  text-shadow:
-    0 5px #321713;
-}
-
-.cafe-sign p{
-  margin:0;
-
-  color:#ffd86a;
-
-  font-size:15px;
-  font-weight:900;
-
-  letter-spacing:.22em;
-}
-
-.cafe-window{
-  position:absolute;
-  left:85px;
-  top:165px;
-
-  width:390px;
-  height:185px;
-
-  background:#8fd0c9;
-
-  border:7px solid #4b2d23;
-  border-radius:12px;
-
-  box-shadow:
-    inset 0 0 0 10px #d5f0df;
-}
-
-.cafe-window::before{
-  content:"TODAY'S SPECIAL";
-
-  position:absolute;
-  left:34px;
-  right:34px;
-  top:29px;
-
-  padding:13px;
-
-  background:#fff2ce;
-
-  border:5px solid #4b2d23;
-  border-radius:10px;
-
-  color:#bb4435;
-
-  text-align:center;
-
-  font-weight:1000;
-
-  transform:rotate(-2deg);
-}
-
-.cafe-door{
-  position:absolute;
-  right:95px;
-  top:155px;
-
-  width:220px;
-  height:255px;
-
-  background:#7d4b34;
-
-  border:7px solid #4b2d23;
-  border-radius:12px 12px 0 0;
-}
-
-.cafe-door::before{
-  content:"OPEN";
-
-  position:absolute;
-  left:32px;
-  right:32px;
-  top:35px;
-
-  padding:14px;
-
-  background:#fff2ce;
-
-  border:5px solid #4b2d23;
-  border-radius:9px;
-
-  color:#4b8b67;
-
-  text-align:center;
-
-  font-weight:1000;
-
-  transform:rotate(3deg);
-}
-
-.cafe-door::after{
-  content:"";
-
-  position:absolute;
-  right:20px;
-  top:132px;
-
-  width:19px;
-  height:19px;
-
-  border-radius:50%;
-
-  background:#ffd86a;
-
-  border:4px solid #4b2d23;
-}
-
-.title-menu{
-  position:absolute;
-  left:50%;
-  bottom:40px;
-
-  z-index:4;
-
-  display:flex;
-
-  gap:18px;
-
-  transform:translateX(-50%);
-}
-
-.big-btn{
-  min-width:260px;
-
-  padding:16px 30px;
-
-  border:5px solid #48271f;
-  border-radius:18px;
-
-  background:
-    linear-gradient(
-      #ffdc72,
-      #f29a3d
-    );
-
-  box-shadow:
-    0 9px #9c432c;
-
-  font-size:25px;
-  font-weight:1000;
-
-  letter-spacing:.08em;
-
-  cursor:pointer;
-
-  transition:
-    transform .12s ease,
-    box-shadow .12s ease;
-}
-
-.big-btn:hover{
-  transform:translateY(-3px);
-}
-
-.big-btn:active{
-  transform:translateY(7px);
-
-  box-shadow:
-    0 2px #9c432c;
-}
-
-.big-btn.secondary{
-  min-width:90px;
-
-  padding-inline:22px;
-
-  background:
-    linear-gradient(
-      #fff6dc,
-      #e8cda2
-    );
-
-  box-shadow:
-    0 9px #8b684d;
-}
-
-.title-chef{
-  position:absolute;
-  left:135px;
-  bottom:45px;
-
-  z-index:3;
-
-  transform:scale(.9);
-}
-
-.title-bubble{
-  position:absolute;
-  right:145px;
-  bottom:280px;
-
-  padding:18px 24px;
-
-  background:#fff6dc;
-
-  border:5px solid #4b2d23;
-  border-radius:22px;
-
-  font-size:20px;
-  font-weight:900;
-
-  transform:rotate(2deg);
-}
-
-.title-bubble::after{
-  content:"";
-
-  position:absolute;
-  right:35px;
-  bottom:-22px;
-
-  border:12px solid transparent;
-  border-top-color:#4b2d23;
-}
-
-/* =========================================================
-   遊戲畫面
-========================================================= */
-
-#play{
-  background:#bfe1d3;
-}
-
-#hud{
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
-
-  z-index:20;
-
-  height:94px;
-
-  display:flex;
-  align-items:center;
-
-  padding:13px 23px;
-
-  background:
-    linear-gradient(
-      #fff2d2,
-      #eec68d
-    );
-
-  border-bottom:6px solid #553328;
-
-  box-shadow:
-    0 8px #0002;
-}
-
-.hud-brand{
-  width:220px;
-}
-
-.hud-brand b{
-  display:block;
-
-  color:#b93b32;
-
-  font-size:25px;
-}
-
-.hud-brand small{
-  color:#684536;
-
-  font-weight:900;
-
-  letter-spacing:.12em;
-}
-
-.order-strip{
-  flex:1;
-
-  display:flex;
-  justify-content:center;
-
-  gap:12px;
-}
-
-.order-card{
-  position:relative;
-
-  width:148px;
-  height:66px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  gap:6px;
-
-  background:#fff8e9;
-
-  border:4px solid #563429;
-  border-radius:15px;
-
-  box-shadow:
-    0 5px #b37b50;
-}
-
-.order-card.active{
-  animation:
-    orderPulse 1s ease-in-out infinite alternate;
-}
-
-@keyframes orderPulse{
-  to{
-    transform:translateY(-3px);
-  }
-}
-
-.food-icon{
-  font-size:31px;
-
-  filter:
-    drop-shadow(0 2px #fff);
-}
-
-.order-card .patience{
-  position:absolute;
-  left:7px;
-  right:7px;
-  bottom:5px;
-
-  height:7px;
-
-  overflow:hidden;
-
-  background:#d8c4a7;
-
-  border-radius:7px;
+  background:#142120;
 }
 
-.order-card .patience i{
+#game-canvas{
   display:block;
 
   width:100%;
   height:100%;
 
-  background:#65aa6b;
+  background:#142120;
 }
 
-.hud-stats{
-  width:300px;
+/* ==================================================
+   手機直向提示
+================================================== */
 
-  display:flex;
-  justify-content:flex-end;
+#orientation{
+  position:absolute;
+  inset:0;
+  z-index:1000;
 
-  gap:10px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  padding:28px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #1d302e,
+      #0b1212 72%
+    );
+
+  color:white;
+
+  text-align:center;
 }
 
-.stat{
-  min-width:92px;
-  height:58px;
+.phone{
+  width:64px;
+  height:108px;
+
+  margin:0 auto 22px;
+
+  border:4px solid #fff;
+  border-radius:14px;
+
+  animation:
+    turn 2s ease-in-out infinite;
+}
+
+@keyframes turn{
+  0%,
+  25%{
+    transform:rotate(-12deg);
+  }
+
+  70%,
+  100%{
+    transform:rotate(78deg);
+  }
+}
+
+/* ==================================================
+   共用畫面
+================================================== */
+
+#loading,
+#menu,
+#pause,
+#result{
+  position:absolute;
+  inset:0;
 
   display:flex;
   align-items:center;
   justify-content:center;
-
-  gap:8px;
-
-  background:#fff8e9;
-
-  border:4px solid #563429;
-  border-radius:17px;
-
-  box-shadow:
-    0 5px #b37b50;
-
-  font-size:23px;
-  font-weight:1000;
 }
 
-.pause{
-  width:58px;
-  min-width:58px;
+/* ==================================================
+   Loading
+================================================== */
 
-  cursor:pointer;
+#loading{
+  z-index:500;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      #27413f 0,
+      #172625 52%,
+      #0d1716 100%
+    );
+
+  color:white;
 }
 
-#kitchen{
+#loading::before{
+  content:"";
+
   position:absolute;
-  left:0;
-  right:0;
-  top:94px;
-  bottom:0;
+  inset:0;
+
+  opacity:.14;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.06) 1px,
+      transparent 1px
+    );
+
+  background-size:52px 52px;
+
+  animation:
+    gridMove 12s linear infinite;
+}
+
+@keyframes gridMove{
+  to{
+    background-position:
+      52px 52px;
+  }
+}
+
+.loading-card{
+  position:relative;
+  z-index:1;
+
+  width:min(76%,620px);
+
+  text-align:center;
+}
+
+.brand-ja{
+  color:#e9c67a;
+
+  font-size:14px;
+  font-weight:800;
+
+  letter-spacing:.38em;
+}
+
+.brand-title{
+  margin-top:8px;
+
+  font-size:clamp(48px,7vw,86px);
+  line-height:1;
+
+  letter-spacing:.08em;
+
+  text-shadow:
+    0 7px 0 rgba(0,0,0,.25);
+}
+
+.brand-en{
+  margin-top:12px;
+
+  color:#b8d7c9;
+
+  font-size:clamp(14px,1.8vw,22px);
+  font-weight:800;
+
+  letter-spacing:.34em;
+}
+
+.loading-status{
+  margin-top:58px;
+}
+
+.loading-row{
+  display:flex;
+  justify-content:space-between;
+
+  gap:20px;
+
+  margin-bottom:12px;
+
+  color:#edf6ef;
+
+  font-size:16px;
+}
+
+.track{
+  height:16px;
 
   overflow:hidden;
 
   background:
-    linear-gradient(
-      90deg,
-      #deb175 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      #deb175 1px,
-      transparent 1px
-    ),
-    #f0d29c;
+    rgba(0,0,0,.34);
 
-  background-size:
-    64px 64px;
+  border:
+    1px solid rgba(255,255,255,.25);
+
+  border-radius:999px;
 }
 
-.wall-top{
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
+.bar{
+  position:relative;
 
-  height:106px;
+  width:0;
+  height:100%;
 
-  background:
-    linear-gradient(
-      #8fc5b9,
-      #71aa9f
-    );
-
-  border-bottom:6px solid #4b2d23;
-}
-
-.tiles{
-  position:absolute;
-  inset:0;
+  border-radius:inherit;
 
   background:
     linear-gradient(
       90deg,
-      #fff3 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      #fff3 1px,
-      transparent 1px
+      #9fc9b8,
+      #f2d58c,
+      #d87858
     );
 
-  background-size:
-    45px 45px;
+  transition:
+    width .08s linear;
 }
 
-.counter{
+.bar::after{
+  content:"";
+
   position:absolute;
+  inset:0 auto 0 -120px;
 
-  background:#a84e35;
-
-  border:6px solid #4a2b22;
-  border-radius:16px;
-
-  box-shadow:
-    inset 0 12px #d8874c,
-    0 10px #6a3429;
-}
-
-.counter.top{
-  left:80px;
-  right:80px;
-  top:38px;
-
-  height:150px;
-}
-
-.counter.left{
-  left:80px;
-  top:172px;
-
-  width:150px;
-  height:310px;
-}
-
-.counter.right{
-  right:80px;
-  top:172px;
-
-  width:150px;
-  height:310px;
-}
-
-.counter.bottom{
-  left:260px;
-  right:260px;
-  bottom:40px;
-
-  height:94px;
-}
-
-.kitchen-label{
-  position:absolute;
-  left:50%;
-  top:12px;
-
-  transform:translateX(-50%);
-
-  color:#fff6dd;
-
-  font-weight:1000;
-
-  letter-spacing:.17em;
-
-  text-shadow:
-    0 3px #345f59;
-}
-
-.station{
-  position:absolute;
-
-  width:112px;
-  height:84px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  width:120px;
 
   background:
     linear-gradient(
-      #fff4d5,
-      #dba76d
+      90deg,
+      transparent,
+      rgba(255,255,255,.65),
+      transparent
     );
 
-  border:5px solid #4a2b22;
-  border-radius:15px;
+  animation:
+    shine 1.3s linear infinite;
+}
+
+@keyframes shine{
+  to{
+    transform:
+      translateX(760px);
+  }
+}
+
+#enter-btn{
+  min-width:240px;
+
+  margin-top:28px;
+  padding:14px 28px;
+
+  background:
+    linear-gradient(
+      #d87558,
+      #aa4f3e
+    );
+
+  border:
+    2px solid rgba(255,255,255,.5);
+
+  border-radius:12px;
 
   box-shadow:
-    0 7px #7b3b2c;
+    0 10px 25px rgba(0,0,0,.28);
+
+  color:white;
+
+  font-size:22px;
+  font-weight:900;
+
+  letter-spacing:.12em;
 
   cursor:pointer;
 
-  transition:
-    transform .12s ease,
-    filter .12s ease;
+  opacity:0;
+  visibility:hidden;
+
+  transform:
+    translateY(14px);
+
+  transition:.35s;
 }
 
-.station span{
-  font-size:38px;
-  line-height:1;
+#enter-btn.show{
+  opacity:1;
+  visibility:visible;
+
+  transform:none;
 }
 
-.station small{
-  margin-top:5px;
+/* ==================================================
+   首頁
+================================================== */
 
-  font-size:15px;
-  font-weight:1000;
+#menu{
+  z-index:300;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(23,38,37,.10),
+      rgba(23,38,37,.42)
+    );
 }
 
-.station.glow{
-  transform:translateY(-4px);
-
-  filter:
-    drop-shadow(0 0 7px #fff)
-    drop-shadow(0 0 14px #ffd86a);
-}
-
-.station[data-st="bun"]{
-  left:210px;
-  top:96px;
-}
-
-.station[data-st="lettuce"]{
-  left:337px;
-  top:96px;
-}
-
-.station[data-st="meat"]{
-  left:464px;
-  top:96px;
-}
-
-.station[data-st="board"]{
-  left:591px;
-  top:96px;
-}
-
-.station[data-st="pan"]{
-  left:718px;
-  top:96px;
-}
-
-.station[data-st="drink"]{
-  left:845px;
-  top:96px;
-}
-
-.station[data-st="assembly"]{
-  left:110px;
-  top:274px;
-}
-
-.station[data-st="serve"]{
-  right:110px;
-  top:274px;
-}
-
-.station[data-st="trash"]{
-  left:584px;
-  bottom:48px;
-}
-
-#chef{
+.menu-panel{
   position:absolute;
-  left:600px;
-  top:410px;
+  left:7%;
+  top:10%;
 
-  z-index:10;
+  width:41%;
 
-  width:86px;
-  height:120px;
+  padding:28px 30px 30px;
 
-  transition:
-    filter .15s ease;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,249,234,.96),
+      rgba(239,220,179,.96)
+    );
+
+  border:
+    4px solid rgba(58,42,35,.8);
+
+  border-radius:26px;
+
+  box-shadow:
+    0 18px 0 rgba(73,45,35,.45),
+    0 34px 70px rgba(0,0,0,.28);
 }
 
-#chef.near{
-  filter:
-    drop-shadow(0 0 8px #fff8c5);
-}
+.menu-kicker{
+  color:#a35a43;
 
-.player-shadow{
-  position:absolute;
-  left:11px;
-  bottom:1px;
-
-  width:66px;
-  height:17px;
-
-  background:#4e302650;
-
-  border-radius:50%;
-}
-
-.mini-hat{
-  position:absolute;
-  left:16px;
-  top:0;
-
-  width:55px;
-  height:36px;
-
-  background:#fff7e7;
-
-  border:4px solid #3c261f;
-  border-radius:50% 50% 25% 25%;
-}
-
-.mini-hat::before,
-.mini-hat::after{
-  content:"";
-
-  position:absolute;
-  top:-16px;
-
-  width:28px;
-  height:28px;
-
-  background:#fff7e7;
-
-  border:4px solid #3c261f;
-  border-bottom:0;
-
-  border-radius:50% 50% 0 0;
-}
-
-.mini-hat::before{
-  left:-5px;
-}
-
-.mini-hat::after{
-  right:-5px;
-}
-
-.mini-head{
-  position:absolute;
-  left:21px;
-  top:30px;
-
-  width:46px;
-  height:43px;
-
-  background:#cd7a47;
-
-  border:4px solid #3c261f;
-  border-radius:46%;
-}
-
-.mini-head::before,
-.mini-head::after{
-  content:"";
-
-  position:absolute;
-  top:14px;
-
-  width:5px;
-  height:7px;
-
-  background:#36211c;
-
-  border-radius:50%;
-}
-
-.mini-head::before{
-  left:11px;
-}
-
-.mini-head::after{
-  right:11px;
-}
-
-.mini-body{
-  position:absolute;
-  left:12px;
-  top:67px;
-
-  width:65px;
-  height:51px;
-
-  background:#fff0d4;
-
-  border:4px solid #3c261f;
-  border-radius:19px 19px 12px 12px;
-}
-
-.mini-body::before{
-  content:"";
-
-  position:absolute;
-  left:27px;
-  top:0;
-
-  width:7px;
-  height:44px;
-
-  background:#e25c44;
-}
-
-.held{
-  position:absolute;
-  right:-16px;
-  top:57px;
-
-  z-index:5;
-
-  min-width:42px;
-  min-height:42px;
-
-  display:grid;
-  place-items:center;
-
-  font-size:34px;
-
-  filter:
-    drop-shadow(0 3px #fff);
-}
-
-.interact-ring{
-  display:none;
-
-  position:absolute;
-  left:-16px;
-  top:73px;
-
-  width:120px;
-  height:53px;
-
-  border:4px solid #ffd86a;
-  border-radius:50%;
-
-  animation:
-    ringPulse .7s ease-in-out infinite alternate;
-}
-
-#chef.near .interact-ring{
-  display:block;
-}
-
-@keyframes ringPulse{
-  to{
-    transform:scale(1.09);
-
-    opacity:.55;
-  }
-}
-
-.controls-help{
-  position:absolute;
-  left:28px;
-  bottom:20px;
-
-  z-index:18;
-
-  padding:8px 12px;
-
-  background:#fff3d7bb;
-
-  border:3px solid #6b4738;
-  border-radius:12px;
-
-  color:#684536;
-
+  font-size:14px;
   font-weight:900;
+
+  letter-spacing:.28em;
 }
 
-#message{
-  position:absolute;
-  left:50%;
-  bottom:16px;
+.menu-title{
+  margin-top:6px;
 
-  z-index:20;
+  color:#2d4a46;
 
-  min-width:430px;
+  font-size:54px;
+  line-height:1.05;
 
-  padding:11px 22px;
+  letter-spacing:.05em;
+}
 
-  background:#fff7df;
+.menu-sub{
+  margin-top:10px;
 
-  border:4px solid #6d4232;
+  color:#87614f;
+
+  font-weight:800;
+  line-height:1.7;
+}
+
+.menu-actions{
+  display:flex;
+
+  gap:14px;
+
+  margin-top:26px;
+}
+
+.menu-btn{
+  min-width:190px;
+
+  padding:15px 24px;
+
+  background:
+    linear-gradient(
+      #e4775d,
+      #ba5545
+    );
+
+  border:0;
   border-radius:14px;
 
   box-shadow:
-    0 7px #8f5a3c;
+    0 8px 0 #7d3b31;
 
-  font-weight:1000;
-  text-align:center;
+  color:white;
 
-  transform:translateX(-50%);
+  font-size:21px;
+  font-weight:900;
+
+  cursor:pointer;
 }
 
-.combo{
-  position:absolute;
-  right:26px;
-  top:116px;
+.menu-btn.secondary{
+  min-width:62px;
 
-  z-index:35;
+  background:
+    linear-gradient(
+      #f8e9c8,
+      #d2b88a
+    );
 
-  padding:10px 18px;
+  box-shadow:
+    0 8px 0 #8c7455;
 
-  background:#ffd25c;
-
-  border:5px solid #5d3426;
-  border-radius:15px;
-
-  color:#7b2b24;
-
-  font-size:24px;
-  font-weight:1000;
-
-  opacity:0;
-
-  transform:
-    translateY(-30px)
-    scale(.8);
+  color:#4f392e;
 }
 
-.combo.show{
-  animation:
-    comboPop 1.15s ease;
-}
+/* ==================================================
+   暫停與結算
+================================================== */
 
-@keyframes comboPop{
-  0%{
-    opacity:0;
-
-    transform:
-      translateY(-30px)
-      scale(.8);
-  }
-
-  20%,
-  75%{
-    opacity:1;
-
-    transform:
-      translateY(0)
-      scale(1.18);
-  }
-
-  100%{
-    opacity:0;
-
-    transform:
-      translateY(-30px);
-  }
-}
-
-/* =========================================================
-   Overlay
-========================================================= */
-
-.overlay{
-  position:absolute;
-  inset:0;
-
-  z-index:100;
+#pause,
+#result{
+  z-index:700;
 
   display:none;
-  place-items:center;
 
-  background:#211411b8;
+  background:
+    rgba(10,17,17,.66);
 
-  backdrop-filter:blur(4px);
+  backdrop-filter:
+    blur(5px);
 }
 
-.overlay.show{
-  display:grid;
-}
-
-.panel{
-  width:690px;
+.overlay-card{
+  width:min(72%,650px);
 
   padding:34px;
 
   background:
     linear-gradient(
-      #fff7e3,
-      #efd2a5
+      #fff8e8,
+      #ead3a7
     );
 
-  border:7px solid #4a2a20;
-  border-radius:28px;
+  border:
+    5px solid #4a3229;
+
+  border-radius:24px;
 
   box-shadow:
-    0 18px #321a15,
-    0 35px 80px #0007;
+    0 18px 0 #2c1d18,
+    0 40px 90px rgba(0,0,0,.4);
 
   text-align:center;
 }
 
-.panel h2{
-  margin:0 0 12px;
+.overlay-card h2{
+  margin-bottom:12px;
 
-  color:#b53a31;
+  color:#a94f3f;
 
-  font-size:46px;
-
-  text-shadow:
-    0 3px #fff;
+  font-size:44px;
 }
 
-.panel p{
-  font-size:19px;
+.overlay-card p{
+  color:#60483c;
+
   font-weight:800;
-  line-height:1.6;
+  line-height:1.7;
 }
 
-.panel-actions{
+.overlay-actions{
   display:flex;
   justify-content:center;
 
-  gap:16px;
+  gap:14px;
 
   margin-top:24px;
 }
 
-.result-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
+/* ==================================================
+   手機操作
+================================================== */
 
-  gap:12px;
+#touch-controls{
+  position:absolute;
+  inset:0;
+  z-index:250;
 
-  margin:20px 0;
+  pointer-events:none;
 }
 
-.result-grid div{
-  padding:13px;
+#joystick-zone{
+  position:absolute;
+  left:24px;
+  bottom:22px;
 
-  background:#fff8e8;
+  width:154px;
+  height:154px;
 
-  border:4px solid #6d4434;
-  border-radius:14px;
+  pointer-events:auto;
 }
 
-.result-grid small{
-  display:block;
+#joystick-base{
+  position:absolute;
+  inset:0;
 
-  color:#795746;
+  background:
+    rgba(20,40,38,.42);
 
-  font-weight:900;
+  border:
+    4px solid rgba(255,255,255,.58);
+
+  border-radius:50%;
+
+  box-shadow:
+    inset 0 0 0 9px rgba(255,255,255,.07);
 }
 
-.result-grid b{
-  font-size:29px;
-}
-
-.stars{
-  color:#ffc943;
-
-  font-size:52px;
-
-  letter-spacing:.14em;
-
-  text-shadow:
-    0 4px #9b5d26;
-}
-
-#toast{
+#joystick-stick{
   position:absolute;
   left:50%;
-  top:125px;
+  top:50%;
 
-  z-index:130;
+  width:72px;
+  height:72px;
 
-  padding:10px 19px;
+  background:
+    linear-gradient(
+      #f9e9c9,
+      #c79b67
+    );
 
-  background:#34201de8;
+  border:
+    4px solid #51382d;
 
-  border:4px solid #fff0c8;
-  border-radius:13px;
+  border-radius:50%;
 
-  color:#fff5d4;
-
-  font-weight:900;
-
-  opacity:0;
+  box-shadow:
+    0 7px 0 rgba(68,45,36,.5);
 
   transform:
-    translate(-50%,-20px);
-
-  transition:
-    opacity .2s ease,
-    transform .2s ease;
+    translate(-50%,-50%);
 }
 
-#toast.show{
-  opacity:1;
+#action-zone{
+  position:absolute;
+  right:28px;
+  bottom:28px;
+
+  display:flex;
+  align-items:flex-end;
+
+  gap:16px;
+
+  pointer-events:auto;
+}
+
+.action-btn{
+  width:104px;
+  height:104px;
+
+  background:
+    linear-gradient(
+      #ef7a61,
+      #b64f41
+    );
+
+  border:
+    5px solid rgba(255,255,255,.7);
+
+  border-radius:50%;
+
+  box-shadow:
+    0 9px 0 #73372f;
+
+  color:white;
+
+  font-size:20px;
+  font-weight:1000;
+
+  letter-spacing:.08em;
+}
+
+.action-btn.secondary{
+  width:76px;
+  height:76px;
+
+  background:
+    linear-gradient(
+      #f0d8a6,
+      #be986a
+    );
+
+  box-shadow:
+    0 8px 0 #755b42;
+
+  color:#3c2c25;
+}
+
+.desktop-help{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  z-index:230;
+
+  padding:8px 14px;
+
+  background:
+    rgba(255,248,231,.88);
+
+  border:
+    2px solid rgba(65,45,38,.7);
+
+  border-radius:12px;
+
+  color:#4f392e;
+
+  font-size:14px;
+  font-weight:900;
+
+  pointer-events:none;
 
   transform:
-    translate(-50%,0);
+    translateX(-50%);
+}
+
+@media (pointer:fine){
+  #touch-controls{
+    display:none;
+  }
+}
+
+@media (pointer:coarse){
+  .desktop-help{
+    display:none;
+  }
 }
 
 @media (orientation:portrait) and (max-width:900px){
-  #rotate{
+  #orientation{
     display:flex;
-  }
-
-  #viewport{
-    display:none;
   }
 }
 </style>
@@ -1716,560 +718,1665 @@ button:focus-visible{
 
 <body>
 
-<section id="rotate">
-  <div class="phone"></div>
+<main id="game-wrapper">
 
-  <h2>請將手機轉為橫向</h2>
+  <canvas
+    id="game-canvas"
+    width="1280"
+    height="720"
+    aria-label="灶咖大亂鬥遊戲畫面"
+  ></canvas>
 
-  <p>
-    橫向模式可獲得最佳遊戲體驗
-  </p>
-</section>
+  <section id="orientation">
+    <div>
+      <div class="phone"></div>
 
-<div id="viewport">
-
-<main id="game">
-
-  <section
-    id="loading"
-    class="screen active"
-    aria-label="遊戲讀取畫面"
-  >
-    <div class="loading-title">
-      <small>KITCHEN CLASH CAFÉ</small>
-
-      <h1>灶咖大亂鬥</h1>
+      <h2>
+        請將手機轉為橫向
+      </h2>
 
       <p>
+        橫向模式可獲得最佳遊戲體驗
+      </p>
+    </div>
+  </section>
+
+  <section id="loading">
+    <div class="loading-card">
+
+      <div class="brand-ja">
         キッチン大騒動
-      </p>
-    </div>
-
-    <div class="loading-kitchen">
-      <div class="loading-counter"></div>
-    </div>
-
-    <div class="loading-chef">
-      <div class="hat"></div>
-
-      <div class="chef-head">
-        <i class="muzzle"></i>
       </div>
 
-      <div class="chef-body"></div>
-    </div>
-
-    <div class="loading-ui">
-      <div class="loading-track">
-        <div
-          class="loading-fill"
-          id="loadingFill"
-        ></div>
+      <div class="brand-title">
+        灶咖大亂鬥
       </div>
 
-      <div class="loading-meta">
-        <span id="loadingText">
-          準備食材中
-        </span>
-
-        <b id="loadingPercent">
-          0%
-        </b>
+      <div class="brand-en">
+        KITCHEN CLASH CAFÉ
       </div>
 
-      <button
-        class="loading-enter"
-        id="enterCafeBtn"
-        type="button"
-      >
-        進入咖啡廳
-      </button>
-    </div>
-  </section>
+      <div class="loading-status">
 
-  <section
-    id="title"
-    class="screen"
-  >
-    <i class="title-cloud c1"></i>
-    <i class="title-cloud c2"></i>
+        <div class="loading-row">
+          <span id="loading-message">
+            正在準備咖啡廳……
+          </span>
 
-    <div class="title-cafe">
-      <div class="cafe-sign">
-        <h1>灶咖大亂鬥</h1>
-
-        <p>
-          KITCHEN CLASH CAFÉ · キッチン大騒動
-        </p>
-      </div>
-
-      <div class="awning"></div>
-      <div class="cafe-window"></div>
-      <div class="cafe-door"></div>
-    </div>
-
-    <div class="title-chef loading-chef">
-      <div class="hat"></div>
-
-      <div class="chef-head">
-        <i class="muzzle"></i>
-      </div>
-
-      <div class="chef-body"></div>
-    </div>
-
-    <div class="title-bubble">
-      客人已經排到門外啦！
-    </div>
-
-    <div class="title-menu">
-      <button
-        class="big-btn"
-        id="startBtn"
-        type="button"
-      >
-        開始營業
-      </button>
-
-      <button
-        class="big-btn secondary"
-        id="howBtn"
-        type="button"
-        aria-label="遊戲說明"
-      >
-        ?
-      </button>
-    </div>
-  </section>
-
-  <section
-    id="play"
-    class="screen"
-  >
-    <header id="hud">
-      <div class="hud-brand">
-        <b>灶咖大亂鬥</b>
-
-        <small>
-          DAY 01 · 午餐尖峰
-        </small>
-      </div>
-
-      <div
-        class="order-strip"
-        id="orders"
-      ></div>
-
-      <div class="hud-stats">
-        <div class="stat">
-          ★
-          <b id="score">0</b>
+          <span id="loading-number">
+            0%
+          </span>
         </div>
 
-        <div class="stat">
-          ⏱
-          <b id="time">75</b>
+        <div class="track">
+          <div
+            id="loading-bar"
+            class="bar"
+          ></div>
         </div>
 
         <button
-          class="stat pause"
-          id="pauseBtn"
+          id="enter-btn"
           type="button"
-          aria-label="暫停遊戲"
         >
-          Ⅱ
+          進入咖啡廳
         </button>
+
       </div>
-    </header>
-
-    <div id="kitchen">
-      <div class="wall-top">
-        <div class="tiles"></div>
-      </div>
-
-      <div class="counter top"></div>
-      <div class="counter left"></div>
-      <div class="counter right"></div>
-      <div class="counter bottom"></div>
-
-      <div class="kitchen-label">
-        SUNNY PAW CAFÉ · OPEN KITCHEN
-      </div>
-
-      <button
-        class="station"
-        data-st="bun"
-        data-item="bun"
-        type="button"
-      >
-        <span>🍞</span>
-        <small>麵包</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="lettuce"
-        data-item="lettuce"
-        type="button"
-      >
-        <span>🥬</span>
-        <small>生菜</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="meat"
-        data-item="raw"
-        type="button"
-      >
-        <span>🥩</span>
-        <small>肉排</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="board"
-        type="button"
-      >
-        <span>🔪</span>
-        <small>砧板</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="pan"
-        type="button"
-      >
-        <span>🍳</span>
-        <small>煎台</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="assembly"
-        type="button"
-      >
-        <span>🍽️</span>
-        <small>組裝台</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="serve"
-        type="button"
-      >
-        <span>🔔</span>
-        <small>出餐口</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="trash"
-        type="button"
-      >
-        <span>🗑️</span>
-        <small>丟棄</small>
-      </button>
-
-      <button
-        class="station"
-        data-st="drink"
-        data-item="drink"
-        type="button"
-      >
-        <span>🥤</span>
-        <small>飲料機</small>
-      </button>
-
-      <div id="chef">
-        <i class="interact-ring"></i>
-
-        <div class="player-shadow"></div>
-        <div class="mini-hat"></div>
-        <div class="mini-head"></div>
-        <div class="mini-body"></div>
-
-        <span
-          class="held"
-          id="held"
-        ></span>
-      </div>
-
-      <div class="controls-help">
-        WASD／方向鍵移動　E／空白鍵互動
-      </div>
-
-      <div id="message">
-        接下第一張訂單，從麵包開始。
-      </div>
-    </div>
-
-    <div
-      class="combo"
-      id="combo"
-    >
-      COMBO ×2
     </div>
   </section>
 
-  <div
-    class="overlay"
-    id="how"
-  >
-    <div class="panel">
-      <h2>營業守則</h2>
+  <section id="menu">
+    <div class="menu-panel">
 
-      <p>
-        依照上方訂單準備餐點。<br>
-        漢堡流程：拿麵包 → 拿肉排 → 煎台 → 組裝台 → 出餐口。<br>
-        飲料可直接拿取後出餐。<br>
-        靠近工作台後按 E 或空白鍵互動。
-      </p>
+      <div class="menu-kicker">
+        SUNNY PAW CAFÉ
+      </div>
 
-      <div class="panel-actions">
+      <div class="menu-title">
+        灶咖大亂鬥
+      </div>
+
+      <div class="menu-sub">
+        午餐尖峰即將開始。依照訂單備料、烹調、
+        組裝並出餐，在客人失去耐心前完成更多餐點。
+      </div>
+
+      <div class="menu-actions">
+
         <button
-          class="big-btn"
-          id="closeHow"
+          id="start-btn"
+          class="menu-btn"
           type="button"
         >
-          知道了
+          開始營業
         </button>
+
+        <button
+          id="help-btn"
+          class="menu-btn secondary"
+          type="button"
+        >
+          ?
+        </button>
+
       </div>
     </div>
-  </div>
+  </section>
 
-  <div
-    class="overlay"
-    id="pauseOverlay"
-  >
-    <div class="panel">
-      <h2>暫停營業</h2>
+  <section id="pause">
+    <div class="overlay-card">
+
+      <h2>
+        暫停營業
+      </h2>
 
       <p>
-        計時與客人耐心已暫停。
+        時間與訂單耐心已暫停。
       </p>
 
-      <div class="panel-actions">
+      <div class="overlay-actions">
+
         <button
-          class="big-btn"
-          id="resumeBtn"
+          id="resume-btn"
+          class="menu-btn"
           type="button"
         >
           繼續營業
         </button>
 
         <button
-          class="big-btn secondary"
-          id="homeBtn"
+          id="pause-home-btn"
+          class="menu-btn secondary"
           type="button"
         >
           首頁
         </button>
+
       </div>
     </div>
-  </div>
+  </section>
 
-  <div
-    class="overlay"
-    id="result"
-  >
-    <div class="panel">
-      <h2 id="resultTitle">
+  <section id="result">
+    <div class="overlay-card">
+
+      <h2 id="result-title">
         營業結束
       </h2>
 
-      <div
-        class="stars"
-        id="stars"
-      >
-        ★★★
-      </div>
-
-      <div class="result-grid">
-        <div>
-          <small>總分</small>
-          <b id="finalScore">0</b>
-        </div>
-
-        <div>
-          <small>完成訂單</small>
-          <b id="finalServed">0</b>
-        </div>
-
-        <div>
-          <small>最高連擊</small>
-          <b id="finalCombo">0</b>
-        </div>
-      </div>
-
-      <p id="resultText">
-        今天的營業告一段落。
+      <p id="result-summary">
+        今日營業告一段落。
       </p>
 
-      <div class="panel-actions">
+      <div class="overlay-actions">
+
         <button
-          class="big-btn"
-          id="retryBtn"
+          id="retry-btn"
+          class="menu-btn"
           type="button"
         >
           再玩一次
         </button>
 
         <button
-          class="big-btn secondary"
-          id="resultHomeBtn"
+          id="result-home-btn"
+          class="menu-btn secondary"
           type="button"
         >
           首頁
         </button>
+
       </div>
+    </div>
+  </section>
+
+  <div id="touch-controls">
+
+    <div id="joystick-zone">
+      <div id="joystick-base">
+        <div id="joystick-stick"></div>
+      </div>
+    </div>
+
+    <div id="action-zone">
+
+      <button
+        id="discard-btn"
+        class="action-btn secondary"
+        type="button"
+      >
+        丟棄
+      </button>
+
+      <button
+        id="interact-btn"
+        class="action-btn"
+        type="button"
+      >
+        互動
+      </button>
+
     </div>
   </div>
 
-  <div id="toast"></div>
+  <div class="desktop-help">
+    WASD／方向鍵移動　E／空白鍵互動　Q 丟棄　Esc 暫停
+  </div>
 
 </main>
-
-</div>
 
 <script>
 (() => {
   "use strict";
 
-  const $ = selector =>
-    document.querySelector(selector);
+  const canvas =
+    document.getElementById("game-canvas");
 
-  const $$ = selector =>
-    [...document.querySelectorAll(selector)];
+  const ctx =
+    canvas.getContext("2d");
 
-  const game = $("#game");
-  const title = $("#title");
-  const play = $("#play");
-  const viewport = $("#viewport");
+  const loading =
+    document.getElementById("loading");
 
-  function fitGame() {
-    const scale = Math.min(
-      viewport.clientWidth / 1280,
-      viewport.clientHeight / 720
-    );
+  const menu =
+    document.getElementById("menu");
 
-    game.style.transform =
-      `scale(${scale})`;
-  }
+  const pause =
+    document.getElementById("pause");
 
-  window.addEventListener(
-    "resize",
-    fitGame
-  );
+  const result =
+    document.getElementById("result");
 
-  const resizeObserver =
-    new ResizeObserver(fitGame);
+  const touchControls =
+    document.getElementById("touch-controls");
 
-  resizeObserver.observe(viewport);
+  const W = 1280;
+  const H = 720;
 
-  fitGame();
+  const COLORS = {
+    ink:"#182323",
+    paper:"#fff7e7",
+    cream:"#f2e1be",
+    caramel:"#b66a3c",
+    coral:"#db5d4c",
+    sage:"#81a99a",
+    mint:"#b8d7c9",
+    deep:"#27413f",
+    line:"#3b2a25",
+    gold:"#f5bf55",
+    floor:"#d9c394",
+    wall:"#9dc5b8"
+  };
 
-  const sleep = milliseconds =>
-    new Promise(resolve => {
-      setTimeout(resolve, milliseconds);
-    });
+  const state = {
+    screen:"menu",
 
-  async function boot() {
-    const steps = [
-      "點亮招牌",
-      "預熱煎台",
-      "準備食材",
-      "整理出餐口",
-      "準備開門"
-    ];
+    running:false,
+    paused:false,
 
-    for (
-      let progress = 0;
-      progress <= 100;
-      progress += 2
-    ) {
-      $("#loadingFill").style.width =
-        `${progress}%`;
+    time:60,
 
-      $("#loadingPercent").textContent =
-        `${progress}%`;
+    score:0,
+    served:0,
+    combo:0,
+    bestCombo:0,
 
-      const stepIndex = Math.min(
-        steps.length - 1,
-        Math.floor(progress / 21)
-      );
+    held:null,
 
-      $("#loadingText").textContent =
-        steps[stepIndex];
+    pan:null,
+    panTimer:0,
 
-      await sleep(
-        progress < 70 ? 24 : 34
-      );
+    prep:[],
+
+    orders:[],
+    orderSpawn:0,
+
+    chef:{
+      x:640,
+      y:470,
+      vx:0,
+      vy:0,
+      dir:"down"
+    },
+
+    keys:{},
+
+    joy:{
+      x:0,
+      y:0
+    },
+
+    nearest:null,
+
+    last:
+      performance.now(),
+
+    toast:"",
+    toastTime:0
+  };
+
+  const stations = [
+    {
+      id:"bun",
+      x:180,
+      y:210,
+      w:120,
+      h:90,
+      label:"麵包",
+      icon:"bun"
+    },
+
+    {
+      id:"lettuce",
+      x:330,
+      y:210,
+      w:120,
+      h:90,
+      label:"生菜",
+      icon:"lettuce"
+    },
+
+    {
+      id:"meat",
+      x:480,
+      y:210,
+      w:120,
+      h:90,
+      label:"肉排",
+      icon:"meat"
+    },
+
+    {
+      id:"pan",
+      x:830,
+      y:210,
+      w:130,
+      h:90,
+      label:"煎台",
+      icon:"pan"
+    },
+
+    {
+      id:"drink",
+      x:990,
+      y:210,
+      w:120,
+      h:90,
+      label:"飲料",
+      icon:"drink"
+    },
+
+    {
+      id:"assembly",
+      x:140,
+      y:425,
+      w:140,
+      h:105,
+      label:"組裝",
+      icon:"plate"
+    },
+
+    {
+      id:"serve",
+      x:1000,
+      y:425,
+      w:140,
+      h:105,
+      label:"出餐",
+      icon:"bell"
+    },
+
+    {
+      id:"trash",
+      x:570,
+      y:590,
+      w:140,
+      h:80,
+      label:"丟棄",
+      icon:"trash"
     }
-
-    $("#loadingText").textContent =
-      "準備完成";
-
-    $("#enterCafeBtn").classList.add(
-      "visible"
-    );
-  }
-
-  function showScreen(element) {
-    $$(".screen").forEach(screen => {
-      screen.classList.remove("active");
-      screen.style.display = "none";
-    });
-
-    element.classList.add("active");
-    element.style.display = "block";
-  }
-
-  boot();
+  ];
 
   const recipes = [
     {
       name:"經典漢堡",
-      icons:["🍞","🥩"],
-      type:"burger"
+      type:"burger",
+      items:[
+        "bun",
+        "cooked"
+      ]
     },
+
     {
       name:"生菜漢堡",
-      icons:["🍞","🥬","🥩"],
-      type:"greenBurger"
+      type:"greenBurger",
+      items:[
+        "bun",
+        "lettuce",
+        "cooked"
+      ]
     },
+
     {
-      name:"冰涼飲料",
-      icons:["🥤"],
-      type:"drink"
+      name:"冰飲",
+      type:"drink",
+      items:[
+        "drink"
+      ]
     }
   ];
 
-  let state;
+  function roundedRect(
+    x,
+    y,
+    w,
+    h,
+    r,
+    fill,
+    stroke,
+    line = 1
+  ){
+    ctx.beginPath();
 
-  function createFreshState() {
-    return {
-      running:false,
-      paused:false,
-      time:75,
-      score:0,
-      served:0,
-      combo:0,
-      maxCombo:0,
-      orders:[],
-      held:null,
-      plate:[],
-      chef:{
-        x:600,
-        y:410
-      },
-      keys:{},
-      lastFrame:performance.now(),
-      spawnTimer:0
-    };
+    ctx.roundRect(
+      x,
+      y,
+      w,
+      h,
+      r
+    );
+
+    if(fill){
+      ctx.fillStyle =
+        fill;
+
+      ctx.fill();
+    }
+
+    if(stroke){
+      ctx.strokeStyle =
+        stroke;
+
+      ctx.lineWidth =
+        line;
+
+      ctx.stroke();
+    }
   }
 
-  function createOrder() {
+  function text(
+    content,
+    x,
+    y,
+    size,
+    color,
+    align = "left",
+    weight = 700
+  ){
+    ctx.fillStyle =
+      color;
+
+    ctx.font =
+      `${weight} ${size}px "Microsoft JhengHei", sans-serif`;
+
+    ctx.textAlign =
+      align;
+
+    ctx.textBaseline =
+      "middle";
+
+    ctx.fillText(
+      content,
+      x,
+      y
+    );
+  }
+
+  function drawIcon(
+    type,
+    x,
+    y,
+    scale = 1
+  ){
+    ctx.save();
+
+    ctx.translate(
+      x,
+      y
+    );
+
+    ctx.scale(
+      scale,
+      scale
+    );
+
+    ctx.lineCap =
+      "round";
+
+    ctx.lineJoin =
+      "round";
+
+    ctx.strokeStyle =
+      COLORS.line;
+
+    ctx.lineWidth =
+      4;
+
+    if(type === "bun"){
+      ctx.fillStyle =
+        "#e9b96e";
+
+      ctx.beginPath();
+
+      ctx.roundRect(
+        -30,
+        -19,
+        60,
+        38,
+        16
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        "#c88947";
+
+      ctx.lineWidth =
+        3;
+
+      [-14,0,14].forEach(value => {
+        ctx.beginPath();
+
+        ctx.moveTo(
+          value - 5,
+          -7
+        );
+
+        ctx.lineTo(
+          value + 4,
+          4
+        );
+
+        ctx.stroke();
+      });
+    }
+
+    else if(type === "lettuce"){
+      ctx.fillStyle =
+        "#79ad6e";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -28,
+        10
+      );
+
+      ctx.bezierCurveTo(
+        -24,
+        -28,
+        -4,
+        -20,
+        0,
+        -32
+      );
+
+      ctx.bezierCurveTo(
+        7,
+        -18,
+        26,
+        -28,
+        29,
+        7
+      );
+
+      ctx.bezierCurveTo(
+        12,
+        26,
+        -13,
+        25,
+        -28,
+        10
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        "#4f7f52";
+
+      ctx.lineWidth =
+        3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        0,
+        -25
+      );
+
+      ctx.lineTo(
+        0,
+        19
+      );
+
+      ctx.stroke();
+    }
+
+    else if(
+      type === "meat" ||
+      type === "cooked"
+    ){
+      ctx.fillStyle =
+        type === "meat"
+          ? "#c8544f"
+          : "#8d5c42";
+
+      ctx.beginPath();
+
+      ctx.ellipse(
+        0,
+        0,
+        31,
+        22,
+        -.2,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        type === "meat"
+          ? "#f2b2aa"
+          : "#c58a66";
+
+      ctx.lineWidth =
+        3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -16,
+        -5
+      );
+
+      ctx.bezierCurveTo(
+        -6,
+        -16,
+        9,
+        -14,
+        17,
+        -4
+      );
+
+      ctx.stroke();
+    }
+
+    else if(type === "pan"){
+      ctx.fillStyle =
+        "#33413f";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        -5,
+        0,
+        24,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        17,
+        13
+      );
+
+      ctx.lineTo(
+        39,
+        31
+      );
+
+      ctx.strokeStyle =
+        COLORS.line;
+
+      ctx.lineWidth =
+        8;
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#f2c85d";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        -5,
+        0,
+        10,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+    }
+
+    else if(type === "drink"){
+      ctx.fillStyle =
+        "#d65d4b";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -18,
+        -24
+      );
+
+      ctx.lineTo(
+        18,
+        -24
+      );
+
+      ctx.lineTo(
+        13,
+        25
+      );
+
+      ctx.lineTo(
+        -13,
+        25
+      );
+
+      ctx.closePath();
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        "#f7eee2";
+
+      ctx.lineWidth =
+        6;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -12,
+        -2
+      );
+
+      ctx.lineTo(
+        14,
+        -2
+      );
+
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        "#e7e0d4";
+
+      ctx.lineWidth =
+        4;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        6,
+        -24
+      );
+
+      ctx.lineTo(
+        14,
+        -38
+      );
+
+      ctx.stroke();
+    }
+
+    else if(type === "plate"){
+      ctx.fillStyle =
+        "#f7f1dd";
+
+      ctx.beginPath();
+
+      ctx.ellipse(
+        0,
+        5,
+        30,
+        19,
+        0,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+
+      ctx.arc(
+        0,
+        5,
+        16,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.strokeStyle =
+        "#b6c9bd";
+
+      ctx.lineWidth =
+        3;
+
+      ctx.stroke();
+    }
+
+    else if(type === "bell"){
+      ctx.fillStyle =
+        "#e9b841";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -26,
+        14
+      );
+
+      ctx.quadraticCurveTo(
+        -20,
+        -24,
+        0,
+        -27
+      );
+
+      ctx.quadraticCurveTo(
+        20,
+        -24,
+        26,
+        14
+      );
+
+      ctx.closePath();
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#8e5a30";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        0,
+        17,
+        6,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+    }
+
+    else if(type === "trash"){
+      ctx.fillStyle =
+        "#7b8e86";
+
+      ctx.fillRect(
+        -20,
+        -18,
+        40,
+        40
+      );
+
+      ctx.strokeRect(
+        -20,
+        -18,
+        40,
+        40
+      );
+
+      ctx.fillRect(
+        -25,
+        -27,
+        50,
+        8
+      );
+
+      ctx.strokeRect(
+        -25,
+        -27,
+        50,
+        8
+      );
+    }
+
+    else if(
+      type === "burger" ||
+      type === "greenBurger"
+    ){
+      drawIcon(
+        "bun",
+        0,
+        -8,
+        .7
+      );
+
+      ctx.fillStyle =
+        "#7e4f39";
+
+      ctx.fillRect(
+        -22,
+        0,
+        44,
+        10
+      );
+
+      if(type === "greenBurger"){
+        ctx.fillStyle =
+          "#74a965";
+
+        ctx.fillRect(
+          -24,
+          -2,
+          48,
+          6
+        );
+      }
+
+      ctx.fillStyle =
+        "#d99f54";
+
+      ctx.beginPath();
+
+      ctx.roundRect(
+        -25,
+        10,
+        50,
+        18,
+        8
+      );
+
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawBackground(){
+    ctx.fillStyle =
+      "#e7d8b2";
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      H
+    );
+
+    ctx.fillStyle =
+      COLORS.wall;
+
+    ctx.fillRect(
+      0,
+      88,
+      W,
+      118
+    );
+
+    ctx.strokeStyle =
+      "rgba(255,255,255,.22)";
+
+    ctx.lineWidth =
+      1;
+
+    for(
+      let x = 0;
+      x < W;
+      x += 52
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x,
+        88
+      );
+
+      ctx.lineTo(
+        x,
+        206
+      );
+
+      ctx.stroke();
+    }
+
+    for(
+      let y = 88;
+      y < 206;
+      y += 40
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        0,
+        y
+      );
+
+      ctx.lineTo(
+        W,
+        y
+      );
+
+      ctx.stroke();
+    }
+
+    ctx.fillStyle =
+      "#ceb984";
+
+    ctx.fillRect(
+      0,
+      206,
+      W,
+      H - 206
+    );
+
+    ctx.strokeStyle =
+      "rgba(106,80,52,.15)";
+
+    for(
+      let x = 0;
+      x < W;
+      x += 64
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x,
+        206
+      );
+
+      ctx.lineTo(
+        x,
+        H
+      );
+
+      ctx.stroke();
+    }
+
+    for(
+      let y = 206;
+      y < H;
+      y += 64
+    ){
+      ctx.beginPath();
+
+      ctx.moveTo(
+        0,
+        y
+      );
+
+      ctx.lineTo(
+        W,
+        y
+      );
+
+      ctx.stroke();
+    }
+  }
+
+  function drawHUD(){
+    ctx.fillStyle =
+      "rgba(255,248,231,.96)";
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      88
+    );
+
+    ctx.fillStyle =
+      COLORS.deep;
+
+    ctx.fillRect(
+      0,
+      82,
+      W,
+      6
+    );
+
+    text(
+      "灶咖大亂鬥",
+      32,
+      30,
+      26,
+      COLORS.coral,
+      "left",
+      900
+    );
+
+    text(
+      "DAY 01 · 午餐尖峰",
+      32,
+      61,
+      14,
+      "#6b5143",
+      "left",
+      900
+    );
+
+    state.orders
+      .slice(0,3)
+      .forEach((order,index) => {
+        const x =
+          415 + index * 168;
+
+        roundedRect(
+          x,
+          14,
+          150,
+          60,
+          15,
+          "#fffaf0",
+          COLORS.line,
+          4
+        );
+
+        order.items.forEach(
+          (item,itemIndex) => {
+            drawIcon(
+              item,
+              x + 38 + itemIndex * 37,
+              38,
+              .48
+            );
+          }
+        );
+
+        ctx.fillStyle =
+          "#d7c8a7";
+
+        ctx.fillRect(
+          x + 15,
+          62,
+          120,
+          6
+        );
+
+        ctx.fillStyle =
+          order.patience < 35
+            ? "#d9584a"
+            : "#69a66f";
+
+        ctx.fillRect(
+          x + 15,
+          62,
+          120 *
+          (
+            order.patience /
+            100
+          ),
+          6
+        );
+      });
+
+    roundedRect(
+      1060,
+      16,
+      88,
+      56,
+      16,
+      "#fffaf0",
+      COLORS.line,
+      4
+    );
+
+    text(
+      "★",
+      1082,
+      44,
+      24,
+      COLORS.gold,
+      "center",
+      900
+    );
+
+    text(
+      String(state.score),
+      1120,
+      44,
+      24,
+      COLORS.ink,
+      "center",
+      900
+    );
+
+    roundedRect(
+      1160,
+      16,
+      88,
+      56,
+      16,
+      "#fffaf0",
+      COLORS.line,
+      4
+    );
+
+    text(
+      String(
+        Math.ceil(
+          state.time
+        )
+      ),
+      1204,
+      44,
+      24,
+      COLORS.ink,
+      "center",
+      900
+    );
+  }
+
+  function drawCounters(){
+    roundedRect(
+      115,
+      175,
+      1050,
+      155,
+      24,
+      "#8b4e36",
+      COLORS.line,
+      6
+    );
+
+    roundedRect(
+      95,
+      190,
+      170,
+      360,
+      22,
+      "#8b4e36",
+      COLORS.line,
+      6
+    );
+
+    roundedRect(
+      1015,
+      190,
+      170,
+      360,
+      22,
+      "#8b4e36",
+      COLORS.line,
+      6
+    );
+
+    roundedRect(
+      330,
+      560,
+      620,
+      112,
+      22,
+      "#8b4e36",
+      COLORS.line,
+      6
+    );
+
+    ctx.fillStyle =
+      "#bb6d44";
+
+    ctx.fillRect(
+      125,
+      189,
+      1030,
+      20
+    );
+  }
+
+  function drawStation(station){
+    const near =
+      state.nearest === station.id;
+
+    roundedRect(
+      station.x,
+      station.y,
+      station.w,
+      station.h,
+      18,
+      near
+        ? "#fff7db"
+        : "#f2e3c2",
+      COLORS.line,
+      5
+    );
+
+    if(near){
+      ctx.strokeStyle =
+        COLORS.gold;
+
+      ctx.lineWidth =
+        5;
+
+      ctx.strokeRect(
+        station.x - 6,
+        station.y - 6,
+        station.w + 12,
+        station.h + 12
+      );
+    }
+
+    drawIcon(
+      station.icon,
+      station.x +
+      station.w / 2,
+      station.y + 35,
+      .72
+    );
+
+    text(
+      station.label,
+      station.x +
+      station.w / 2,
+      station.y + 72,
+      16,
+      COLORS.ink,
+      "center",
+      900
+    );
+  }
+
+  function drawChef(){
+    const {
+      x,
+      y
+    } = state.chef;
+
+    ctx.save();
+
+    ctx.translate(
+      x,
+      y
+    );
+
+    ctx.fillStyle =
+      "rgba(30,40,35,.18)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      40,
+      31,
+      10,
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      "#fff7e9";
+
+    ctx.strokeStyle =
+      COLORS.line;
+
+    ctx.lineWidth =
+      4;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      -28,
+      -18,
+      56,
+      62,
+      18
+    );
+
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle =
+      "#cf7a49";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -18,
+      25,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle =
+      "#fff7e9";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+      -30,
+      -55,
+      60,
+      30,
+      13
+    );
+
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle =
+      COLORS.coral;
+
+    ctx.fillRect(
+      -4,
+      -3,
+      8,
+      42
+    );
+
+    ctx.fillStyle =
+      COLORS.line;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      -8,
+      -21,
+      3,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      8,
+      -21,
+      3,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    if(state.held){
+      drawIcon(
+        state.held,
+        35,
+        5,
+        .65
+      );
+    }
+
+    ctx.restore();
+  }
+
+  function drawOrdersTip(){
+    roundedRect(
+      430,
+      638,
+      420,
+      54,
+      15,
+      "rgba(255,250,238,.95)",
+      COLORS.line,
+      4
+    );
+
+    const message =
+      state.held
+        ? "前往對應工作台繼續處理餐點"
+        : "先依照訂單拿取需要的食材";
+
+    text(
+      message,
+      640,
+      665,
+      17,
+      COLORS.ink,
+      "center",
+      900
+    );
+  }
+
+  function drawGame(){
+    drawBackground();
+    drawHUD();
+    drawCounters();
+
+    text(
+      "SUNNY PAW CAFÉ · OPEN KITCHEN",
+      640,
+      128,
+      18,
+      "#f7f2df",
+      "center",
+      900
+    );
+
+    stations.forEach(
+      drawStation
+    );
+
+    drawChef();
+    drawOrdersTip();
+
+    if(state.toastTime > 0){
+      roundedRect(
+        465,
+        105,
+        350,
+        48,
+        14,
+        "rgba(31,48,45,.94)",
+        "#fff3d5",
+        3
+      );
+
+      text(
+        state.toast,
+        640,
+        130,
+        17,
+        "#fff7e8",
+        "center",
+        900
+      );
+    }
+  }
+
+  function drawMenuScene(){
+    drawBackground();
+
+    ctx.fillStyle =
+      "#6f9f92";
+
+    ctx.fillRect(
+      0,
+      0,
+      W,
+      270
+    );
+
+    ctx.fillStyle =
+      "#f2d8a3";
+
+    ctx.fillRect(
+      660,
+      110,
+      500,
+      440
+    );
+
+    ctx.fillStyle =
+      "#704333";
+
+    ctx.fillRect(
+      700,
+      180,
+      420,
+      220
+    );
+
+    ctx.fillStyle =
+      "#a7d2c6";
+
+    ctx.fillRect(
+      740,
+      215,
+      340,
+      145
+    );
+
+    ctx.fillStyle =
+      "#e8c77f";
+
+    ctx.fillRect(
+      705,
+      135,
+      410,
+      56
+    );
+
+    for(
+      let i = 0;
+      i < 8;
+      i++
+    ){
+      ctx.fillStyle =
+        i % 2
+          ? COLORS.paper
+          : COLORS.coral;
+
+      ctx.fillRect(
+        705 + i * 51,
+        191,
+        51,
+        44
+      );
+    }
+
+    roundedRect(
+      800,
+      90,
+      260,
+      80,
+      18,
+      "#6e3a2f",
+      COLORS.line,
+      5
+    );
+
+    text(
+      "SUNNY PAW CAFÉ",
+      930,
+      130,
+      25,
+      "#fff1cd",
+      "center",
+      900
+    );
+
+    state.chef.x =
+      930;
+
+    state.chef.y =
+      500;
+
+    drawChef();
+  }
+
+  function render(){
+    ctx.clearRect(
+      0,
+      0,
+      W,
+      H
+    );
+
+    if(state.screen === "menu"){
+      drawMenuScene();
+    }
+    else{
+      drawGame();
+    }
+  }
+
+  function addOrder(){
     const recipe =
       recipes[
         Math.floor(
@@ -2279,538 +2386,342 @@ button:focus-visible{
       ];
 
     state.orders.push({
-      id:
-        Date.now() +
-        Math.random(),
       ...recipe,
-      patience:100
+      patience:100,
+      id:Math.random()
     });
   }
 
-  function renderOrders() {
-    const orderContainer =
-      $("#orders");
+  function startGame(){
+    Object.assign(
+      state,
+      {
+        screen:"game",
 
-    orderContainer.innerHTML =
-      state.orders
-        .slice(0,3)
-        .map((order,index) => {
-          const icons =
-            order.icons
-              .map(icon => {
-                return `
-                  <span class="food-icon">
-                    ${icon}
-                  </span>
-                `;
-              })
-              .join("");
+        running:true,
+        paused:false,
 
-          const patienceColor =
-            order.patience < 35
-              ? "#df4b3f"
-              : "#65aa6b";
+        time:60,
 
-          return `
-            <div
-              class="order-card ${
-                index === 0
-                  ? "active"
-                  : ""
-              }"
-              title="${order.name}"
-            >
-              ${icons}
+        score:0,
+        served:0,
+        combo:0,
+        bestCombo:0,
 
-              <div class="patience">
-                <i
-                  style="
-                    width:${Math.max(
-                      0,
-                      order.patience
-                    )}%;
+        held:null,
 
-                    background:
-                      ${patienceColor};
-                  "
-                ></i>
-              </div>
-            </div>
-          `;
-        })
-        .join("");
-  }
+        pan:null,
+        panTimer:0,
 
-  function startGame() {
-    state =
-      createFreshState();
+        prep:[],
 
-    state.running = true;
+        orders:[],
+        orderSpawn:0,
 
-    createOrder();
-    createOrder();
+        chef:{
+          x:640,
+          y:470,
+          vx:0,
+          vy:0,
+          dir:"down"
+        },
 
-    showScreen(play);
+        nearest:null,
 
-    $("#result").classList.remove(
-      "show"
+        last:
+          performance.now(),
+
+        toast:"",
+        toastTime:0
+      }
     );
 
-    $("#pauseOverlay").classList.remove(
-      "show"
-    );
+    addOrder();
+    addOrder();
 
-    renderOrders();
+    menu.style.display =
+      "none";
+
+    result.style.display =
+      "none";
+
+    touchControls.style.display =
+      "";
+
     render();
 
-    state.lastFrame =
-      performance.now();
-
     requestAnimationFrame(
-      gameLoop
+      loop
     );
   }
 
-  function render() {
-    const chef = $("#chef");
+  function nearestStation(){
+    let best =
+      null;
 
-    chef.style.left =
-      `${state.chef.x}px`;
+    let distance =
+      Infinity;
 
-    chef.style.top =
-      `${state.chef.y}px`;
-
-    $("#held").textContent =
-      getItemIcon(state.held);
-
-    $("#score").textContent =
-      state.score;
-
-    $("#time").textContent =
-      Math.ceil(state.time);
-
-    highlightNearestStation();
-    updateMessage();
-  }
-
-  function getItemIcon(item) {
-    const icons = {
-      bun:"🍞",
-      lettuce:"🥬",
-      raw:"🥩",
-      cooked:"🍖",
-      drink:"🥤",
-      burger:"🍔",
-      greenBurger:"🍔"
-    };
-
-    return icons[item] || "";
-  }
-
-  function getElementRect(element) {
-    return {
-      left:element.offsetLeft,
-      top:element.offsetTop,
-      right:
-        element.offsetLeft +
-        element.offsetWidth,
-      bottom:
-        element.offsetTop +
-        element.offsetHeight
-    };
-  }
-
-  function getNearestStation() {
-    const chefCenterX =
-      state.chef.x + 43;
-
-    const chefCenterY =
-      state.chef.y + 72;
-
-    let nearest = null;
-    let nearestDistance = Infinity;
-
-    $$(".station").forEach(station => {
-      const rect =
-        getElementRect(station);
-
-      const stationCenterX =
+    stations.forEach(station => {
+      const deltaX =
+        state.chef.x -
         (
-          rect.left +
-          rect.right
-        ) / 2;
-
-      const stationCenterY =
-        (
-          rect.top +
-          rect.bottom
-        ) / 2;
-
-      const distance =
-        Math.hypot(
-          chefCenterX -
-          stationCenterX,
-
-          chefCenterY -
-          stationCenterY
+          station.x +
+          station.w / 2
         );
 
-      if (
-        distance <
-        nearestDistance
-      ) {
-        nearestDistance =
-          distance;
+      const deltaY =
+        state.chef.y -
+        (
+          station.y +
+          station.h / 2
+        );
 
-        nearest =
+      const currentDistance =
+        Math.hypot(
+          deltaX,
+          deltaY
+        );
+
+      if(currentDistance < distance){
+        distance =
+          currentDistance;
+
+        best =
           station;
       }
     });
 
-    return nearestDistance < 115
-      ? nearest
+    return distance < 135
+      ? best
       : null;
   }
 
-  function highlightNearestStation() {
-    const nearest =
-      getNearestStation();
-
-    $$(".station").forEach(station => {
-      station.classList.toggle(
-        "glow",
-        station === nearest
-      );
-    });
-
-    $("#chef").classList.toggle(
-      "near",
-      Boolean(nearest)
-    );
-  }
-
-  function updateMessage() {
-    let message =
-      "靠近工作台後按 E 或空白鍵互動。";
-
-    if (!state.held) {
-      message =
-        "接單後，先拿取訂單需要的食材。";
-    } else if (
-      state.held === "raw"
-    ) {
-      message =
-        "生肉需要先放到煎台。";
-    } else if (
-      state.held === "cooked" ||
-      state.held === "bun" ||
-      state.held === "lettuce"
-    ) {
-      message =
-        "把食材送到組裝台。";
-    } else if (
-      [
-        "burger",
-        "greenBurger",
-        "drink"
-      ].includes(state.held)
-    ) {
-      message =
-        "餐點完成，送到右上方出餐口！";
-    }
-
-    $("#message").textContent =
+  function toast(message){
+    state.toast =
       message;
+
+    state.toastTime =
+      1.4;
   }
 
-  function showToast(text) {
-    const toast =
-      $("#toast");
-
-    toast.textContent =
-      text;
-
-    toast.classList.add(
-      "show"
-    );
-
-    clearTimeout(
-      showToast.timer
-    );
-
-    showToast.timer =
-      setTimeout(() => {
-        toast.classList.remove(
-          "show"
-        );
-      },1200);
-  }
-
-  function interact() {
-    if (
+  function interact(){
+    if(
       !state.running ||
       state.paused
-    ) {
+    ){
       return;
     }
 
     const station =
-      getNearestStation();
+      nearestStation();
 
-    if (!station) {
-      showToast(
+    if(!station){
+      toast(
         "再靠近工作台一點"
       );
 
       return;
     }
 
-    const stationType =
-      station.dataset.st;
-
-    const item =
-      station.dataset.item;
-
-    if (item) {
-      if (state.held) {
-        showToast(
-          "手上已經有東西了"
+    if(
+      [
+        "bun",
+        "lettuce",
+        "meat",
+        "drink"
+      ].includes(station.id)
+    ){
+      if(state.held){
+        toast(
+          "手上已經有食材"
         );
 
         return;
       }
 
       state.held =
-        item;
+        station.id === "meat"
+          ? "meat"
+          : station.id;
 
-      const itemNames = {
-        bun:"麵包",
-        lettuce:"生菜",
-        raw:"生肉排",
-        drink:"飲料"
-      };
-
-      showToast(
-        `拿起${itemNames[item]}`
+      toast(
+        `已拿取${station.label}`
       );
-    } else if (
-      stationType === "pan"
-    ) {
-      if (
-        state.held === "raw"
-      ) {
+    }
+
+    else if(station.id === "pan"){
+      if(state.held === "meat"){
+        state.held =
+          null;
+
+        state.pan =
+          "cooking";
+
+        state.panTimer =
+          2.5;
+
+        toast(
+          "肉排開始烹調"
+        );
+      }
+
+      else if(state.pan === "done"){
         state.held =
           "cooked";
 
-        showToast(
-          "肉排煎好了！"
-        );
-      } else {
-        showToast(
-          "煎台只能處理生肉排"
-        );
-      }
-    } else if (
-      stationType ===
-      "assembly"
-    ) {
-      assembleFood();
-    } else if (
-      stationType ===
-      "serve"
-    ) {
-      serveFood();
-    } else if (
-      stationType ===
-      "trash"
-    ) {
-      if (
-        state.held ||
-        state.plate.length
-      ) {
-        state.held = null;
-        state.plate = [];
+        state.pan =
+          null;
 
-        showToast(
-          "已清空食材"
-        );
-      } else {
-        showToast(
-          "目前沒有可丟棄的東西"
+        toast(
+          "已拿起熟肉排"
         );
       }
-    } else if (
-      stationType ===
-      "board"
-    ) {
-      showToast(
-        "本關砧板尚未啟用"
-      );
+
+      else{
+        toast(
+          state.pan === "cooking"
+            ? "肉排還在烹調"
+            : "需要先放入生肉排"
+        );
+      }
     }
 
-    render();
-  }
-
-  function assembleFood() {
-    const validIngredients = [
-      "bun",
-      "lettuce",
-      "cooked"
-    ];
-
-    if (
-      state.held &&
-      validIngredients.includes(
-        state.held
-      )
-    ) {
-      state.plate.push(
-        state.held
-      );
-
-      showToast(
-        `放上組裝台：${
-          getItemIcon(
-            state.held
-          )
-        }`
-      );
-
-      state.held = null;
-
-      const ingredientSet =
-        new Set(
-          state.plate
-        );
-
-      const hasBun =
-        ingredientSet.has(
-          "bun"
-        );
-
-      const hasCookedMeat =
-        ingredientSet.has(
+    else if(station.id === "assembly"){
+      if(
+        [
+          "bun",
+          "lettuce",
           "cooked"
+        ].includes(state.held)
+      ){
+        state.prep.push(
+          state.held
         );
 
-      const hasLettuce =
-        ingredientSet.has(
-          "lettuce"
-        );
-
-      if (
-        hasBun &&
-        hasCookedMeat
-      ) {
         state.held =
-          hasLettuce
-            ? "greenBurger"
-            : "burger";
+          null;
 
-        state.plate = [];
+        const ingredientSet =
+          new Set(
+            state.prep
+          );
 
-        showToast(
-          "漢堡完成！"
+        if(
+          ingredientSet.has("bun") &&
+          ingredientSet.has("cooked")
+        ){
+          state.held =
+            ingredientSet.has("lettuce")
+              ? "greenBurger"
+              : "burger";
+
+          state.prep =
+            [];
+
+          toast(
+            "餐點組裝完成"
+          );
+        }
+        else{
+          toast(
+            "食材已放上組裝台"
+          );
+        }
+      }
+      else{
+        toast(
+          "這項食材不能在此組裝"
         );
       }
-    } else {
-      showToast(
-        "這項食材不能在此組裝"
-      );
+    }
+
+    else if(station.id === "serve"){
+      const order =
+        state.orders[0];
+
+      if(
+        order &&
+        state.held === order.type
+      ){
+        const earnedScore =
+          Math.round(
+            120 +
+            order.patience +
+            state.combo * 25
+          );
+
+        state.score +=
+          earnedScore;
+
+        state.served +=
+          1;
+
+        state.combo +=
+          1;
+
+        state.bestCombo =
+          Math.max(
+            state.bestCombo,
+            state.combo
+          );
+
+        state.held =
+          null;
+
+        state.orders.shift();
+
+        addOrder();
+
+        toast(
+          `出餐成功 +${earnedScore}`
+        );
+      }
+      else{
+        state.combo =
+          0;
+
+        state.score =
+          Math.max(
+            0,
+            state.score - 40
+          );
+
+        toast(
+          "餐點與目前訂單不符"
+        );
+      }
+    }
+
+    else if(station.id === "trash"){
+      discard();
     }
   }
 
-  function serveFood() {
-    const currentOrder =
-      state.orders[0];
-
-    if (!currentOrder) {
-      showToast(
-        "目前沒有訂單"
-      );
-
-      return;
-    }
-
-    if (
-      state.held ===
-      currentOrder.type
-    ) {
-      const earnedScore =
-        Math.round(
-          120 +
-          currentOrder.patience *
-          1.3 +
-          state.combo *
-          25
-        );
-
-      state.score +=
-        earnedScore;
-
-      state.served += 1;
-      state.combo += 1;
-
-      state.maxCombo =
-        Math.max(
-          state.maxCombo,
-          state.combo
-        );
-
+  function discard(){
+    if(
+      state.held ||
+      state.prep.length
+    ){
       state.held =
         null;
 
-      state.orders.shift();
+      state.prep =
+        [];
 
-      createOrder();
-      showCombo();
-
-      showToast(
-        `完美出餐！+${earnedScore}`
+      toast(
+        "已丟棄手上內容"
       );
-
-      renderOrders();
-    } else {
-      state.combo = 0;
-
-      state.score =
-        Math.max(
-          0,
-          state.score - 40
-        );
-
-      showToast(
-        "餐點不符合目前訂單"
+    }
+    else{
+      toast(
+        "目前沒有可丟棄的內容"
       );
     }
   }
 
-  function showCombo() {
-    if (
-      state.combo < 2
-    ) {
-      return;
-    }
-
-    const combo =
-      $("#combo");
-
-    combo.textContent =
-      `COMBO ×${state.combo}`;
-
-    combo.classList.remove(
-      "show"
-    );
-
-    void combo.offsetWidth;
-
-    combo.classList.add(
-      "show"
-    );
-  }
-
-  function gameLoop(currentTime) {
-    if (!state.running) {
+  function loop(now){
+    if(!state.running){
       return;
     }
 
@@ -2818,21 +2729,100 @@ button:focus-visible{
       Math.min(
         .033,
         (
-          currentTime -
-          state.lastFrame
-        ) / 1000
+          now -
+          state.last
+        ) /
+        1000
       );
 
-    state.lastFrame =
-      currentTime;
+    state.last =
+      now;
 
-    if (!state.paused) {
-      moveChef(deltaTime);
+    if(!state.paused){
+      let movementX =
+        state.joy.x;
+
+      let movementY =
+        state.joy.y;
+
+      if(
+        state.keys.ArrowLeft ||
+        state.keys.a
+      ){
+        movementX -=
+          1;
+      }
+
+      if(
+        state.keys.ArrowRight ||
+        state.keys.d
+      ){
+        movementX +=
+          1;
+      }
+
+      if(
+        state.keys.ArrowUp ||
+        state.keys.w
+      ){
+        movementY -=
+          1;
+      }
+
+      if(
+        state.keys.ArrowDown ||
+        state.keys.s
+      ){
+        movementY +=
+          1;
+      }
+
+      const movementLength =
+        Math.hypot(
+          movementX,
+          movementY
+        );
+
+      if(movementLength > 1){
+        movementX /=
+          movementLength;
+
+        movementY /=
+          movementLength;
+      }
+
+      state.chef.x =
+        Math.max(
+          315,
+          Math.min(
+            965,
+            state.chef.x +
+            movementX *
+            250 *
+            deltaTime
+          )
+        );
+
+      state.chef.y =
+        Math.max(
+          330,
+          Math.min(
+            550,
+            state.chef.y +
+            movementY *
+            250 *
+            deltaTime
+          )
+        );
+
+      state.nearest =
+        nearestStation()?.id ||
+        null;
 
       state.time -=
         deltaTime;
 
-      state.spawnTimer +=
+      state.orderSpawn +=
         deltaTime;
 
       state.orders.forEach(
@@ -2842,265 +2832,246 @@ button:focus-visible{
             (
               index === 0
                 ? 4.5
-                : 2.6
+                : 2.2
             );
         }
       );
 
-      if (
+      if(
         state.orders[0]
           ?.patience <= 0
-      ) {
+      ){
         state.orders.shift();
 
-        state.combo = 0;
+        state.combo =
+          0;
 
         state.score =
           Math.max(
             0,
-            state.score - 75
+            state.score - 60
           );
 
-        createOrder();
+        addOrder();
 
-        showToast(
+        toast(
           "客人等不及離開了"
         );
-
-        renderOrders();
       }
 
-      if (
-        state.spawnTimer > 10 &&
+      if(
+        state.orderSpawn > 11 &&
         state.orders.length < 3
-      ) {
-        state.spawnTimer = 0;
+      ){
+        state.orderSpawn =
+          0;
 
-        createOrder();
-        renderOrders();
+        addOrder();
       }
 
-      if (
-        state.time <= 0
-      ) {
+      if(state.pan === "cooking"){
+        state.panTimer -=
+          deltaTime;
+
+        if(state.panTimer <= 0){
+          state.pan =
+            "done";
+
+          toast(
+            "肉排烹調完成"
+          );
+        }
+      }
+
+      if(state.toastTime > 0){
+        state.toastTime -=
+          deltaTime;
+      }
+
+      if(state.time <= 0){
         endGame();
+
         return;
       }
-
-      renderOrders();
-      render();
     }
+
+    render();
 
     requestAnimationFrame(
-      gameLoop
+      loop
     );
   }
 
-  function moveChef(deltaTime) {
-    let directionX = 0;
-    let directionY = 0;
+  function endGame(){
+    state.running =
+      false;
 
-    if (
-      state.keys.ArrowLeft ||
-      state.keys.a ||
-      state.keys.A
-    ) {
-      directionX -= 1;
-    }
+    touchControls.style.display =
+      "none";
 
-    if (
-      state.keys.ArrowRight ||
-      state.keys.d ||
-      state.keys.D
-    ) {
-      directionX += 1;
-    }
+    document
+      .getElementById(
+        "result-title"
+      )
+      .textContent =
+        state.score >= 900
+          ? "今日營業成功"
+          : "營業結束";
 
-    if (
-      state.keys.ArrowUp ||
-      state.keys.w ||
-      state.keys.W
-    ) {
-      directionY -= 1;
-    }
+    document
+      .getElementById(
+        "result-summary"
+      )
+      .textContent =
+        `總分 ${state.score}｜完成訂單 ${state.served}｜最高連擊 ${state.bestCombo}`;
 
-    if (
-      state.keys.ArrowDown ||
-      state.keys.s ||
-      state.keys.S
-    ) {
-      directionY += 1;
-    }
+    result.style.display =
+      "flex";
+  }
 
-    if (
-      directionX ||
-      directionY
-    ) {
-      const vectorLength =
-        Math.hypot(
-          directionX,
-          directionY
+  function goHome(){
+    state.running =
+      false;
+
+    state.screen =
+      "menu";
+
+    pause.style.display =
+      "none";
+
+    result.style.display =
+      "none";
+
+    menu.style.display =
+      "flex";
+
+    touchControls.style.display =
+      "none";
+
+    render();
+  }
+
+  document
+    .getElementById(
+      "start-btn"
+    )
+    .onclick =
+      startGame;
+
+  document
+    .getElementById(
+      "retry-btn"
+    )
+    .onclick =
+      startGame;
+
+  document
+    .getElementById(
+      "pause-home-btn"
+    )
+    .onclick =
+      goHome;
+
+  document
+    .getElementById(
+      "result-home-btn"
+    )
+    .onclick =
+      goHome;
+
+  document
+    .getElementById(
+      "resume-btn"
+    )
+    .onclick =
+      () => {
+        state.paused =
+          false;
+
+        pause.style.display =
+          "none";
+
+        state.last =
+          performance.now();
+      };
+
+  document
+    .getElementById(
+      "help-btn"
+    )
+    .onclick =
+      () => {
+        alert(
+          "依照訂單拿取食材。肉排需要先放入煎台，完成後送到組裝台，最後前往出餐口。"
         );
+      };
 
-      const speed = 260;
+  document
+    .getElementById(
+      "interact-btn"
+    )
+    .onclick =
+      interact;
 
-      state.chef.x =
-        Math.max(
-          280,
-          Math.min(
-            910,
-            state.chef.x +
-            directionX /
-            vectorLength *
-            speed *
-            deltaTime
-          )
-        );
-
-      state.chef.y =
-        Math.max(
-          170,
-          Math.min(
-            480,
-            state.chef.y +
-            directionY /
-            vectorLength *
-            speed *
-            deltaTime
-          )
-        );
-    }
-  }
-
-  function endGame() {
-    state.running = false;
-
-    let starCount = 0;
-
-    if (
-      state.score >= 1500
-    ) {
-      starCount = 3;
-    } else if (
-      state.score >= 800
-    ) {
-      starCount = 2;
-    } else if (
-      state.score >= 300
-    ) {
-      starCount = 1;
-    }
-
-    $("#stars").textContent =
-      "★".repeat(starCount) +
-      "☆".repeat(
-        3 - starCount
-      );
-
-    $("#finalScore").textContent =
-      state.score;
-
-    $("#finalServed").textContent =
-      state.served;
-
-    $("#finalCombo").textContent =
-      state.maxCombo;
-
-    $("#resultTitle").textContent =
-      starCount >= 2
-        ? "今日營業成功！"
-        : "營業結束";
-
-    $("#resultText").textContent =
-      starCount >= 2
-        ? "尖峰時段順利撐過去了。"
-        : "再熟悉工作台動線，就能服務更多客人。";
-
-    $("#result").classList.add(
-      "show"
-    );
-  }
-
-  function returnHome() {
-    if (state) {
-      state.running = false;
-    }
-
-    $("#pauseOverlay").classList.remove(
-      "show"
-    );
-
-    $("#result").classList.remove(
-      "show"
-    );
-
-    showScreen(title);
-  }
-
-  function togglePause() {
-    if (
-      !state?.running
-    ) {
-      return;
-    }
-
-    state.paused =
-      !state.paused;
-
-    $("#pauseOverlay").classList.toggle(
-      "show",
-      state.paused
-    );
-
-    state.lastFrame =
-      performance.now();
-  }
+  document
+    .getElementById(
+      "discard-btn"
+    )
+    .onclick =
+      discard;
 
   window.addEventListener(
     "keydown",
     event => {
-      const blockedKeys = [
-        "ArrowUp",
-        "ArrowDown",
-        "ArrowLeft",
-        "ArrowRight",
-        " ",
-        "e",
-        "E"
-      ];
-
-      if (
-        blockedKeys.includes(
-          event.key
-        )
-      ) {
-        event.preventDefault();
-      }
-
-      if (!state) {
-        return;
-      }
-
       state.keys[event.key] =
         true;
 
-      if (
+      if(
+        [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          " ",
+          "e",
+          "E",
+          "q",
+          "Q"
+        ].includes(event.key)
+      ){
+        event.preventDefault();
+      }
+
+      if(
         (
           event.key === "e" ||
           event.key === "E" ||
           event.key === " "
         ) &&
         !event.repeat
-      ) {
+      ){
         interact();
       }
 
-      if (
-        event.key ===
-        "Escape" &&
+      if(
+        (
+          event.key === "q" ||
+          event.key === "Q"
+        ) &&
+        !event.repeat
+      ){
+        discard();
+      }
+
+      if(
+        event.key === "Escape" &&
         state.running
-      ) {
-        togglePause();
+      ){
+        state.paused =
+          true;
+
+        pause.style.display =
+          "flex";
       }
     }
   );
@@ -3108,127 +3079,239 @@ button:focus-visible{
   window.addEventListener(
     "keyup",
     event => {
-      if (state) {
-        state.keys[event.key] =
-          false;
-      }
+      state.keys[event.key] =
+        false;
     }
   );
 
-  $("#enterCafeBtn").addEventListener(
-    "click",
-    () => {
-      showScreen(title);
-    }
-  );
-
-  $("#startBtn").addEventListener(
-    "click",
-    startGame
-  );
-
-  $("#retryBtn").addEventListener(
-    "click",
-    startGame
-  );
-
-  $("#pauseBtn").addEventListener(
-    "click",
-    togglePause
-  );
-
-  $("#resumeBtn").addEventListener(
-    "click",
-    togglePause
-  );
-
-  $("#homeBtn").addEventListener(
-    "click",
-    returnHome
-  );
-
-  $("#resultHomeBtn").addEventListener(
-    "click",
-    returnHome
-  );
-
-  $("#howBtn").addEventListener(
-    "click",
-    () => {
-      $("#how").classList.add(
-        "show"
-      );
-    }
-  );
-
-  $("#closeHow").addEventListener(
-    "click",
-    () => {
-      $("#how").classList.remove(
-        "show"
-      );
-    }
-  );
-
-  $$(".station").forEach(station => {
-    station.addEventListener(
-      "click",
-      () => {
-        if (
-          !state?.running ||
-          state.paused
-        ) {
-          return;
-        }
-
-        const stationCenterX =
-          station.offsetLeft +
-          station.offsetWidth / 2;
-
-        const stationCenterY =
-          station.offsetTop +
-          station.offsetHeight / 2;
-
-        const chefCenterX =
-          state.chef.x + 43;
-
-        const chefCenterY =
-          state.chef.y + 72;
-
-        const distance =
-          Math.hypot(
-            chefCenterX -
-            stationCenterX,
-
-            chefCenterY -
-            stationCenterY
-          );
-
-        if (
-          distance < 115
-        ) {
-          interact();
-        } else {
-          showToast(
-            "請先移動到工作台旁邊"
-          );
-        }
-      }
+  const joystickZone =
+    document.getElementById(
+      "joystick-zone"
     );
-  });
 
-  document.addEventListener(
-    "visibilitychange",
-    () => {
-      if (
-        document.hidden &&
-        state?.running &&
-        !state.paused
-      ) {
-        togglePause();
+  const joystickStick =
+    document.getElementById(
+      "joystick-stick"
+    );
+
+  let joystickPointer =
+    null;
+
+  function joystickMove(event){
+    const rect =
+      joystickZone
+        .getBoundingClientRect();
+
+    const centerX =
+      rect.left +
+      rect.width / 2;
+
+    const centerY =
+      rect.top +
+      rect.height / 2;
+
+    let deltaX =
+      event.clientX -
+      centerX;
+
+    let deltaY =
+      event.clientY -
+      centerY;
+
+    const maximum =
+      rect.width * .29;
+
+    const length =
+      Math.hypot(
+        deltaX,
+        deltaY
+      );
+
+    if(length > maximum){
+      deltaX =
+        deltaX /
+        length *
+        maximum;
+
+      deltaY =
+        deltaY /
+        length *
+        maximum;
+    }
+
+    state.joy.x =
+      deltaX /
+      maximum;
+
+    state.joy.y =
+      deltaY /
+      maximum;
+
+    joystickStick.style.transform =
+      `translate(
+        calc(-50% + ${deltaX}px),
+        calc(-50% + ${deltaY}px)
+      )`;
+  }
+
+  joystickZone.addEventListener(
+    "pointerdown",
+    event => {
+      joystickPointer =
+        event.pointerId;
+
+      joystickZone
+        .setPointerCapture(
+          event.pointerId
+        );
+
+      joystickMove(
+        event
+      );
+    }
+  );
+
+  joystickZone.addEventListener(
+    "pointermove",
+    event => {
+      if(
+        event.pointerId ===
+        joystickPointer
+      ){
+        joystickMove(
+          event
+        );
       }
     }
   );
+
+  function joystickEnd(event){
+    if(
+      event.pointerId !==
+      joystickPointer
+    ){
+      return;
+    }
+
+    joystickPointer =
+      null;
+
+    state.joy.x =
+      0;
+
+    state.joy.y =
+      0;
+
+    joystickStick.style.transform =
+      "translate(-50%,-50%)";
+  }
+
+  joystickZone.addEventListener(
+    "pointerup",
+    joystickEnd
+  );
+
+  joystickZone.addEventListener(
+    "pointercancel",
+    joystickEnd
+  );
+
+  async function boot(){
+    const steps = [
+      "點亮招牌",
+      "清點食材",
+      "預熱煎台",
+      "整理出餐口",
+      "準備開門"
+    ];
+
+    for(
+      let progress = 0;
+      progress <= 100;
+      progress += 2
+    ){
+      document
+        .getElementById(
+          "loading-bar"
+        )
+        .style
+        .width =
+          `${progress}%`;
+
+      document
+        .getElementById(
+          "loading-number"
+        )
+        .textContent =
+          `${progress}%`;
+
+      document
+        .getElementById(
+          "loading-message"
+        )
+        .textContent =
+          steps[
+            Math.min(
+              steps.length - 1,
+              Math.floor(
+                progress / 21
+              )
+            )
+          ];
+
+      await new Promise(resolve => {
+        setTimeout(
+          resolve,
+          progress < 70
+            ? 22
+            : 32
+        );
+      });
+    }
+
+    document
+      .getElementById(
+        "loading-message"
+      )
+      .textContent =
+        "準備完成";
+
+    document
+      .getElementById(
+        "enter-btn"
+      )
+      .classList
+      .add(
+        "show"
+      );
+  }
+
+  document
+    .getElementById(
+      "enter-btn"
+    )
+    .onclick =
+      () => {
+        loading.style.display =
+          "none";
+
+        menu.style.display =
+          "flex";
+
+        touchControls.style.display =
+          "none";
+
+        render();
+      };
+
+  menu.style.display =
+    "none";
+
+  touchControls.style.display =
+    "none";
+
+  render();
+  boot();
 })();
 </script>
 
