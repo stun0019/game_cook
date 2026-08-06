@@ -81,9 +81,6 @@ button{
 
 /* =========================================================
    固定 1280 × 720 邏輯舞台
-
-   不直接使用 vw / vh 改變內容尺寸。
-   所有畫面由 JavaScript 統一縮放。
 ========================================================= */
 
 #stage{
@@ -186,688 +183,43 @@ button{
 
   color:#ffffff;
 
+  background:#101522;
+}
+
+.loading-background{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+  object-position:center;
+
+  pointer-events:none;
+}
+
+.loading-shade{
+  position:absolute;
+  inset:0;
+
   background:
-    radial-gradient(
-      circle at 50% 18%,
-      rgba(143,104,255,.28),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 18% 68%,
-      rgba(45,124,255,.17),
-      transparent 24%
-    ),
-    radial-gradient(
-      circle at 83% 63%,
-      rgba(255,132,38,.14),
-      transparent 22%
-    ),
     linear-gradient(
       180deg,
-      #221b43,
-      #171433 48%,
-      #0d1023
-    );
-}
-
-.loading-stars{
-  position:absolute;
-  inset:0;
-
-  opacity:.58;
-
-  background-image:
-    radial-gradient(
-      rgba(255,255,255,.95) 1px,
-      transparent 1px
+      rgba(4,7,14,.02) 0%,
+      rgba(4,7,14,.02) 54%,
+      rgba(4,7,14,.3) 76%,
+      rgba(4,7,14,.76) 100%
     );
 
-  background-size:
-    52px 52px;
+  pointer-events:none;
 }
-
-.loading-stars::after{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  opacity:.55;
-
-  background-image:
-    radial-gradient(
-      rgba(255,222,151,.9) 1px,
-      transparent 1px
-    );
-
-  background-position:
-    27px 21px;
-
-  background-size:
-    83px 83px;
-}
-
-.comet{
-  position:absolute;
-
-  width:135px;
-  height:4px;
-
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #ffc66d
-    );
-
-  filter:
-    drop-shadow(
-      0 0 9px rgba(255,185,80,.9)
-    );
-
-  transform:
-    rotate(-28deg);
-
-  animation:
-    cometMove 6s linear infinite;
-}
-
-.comet::after{
-  content:"";
-
-  position:absolute;
-  right:-8px;
-  top:-5px;
-
-  width:14px;
-  height:14px;
-
-  border-radius:50%;
-
-  background:#ffb55a;
-
-  box-shadow:
-    0 0 18px rgba(255,175,64,.9);
-}
-
-.comet.one{
-  left:74%;
-  top:22%;
-}
-
-.comet.two{
-  left:18%;
-  top:40%;
-
-  width:100px;
-
-  animation-delay:2s;
-}
-
-.comet.three{
-  left:39%;
-  top:15%;
-
-  animation-delay:3.5s;
-}
-
-@keyframes cometMove{
-  0%{
-    opacity:0;
-
-    transform:
-      translate(120px,-70px)
-      rotate(-28deg);
-  }
-
-  15%,
-  60%{
-    opacity:1;
-  }
-
-  100%{
-    opacity:0;
-
-    transform:
-      translate(-190px,135px)
-      rotate(-28deg);
-  }
-}
-
-.loading-title{
-  position:absolute;
-  left:50%;
-  top:42px;
-  z-index:5;
-
-  width:1000px;
-
-  text-align:center;
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-title small{
-  color:#ffd36d;
-
-  font-size:18px;
-  font-weight:1000;
-
-  letter-spacing:.3em;
-}
-
-.loading-title h1{
-  margin-top:10px;
-
-  color:#fff8ed;
-
-  font-size:92px;
-  font-weight:1000;
-  line-height:1;
-
-  letter-spacing:.05em;
-
-  text-shadow:
-    0 8px 0 rgba(51,23,29,.7),
-    -5px 0 #c7462f,
-    5px 0 #c7462f,
-    0 -5px #c7462f,
-    0 5px #c7462f,
-    -4px -4px #c7462f,
-    4px -4px #c7462f,
-    -4px 4px #c7462f,
-    4px 4px #c7462f;
-}
-
-/* =========================================================
-   Loading 地球
-========================================================= */
-
-.loading-globe{
-  position:absolute;
-  left:50%;
-  bottom:-205px;
-
-  width:480px;
-  height:480px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle at 50% 27%,
-      rgba(84,175,255,.42),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 50% 32%,
-      #2367aa,
-      #173c73 43%,
-      #09152f 77%
-    );
-
-  box-shadow:
-    0 -12px 80px rgba(94,142,255,.27);
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-globe::before{
-  content:"";
-
-  position:absolute;
-  left:105px;
-  top:235px;
-
-  width:190px;
-  height:100px;
-
-  border-radius:
-    54% 46% 52% 48% /
-    55% 46% 54% 45%;
-
-  background:#3a9b50;
-
-  transform:
-    rotate(-12deg);
-
-  box-shadow:
-    118px -45px 0 -20px #3a9b50,
-    42px 43px 0 -19px #2f8242;
-}
-
-.loading-globe::after{
-  content:"";
-
-  position:absolute;
-  left:237px;
-  top:184px;
-
-  width:120px;
-  height:70px;
-
-  border-radius:
-    48% 52% 56% 44% /
-    54% 48% 52% 46%;
-
-  background:#3a9b50;
-
-  transform:
-    rotate(19deg);
-}
-
-/* =========================================================
-   Loading 角色群
-========================================================= */
-
-.loading-cast{
-  position:absolute;
-  left:50%;
-  bottom:111px;
-  z-index:4;
-
-  width:580px;
-  height:322px;
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-character{
-  position:absolute;
-  bottom:0;
-
-  animation:
-    characterBob 2.7s ease-in-out infinite;
-}
-
-.loading-character .shadow{
-  position:absolute;
-  left:50%;
-  bottom:-9px;
-
-  width:88px;
-  height:21px;
-
-  border-radius:50%;
-
-  background:
-    rgba(0,0,0,.25);
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-character .body{
-  position:absolute;
-  left:50%;
-  bottom:0;
-
-  border:
-    4px solid var(--ink);
-
-  border-radius:
-    25px 25px 18px 18px;
-
-  background:#fff9eb;
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-character .face{
-  position:absolute;
-  left:50%;
-
-  border:
-    4px solid var(--ink);
-
-  border-radius:50%;
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-character .hat{
-  position:absolute;
-  left:50%;
-
-  border:
-    4px solid var(--ink);
-
-  border-radius:
-    18px 18px 12px 12px;
-
-  background:#fff9eb;
-
-  transform:
-    translateX(-50%);
-}
-
-.loading-character .eye{
-  position:absolute;
-  top:13px;
-
-  width:4px;
-  height:4px;
-
-  border-radius:50%;
-
-  background:var(--ink);
-}
-
-.character-one{
-  left:23px;
-
-  width:118px;
-  height:137px;
-}
-
-.character-one .body{
-  width:76px;
-  height:79px;
-}
-
-.character-one .face{
-  top:29px;
-
-  width:56px;
-  height:56px;
-
-  background:#ca7845;
-}
-
-.character-one .hat{
-  top:-20px;
-
-  width:61px;
-  height:33px;
-}
-
-.character-one .eye.left{
-  left:45px;
-}
-
-.character-one .eye.right{
-  right:45px;
-}
-
-.character-two{
-  left:140px;
-
-  width:184px;
-  height:247px;
-
-  animation-delay:.2s;
-}
-
-.character-two .body{
-  width:114px;
-  height:118px;
-}
-
-.character-two .face{
-  top:42px;
-
-  width:85px;
-  height:85px;
-
-  background:#8e5c34;
-}
-
-.character-two .hat{
-  top:-29px;
-
-  width:85px;
-  height:43px;
-}
-
-.character-two .eye.left{
-  left:71px;
-}
-
-.character-two .eye.right{
-  right:71px;
-}
-
-.character-two::before{
-  content:"";
-
-  position:absolute;
-  left:50%;
-  top:-2px;
-
-  width:110px;
-  height:110px;
-
-  clip-path:
-    polygon(
-      50% 0,
-      62% 14%,
-      80% 10%,
-      74% 29%,
-      91% 36%,
-      77% 46%,
-      83% 64%,
-      63% 60%,
-      50% 77%,
-      37% 60%,
-      17% 64%,
-      23% 46%,
-      9% 36%,
-      26% 29%,
-      20% 10%,
-      38% 14%
-    );
-
-  background:#f1cb57;
-
-  transform:
-    translateX(-50%);
-
-  filter:
-    drop-shadow(
-      0 5px 0 rgba(80,52,23,.35)
-    );
-}
-
-.character-three{
-  left:288px;
-
-  width:122px;
-  height:153px;
-
-  animation-delay:.38s;
-}
-
-.character-three .body{
-  width:82px;
-  height:84px;
-}
-
-.character-three .face{
-  top:33px;
-
-  width:59px;
-  height:59px;
-
-  background:#d18d4f;
-}
-
-.character-three .hat{
-  top:-20px;
-
-  width:63px;
-  height:33px;
-}
-
-.character-three .eye.left{
-  left:48px;
-}
-
-.character-three .eye.right{
-  right:48px;
-}
-
-.character-four{
-  left:394px;
-
-  width:134px;
-  height:173px;
-
-  animation-delay:.52s;
-}
-
-.character-four .body{
-  width:88px;
-  height:90px;
-}
-
-.character-four .face{
-  top:35px;
-
-  width:63px;
-  height:63px;
-
-  background:#d1814b;
-}
-
-.character-four .hat{
-  top:-22px;
-
-  width:65px;
-  height:35px;
-}
-
-.character-four .eye.left{
-  left:52px;
-}
-
-.character-four .eye.right{
-  right:52px;
-}
-
-.character-four::after{
-  content:"";
-
-  position:absolute;
-  right:7px;
-  top:58px;
-
-  width:17px;
-  height:77px;
-
-  border:
-    4px solid var(--ink);
-
-  border-radius:10px;
-
-  background:
-    linear-gradient(
-      #f5f5f5,
-      #d7d7d7
-    );
-
-  transform:
-    rotate(29deg);
-}
-
-.character-dog{
-  right:0;
-
-  width:132px;
-  height:184px;
-
-  animation-delay:.13s;
-}
-
-.character-dog .body{
-  width:86px;
-  height:92px;
-
-  background:#f0cb63;
-}
-
-.character-dog .face{
-  top:38px;
-
-  width:69px;
-  height:65px;
-
-  background:#c78b4b;
-}
-
-.character-dog .hat{
-  display:none;
-}
-
-.character-dog .eye.left{
-  left:51px;
-}
-
-.character-dog .eye.right{
-  right:51px;
-}
-
-.character-dog::before,
-.character-dog::after{
-  content:"";
-
-  position:absolute;
-  top:28px;
-
-  width:27px;
-  height:43px;
-
-  border:
-    4px solid var(--ink);
-
-  border-radius:
-    18px 18px 12px 12px;
-
-  background:#c78b4b;
-}
-
-.character-dog::before{
-  left:17px;
-
-  transform:
-    rotate(-28deg);
-}
-
-.character-dog::after{
-  right:17px;
-
-  transform:
-    rotate(28deg);
-}
-
-@keyframes characterBob{
-  0%,
-  100%{
-    transform:
-      translateY(0);
-  }
-
-  50%{
-    transform:
-      translateY(-8px);
-  }
-}
-
-/* =========================================================
-   Loading 進度
-========================================================= */
 
 .loading-progress{
   position:absolute;
   left:50%;
   bottom:28px;
-  z-index:8;
+  z-index:5;
 
   width:730px;
 
@@ -890,25 +242,26 @@ button{
   font-weight:1000;
 
   text-shadow:
-    0 2px 6px rgba(0,0,0,.55);
+    0 2px 5px rgba(0,0,0,.85),
+    0 0 8px rgba(0,0,0,.55);
 }
 
 .loading-track{
-  height:19px;
+  height:20px;
 
   overflow:hidden;
 
   border:
-    2px solid rgba(255,255,255,.86);
+    3px solid rgba(255,255,255,.94);
 
   border-radius:999px;
 
   background:
-    rgba(10,11,28,.54);
+    rgba(7,9,20,.68);
 
   box-shadow:
-    inset 0 0 0 4px
-    rgba(255,255,255,.05);
+    0 4px 12px rgba(0,0,0,.3),
+    inset 0 0 0 3px rgba(255,255,255,.06);
 }
 
 #loading-bar{
@@ -922,8 +275,8 @@ button{
   background:
     linear-gradient(
       90deg,
-      #47aadc,
-      #fbd66a,
+      #45a8dd,
+      #f8d568,
       #ef7b4a
     );
 
@@ -943,7 +296,7 @@ button{
     linear-gradient(
       90deg,
       transparent,
-      rgba(255,255,255,.75),
+      rgba(255,255,255,.78),
       transparent
     );
 
@@ -964,11 +317,11 @@ button{
 
   min-width:240px;
 
-  margin-top:19px;
+  margin-top:18px;
   padding:14px 30px;
 
   border:
-    3px solid rgba(255,255,255,.9);
+    3px solid rgba(255,255,255,.92);
 
   border-radius:16px;
 
@@ -994,7 +347,10 @@ button{
   transform:
     translateY(12px);
 
-  transition:.3s;
+  transition:
+    opacity .3s,
+    visibility .3s,
+    transform .3s;
 }
 
 #enter-button.visible{
@@ -1002,6 +358,15 @@ button{
   opacity:1;
 
   transform:none;
+}
+
+#enter-button:active{
+  transform:
+    translateY(6px);
+
+  box-shadow:
+    0 2px 0 #7d3322,
+    0 8px 18px rgba(0,0,0,.28);
 }
 
 /* =========================================================
@@ -1647,77 +1012,21 @@ button{
       id="loading-screen"
       class="screen"
     >
-      <div class="loading-stars"></div>
+      <img
+        id="loading-background"
+        class="loading-background"
+        src="asset/art/Loading_page_BG.png"
+        alt=""
+        draggable="false"
+      >
 
-      <span class="comet one"></span>
-      <span class="comet two"></span>
-      <span class="comet three"></span>
-
-      <div class="loading-title">
-        <small>
-          サニーポーカフェ
-        </small>
-
-        <h1>
-          キッチン大騒動
-        </h1>
-      </div>
-
-      <div class="loading-globe"></div>
-
-      <div class="loading-cast">
-
-        <div class="loading-character character-one">
-          <span class="shadow"></span>
-          <span class="hat"></span>
-          <span class="body"></span>
-          <span class="face"></span>
-          <span class="eye left"></span>
-          <span class="eye right"></span>
-        </div>
-
-        <div class="loading-character character-two">
-          <span class="shadow"></span>
-          <span class="hat"></span>
-          <span class="body"></span>
-          <span class="face"></span>
-          <span class="eye left"></span>
-          <span class="eye right"></span>
-        </div>
-
-        <div class="loading-character character-three">
-          <span class="shadow"></span>
-          <span class="hat"></span>
-          <span class="body"></span>
-          <span class="face"></span>
-          <span class="eye left"></span>
-          <span class="eye right"></span>
-        </div>
-
-        <div class="loading-character character-four">
-          <span class="shadow"></span>
-          <span class="hat"></span>
-          <span class="body"></span>
-          <span class="face"></span>
-          <span class="eye left"></span>
-          <span class="eye right"></span>
-        </div>
-
-        <div class="loading-character character-dog">
-          <span class="shadow"></span>
-          <span class="body"></span>
-          <span class="face"></span>
-          <span class="eye left"></span>
-          <span class="eye right"></span>
-        </div>
-
-      </div>
+      <div class="loading-shade"></div>
 
       <div class="loading-progress">
 
         <div class="loading-status">
           <span id="loading-message">
-            食材を確認しています
+            画像を読み込んでいます
           </span>
 
           <span id="loading-number">
@@ -1732,6 +1041,7 @@ button{
         <button
           id="enter-button"
           type="button"
+          disabled
         >
           メニューへ
         </button>
@@ -2028,9 +1338,7 @@ button{
   </main>
 </div>
 
-<section
-  id="rotate-screen"
->
+<section id="rotate-screen">
   <div>
     <div class="rotate-phone"></div>
 
@@ -2048,13 +1356,6 @@ button{
 (() => {
   "use strict";
 
-  /* =======================================================
-     固定舞台自適應
-
-     舞台永遠維持 1280 × 720，
-     只縮放整個舞台，不改動內部座標。
-  ======================================================= */
-
   const LOGICAL_WIDTH = 1280;
   const LOGICAL_HEIGHT = 720;
 
@@ -2069,11 +1370,32 @@ button{
     );
 
   function fitStage(){
+    const visualWidth =
+      window.visualViewport
+        ?.width ||
+      window.innerWidth;
+
+    const visualHeight =
+      window.visualViewport
+        ?.height ||
+      window.innerHeight;
+
+    const viewportRect =
+      viewport.getBoundingClientRect();
+
     const availableWidth =
-      viewport.clientWidth;
+      Math.min(
+        viewport.clientWidth,
+        visualWidth,
+        viewportRect.width
+      );
 
     const availableHeight =
-      viewport.clientHeight;
+      Math.min(
+        viewport.clientHeight,
+        visualHeight,
+        viewportRect.height
+      );
 
     const scale =
       Math.min(
@@ -2101,7 +1423,7 @@ button{
     () => {
       setTimeout(
         fitStage,
-        120
+        160
       );
     },
     {
@@ -2129,10 +1451,6 @@ button{
 
   fitStage();
 
-  /* =======================================================
-     DOM
-  ======================================================= */
-
   const canvas =
     document.getElementById(
       "game"
@@ -2146,6 +1464,11 @@ button{
   const loadingScreen =
     document.getElementById(
       "loading-screen"
+    );
+
+  const loadingBackground =
+    document.getElementById(
+      "loading-background"
     );
 
   const modeScreen =
@@ -2173,6 +1496,26 @@ button{
       "desktop-help"
     );
 
+  const loadingBar =
+    document.getElementById(
+      "loading-bar"
+    );
+
+  const loadingNumber =
+    document.getElementById(
+      "loading-number"
+    );
+
+  const loadingMessage =
+    document.getElementById(
+      "loading-message"
+    );
+
+  const enterButton =
+    document.getElementById(
+      "enter-button"
+    );
+
   const W = 1280;
   const H = 720;
   const HUD_HEIGHT = 132;
@@ -2194,10 +1537,6 @@ button{
     dark:"#1d3037",
     shadow:"rgba(41,27,20,.26)"
   };
-
-  /* =======================================================
-     餐台
-  ======================================================= */
 
   const counterTiles = [];
 
@@ -2238,16 +1577,6 @@ button{
       y:552
     });
   }
-
-  /* =======================================================
-     工作站
-
-     visualX / visualY：
-     工作站實際繪製位置。
-
-     interactX / interactY：
-     玩家站在此位置附近才能互動。
-  ======================================================= */
 
   const stations = [
     {
@@ -2450,10 +1779,6 @@ button{
       performance.now()
   };
 
-  /* =======================================================
-     Canvas 工具
-  ======================================================= */
-
   function roundedRect(
     x,
     y,
@@ -2519,10 +1844,6 @@ button{
       y
     );
   }
-
-  /* =======================================================
-     圖示
-  ======================================================= */
 
   function drawIcon(
     type,
@@ -2944,10 +2265,6 @@ button{
     ctx.restore();
   }
 
-  /* =======================================================
-     場景
-  ======================================================= */
-
   function drawBackground(){
     ctx.fillStyle =
       COLORS.floor;
@@ -3278,10 +2595,6 @@ button{
     ctx.restore();
   }
 
-  /* =======================================================
-     訂單 HUD
-  ======================================================= */
-
   function getPatienceColor(
     patience
   ){
@@ -3558,10 +2871,6 @@ button{
       1000
     );
   }
-
-  /* =======================================================
-     訂單與遊戲流程
-  ======================================================= */
 
   function addOrder(){
     const recipe =
@@ -3978,10 +3287,6 @@ button{
     }
   }
 
-  /* =======================================================
-     更新
-  ======================================================= */
-
   function updateMovement(
     deltaTime
   ){
@@ -4248,10 +3553,6 @@ button{
     );
   }
 
-  /* =======================================================
-     鍵盤
-  ======================================================= */
-
   window.addEventListener(
     "keydown",
     event => {
@@ -4316,14 +3617,6 @@ button{
         false;
     }
   );
-
-  /* =======================================================
-     虛擬搖桿
-
-     因為使用 getBoundingClientRect()，
-     取得的是縮放後的實際畫面尺寸，
-     所以觸控比例會跟隨舞台縮放。
-  ======================================================= */
 
   const joystick =
     document.getElementById(
@@ -4450,10 +3743,6 @@ button{
     resetJoystick
   );
 
-  /* =======================================================
-     UI
-  ======================================================= */
-
   document
     .getElementById(
       "interact-button"
@@ -4568,84 +3857,133 @@ button{
       showModeScreen
     );
 
-  /* =======================================================
-     Loading
-  ======================================================= */
-
   let loadingReady =
     false;
 
+  function waitForImage(
+    image
+  ){
+    return new Promise(resolve => {
+      if(
+        image.complete &&
+        image.naturalWidth > 0
+      ){
+        resolve(true);
+
+        return;
+      }
+
+      image.addEventListener(
+        "load",
+        () => resolve(true),
+        {
+          once:true
+        }
+      );
+
+      image.addEventListener(
+        "error",
+        () => resolve(false),
+        {
+          once:true
+        }
+      );
+    });
+  }
+
   async function boot(){
+    loadingMessage.textContent =
+      "画像を読み込んでいます";
+
+    loadingBar.style.width =
+      "8%";
+
+    loadingNumber.textContent =
+      "8%";
+
+    const backgroundLoaded =
+      await waitForImage(
+        loadingBackground
+      );
+
     const loadingSteps = [
-      "食材を確認しています",
-      "調理器具を準備しています",
-      "キッチンを整えています",
-      "注文票を並べています",
-      "まもなく開店です"
+      {
+        progress:24,
+        text:"食材を確認しています"
+      },
+      {
+        progress:46,
+        text:"調理器具を準備しています"
+      },
+      {
+        progress:68,
+        text:"キッチンを整えています"
+      },
+      {
+        progress:86,
+        text:"注文票を並べています"
+      },
+      {
+        progress:100,
+        text:"準備完了"
+      }
     ];
 
     for(
-      let progress = 0;
-      progress <= 100;
-      progress += 2
+      const step of loadingSteps
     ){
-      document
-        .getElementById(
-          "loading-bar"
-        )
-        .style
-        .width =
+      const currentProgress =
+        Number.parseInt(
+          loadingBar.style.width,
+          10
+        ) || 8;
+
+      for(
+        let progress = currentProgress;
+        progress <= step.progress;
+        progress += 2
+      ){
+        loadingBar.style.width =
           `${progress}%`;
 
-      document
-        .getElementById(
-          "loading-number"
-        )
-        .textContent =
+        loadingNumber.textContent =
           `${progress}%`;
 
-      document
-        .getElementById(
-          "loading-message"
-        )
-        .textContent =
-          loadingSteps[
-            Math.min(
-              loadingSteps.length - 1,
-              Math.floor(
-                progress / 21
-              )
-            )
-          ];
+        await new Promise(resolve => {
+          setTimeout(
+            resolve,
+            25
+          );
+        });
+      }
+
+      loadingMessage.textContent =
+        step.text;
 
       await new Promise(resolve => {
         setTimeout(
           resolve,
-          progress < 70
-            ? 24
-            : 34
+          120
         );
       });
+    }
+
+    if(!backgroundLoaded){
+      loadingMessage.textContent =
+        "背景画像を読み込めませんでした";
+
+      return;
     }
 
     loadingReady =
       true;
 
-    document
-      .getElementById(
-        "loading-message"
-      )
-      .textContent =
-        "準備完了";
+    enterButton.disabled =
+      false;
 
-    document
-      .getElementById(
-        "enter-button"
-      )
-      .classList
-      .add(
-        "visible"
-      );
+    enterButton.classList.add(
+      "visible"
+    );
   }
 
   function enterMenu(){
@@ -4665,14 +4003,19 @@ button{
     render();
   }
 
-  document
-    .getElementById(
-      "enter-button"
-    )
-    .addEventListener(
-      "click",
-      enterMenu
-    );
+  enterButton.addEventListener(
+    "click",
+    enterMenu
+  );
+
+  enterButton.addEventListener(
+    "pointerup",
+    event => {
+      event.preventDefault();
+
+      enterMenu();
+    }
+  );
 
   modeScreen.style.display =
     "none";
