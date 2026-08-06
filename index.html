@@ -2,14 +2,20 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#0b1022">
+
 <title>灶咖大亂鬥</title>
 
 <style>
 :root{
   --ink:#33251f;
   --paper:#fffaf0;
-  --cream:#fff3d5;
   --red:#e45a45;
   --orange:#f29a46;
   --gold:#f6c34f;
@@ -22,6 +28,7 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
+
   user-select:none;
   -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
@@ -31,53 +38,78 @@ html,
 body{
   width:100%;
   height:100%;
+
   overflow:hidden;
-  background:#091116;
+
+  background:#080d12;
+
   touch-action:none;
+  overscroll-behavior:none;
+
   font-family:
     "Noto Sans TC",
+    "PingFang TC",
     "Microsoft JhengHei",
     sans-serif;
 }
 
 body{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  position:fixed;
+  inset:0;
 }
 
 button{
   font:inherit;
 }
 
-#shell{
-  position:relative;
+/* =========================================================
+   裝置可視區
+========================================================= */
 
-  width:min(
-    100vw,
-    calc(100vh * 16 / 9)
-  );
+#viewport{
+  position:fixed;
 
-  height:min(
-    100vh,
-    calc(100vw * 9 / 16)
-  );
+  left:env(safe-area-inset-left);
+  right:env(safe-area-inset-right);
+  top:env(safe-area-inset-top);
+  bottom:env(safe-area-inset-bottom);
 
-  max-width:1280px;
-  max-height:720px;
+  overflow:hidden;
+
+  background:#080d12;
+}
+
+/* =========================================================
+   固定 1280 × 720 邏輯舞台
+
+   不直接使用 vw / vh 改變內容尺寸。
+   所有畫面由 JavaScript 統一縮放。
+========================================================= */
+
+#stage{
+  position:absolute;
+  left:50%;
+  top:50%;
+
+  width:1280px;
+  height:720px;
 
   overflow:hidden;
 
   background:#101820;
 
+  transform-origin:center center;
+  will-change:transform;
+
   box-shadow:
-    0 24px 70px rgba(0,0,0,.55);
+    0 30px 80px rgba(0,0,0,.55);
 }
 
 #game{
   display:block;
-  width:100%;
-  height:100%;
+
+  width:1280px;
+  height:720px;
 }
 
 .screen{
@@ -85,29 +117,60 @@ button{
   inset:0;
 }
 
-.hide{
-  display:none !important;
-}
-
 /* =========================================================
-   旋轉提示
+   直向提示
 ========================================================= */
 
-#rotate{
-  z-index:99;
+#rotate-screen{
+  position:fixed;
+  inset:0;
+  z-index:9999;
 
   display:none;
   align-items:center;
   justify-content:center;
 
-  background:#101820;
+  padding:30px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #283d46,
+      #091116 72%
+    );
+
   color:#ffffff;
 
   text-align:center;
 }
 
+.rotate-phone{
+  width:62px;
+  height:106px;
+
+  margin:0 auto 22px;
+
+  border:4px solid #ffffff;
+  border-radius:15px;
+
+  animation:
+    rotatePhone 2s ease-in-out infinite;
+}
+
+@keyframes rotatePhone{
+  0%,
+  25%{
+    transform:rotate(-10deg);
+  }
+
+  70%,
+  100%{
+    transform:rotate(80deg);
+  }
+}
+
 @media (orientation:portrait) and (max-width:900px){
-  #rotate{
+  #rotate-screen{
     display:flex;
   }
 }
@@ -116,8 +179,8 @@ button{
    Loading
 ========================================================= */
 
-#loading{
-  z-index:30;
+#loading-screen{
+  z-index:1000;
 
   overflow:hidden;
 
@@ -126,67 +189,89 @@ button{
   background:
     radial-gradient(
       circle at 50% 18%,
-      rgba(143,104,255,.26),
+      rgba(143,104,255,.28),
       transparent 28%
     ),
     radial-gradient(
-      circle at 20% 72%,
+      circle at 18% 68%,
       rgba(45,124,255,.17),
       transparent 24%
     ),
     radial-gradient(
-      circle at 80% 68%,
-      rgba(255,132,38,.13),
+      circle at 83% 63%,
+      rgba(255,132,38,.14),
       transparent 22%
     ),
     linear-gradient(
-      #211a42,
-      #15132f 48%,
-      #0b0f21
+      180deg,
+      #221b43,
+      #171433 48%,
+      #0d1023
     );
 }
 
-.stars{
+.loading-stars{
   position:absolute;
   inset:0;
 
-  opacity:.42;
+  opacity:.58;
 
   background-image:
     radial-gradient(
-      #ffffff 1px,
+      rgba(255,255,255,.95) 1px,
       transparent 1px
     );
 
   background-size:
-    54px 54px;
+    52px 52px;
+}
+
+.loading-stars::after{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  opacity:.55;
+
+  background-image:
+    radial-gradient(
+      rgba(255,222,151,.9) 1px,
+      transparent 1px
+    );
+
+  background-position:
+    27px 21px;
+
+  background-size:
+    83px 83px;
 }
 
 .comet{
   position:absolute;
 
-  width:130px;
+  width:135px;
   height:4px;
 
-  border-radius:99px;
+  border-radius:999px;
 
   background:
     linear-gradient(
       90deg,
       transparent,
-      #ffc26b
+      #ffc66d
     );
 
   filter:
     drop-shadow(
-      0 0 8px #ffb24f
+      0 0 9px rgba(255,185,80,.9)
     );
 
   transform:
     rotate(-28deg);
 
   animation:
-    comet 5.5s linear infinite;
+    cometMove 6s linear infinite;
 }
 
 .comet::after{
@@ -201,41 +286,43 @@ button{
 
   border-radius:50%;
 
-  background:#ffb85c;
+  background:#ffb55a;
+
+  box-shadow:
+    0 0 18px rgba(255,175,64,.9);
 }
 
-.c1{
+.comet.one{
+  left:74%;
   top:22%;
-  left:72%;
 }
 
-.c2{
-  top:39%;
+.comet.two{
   left:18%;
+  top:40%;
+
+  width:100px;
 
   animation-delay:2s;
 }
 
-.c3{
-  top:14%;
-  left:38%;
+.comet.three{
+  left:39%;
+  top:15%;
 
-  animation-delay:3.3s;
+  animation-delay:3.5s;
 }
 
-@keyframes comet{
+@keyframes cometMove{
   0%{
     opacity:0;
 
     transform:
-      translate(
-        120px,
-        -70px
-      )
+      translate(120px,-70px)
       rotate(-28deg);
   }
 
-  18%,
+  15%,
   60%{
     opacity:1;
   }
@@ -244,19 +331,18 @@ button{
     opacity:0;
 
     transform:
-      translate(
-        -180px,
-        130px
-      )
+      translate(-190px,135px)
       rotate(-28deg);
   }
 }
 
-.brand{
+.loading-title{
   position:absolute;
   left:50%;
   top:42px;
   z-index:5;
+
+  width:1000px;
 
   text-align:center;
 
@@ -264,124 +350,148 @@ button{
     translateX(-50%);
 }
 
-.brand small{
+.loading-title small{
   color:#ffd36d;
 
   font-size:18px;
   font-weight:1000;
 
-  letter-spacing:.28em;
+  letter-spacing:.3em;
 }
 
-.brand h1{
+.loading-title h1{
   margin-top:10px;
 
-  color:#fff7ee;
+  color:#fff8ed;
 
-  font-size:90px;
+  font-size:92px;
   font-weight:1000;
   line-height:1;
 
-  letter-spacing:.04em;
+  letter-spacing:.05em;
 
   text-shadow:
-    0 7px #4a2020,
+    0 8px 0 rgba(51,23,29,.7),
     -5px 0 #c7462f,
     5px 0 #c7462f,
     0 -5px #c7462f,
-    0 5px #c7462f;
+    0 5px #c7462f,
+    -4px -4px #c7462f,
+    4px -4px #c7462f,
+    -4px 4px #c7462f,
+    4px 4px #c7462f;
 }
 
-.globe{
+/* =========================================================
+   Loading 地球
+========================================================= */
+
+.loading-globe{
   position:absolute;
   left:50%;
-  bottom:-190px;
+  bottom:-205px;
 
-  width:470px;
-  height:470px;
+  width:480px;
+  height:480px;
 
   border-radius:50%;
 
   background:
     radial-gradient(
-      circle at 50% 30%,
-      #2a75bc,
-      #163c75 42%,
-      #08132c 76%
+      circle at 50% 27%,
+      rgba(84,175,255,.42),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 32%,
+      #2367aa,
+      #173c73 43%,
+      #09152f 77%
     );
 
   box-shadow:
-    0 -8px 70px rgba(90,138,255,.22);
+    0 -12px 80px rgba(94,142,255,.27);
 
   transform:
     translateX(-50%);
 }
 
-.globe::before,
-.globe::after{
+.loading-globe::before{
   content:"";
 
   position:absolute;
-
-  border-radius:50%;
-
-  background:#3b9d52;
-}
-
-.globe::before{
   left:105px;
-  top:240px;
+  top:235px;
 
   width:190px;
   height:100px;
 
+  border-radius:
+    54% 46% 52% 48% /
+    55% 46% 54% 45%;
+
+  background:#3a9b50;
+
   transform:
-    rotate(-10deg);
+    rotate(-12deg);
+
+  box-shadow:
+    118px -45px 0 -20px #3a9b50,
+    42px 43px 0 -19px #2f8242;
 }
 
-.globe::after{
-  left:235px;
-  top:185px;
+.loading-globe::after{
+  content:"";
+
+  position:absolute;
+  left:237px;
+  top:184px;
 
   width:120px;
   height:70px;
 
+  border-radius:
+    48% 52% 56% 44% /
+    54% 48% 52% 46%;
+
+  background:#3a9b50;
+
   transform:
-    rotate(18deg);
+    rotate(19deg);
 }
 
 /* =========================================================
-   Loading 人物群
+   Loading 角色群
 ========================================================= */
 
-.cast{
+.loading-cast{
   position:absolute;
   left:50%;
-  bottom:112px;
-  z-index:3;
+  bottom:111px;
+  z-index:4;
 
-  width:570px;
-  height:315px;
+  width:580px;
+  height:322px;
 
   transform:
     translateX(-50%);
 }
 
-.char{
+.loading-character{
   position:absolute;
   bottom:0;
 
   animation:
-    bob 2.6s ease-in-out infinite;
+    characterBob 2.7s ease-in-out infinite;
 }
 
-.shadow{
+.loading-character .shadow{
   position:absolute;
   left:50%;
-  bottom:-8px;
+  bottom:-9px;
 
   width:88px;
-  height:20px;
+  height:21px;
 
   border-radius:50%;
 
@@ -392,7 +502,7 @@ button{
     translateX(-50%);
 }
 
-.body{
+.loading-character .body{
   position:absolute;
   left:50%;
   bottom:0;
@@ -401,15 +511,15 @@ button{
     4px solid var(--ink);
 
   border-radius:
-    24px 24px 18px 18px;
+    25px 25px 18px 18px;
 
-  background:#fff8ea;
+  background:#fff9eb;
 
   transform:
     translateX(-50%);
 }
 
-.face{
+.loading-character .face{
   position:absolute;
   left:50%;
 
@@ -422,24 +532,25 @@ button{
     translateX(-50%);
 }
 
-.hat{
+.loading-character .hat{
   position:absolute;
   left:50%;
 
   border:
     4px solid var(--ink);
 
-  border-radius:18px;
+  border-radius:
+    18px 18px 12px 12px;
 
-  background:#fff8ea;
+  background:#fff9eb;
 
   transform:
     translateX(-50%);
 }
 
-.eye{
+.loading-character .eye{
   position:absolute;
-  top:12px;
+  top:13px;
 
   width:4px;
   height:4px;
@@ -449,93 +560,89 @@ button{
   background:var(--ink);
 }
 
-/* 左側小廚師 */
+.character-one{
+  left:23px;
 
-.p1{
-  left:30px;
-
-  width:115px;
-  height:135px;
+  width:118px;
+  height:137px;
 }
 
-.p1 .body{
-  width:75px;
-  height:78px;
+.character-one .body{
+  width:76px;
+  height:79px;
 }
 
-.p1 .face{
+.character-one .face{
   top:29px;
 
-  width:55px;
-  height:55px;
+  width:56px;
+  height:56px;
 
-  background:#cb7a46;
+  background:#ca7845;
 }
 
-.p1 .hat{
+.character-one .hat{
   top:-20px;
 
-  width:60px;
-  height:32px;
+  width:61px;
+  height:33px;
 }
 
-.p1 .eye.l{
-  left:44px;
+.character-one .eye.left{
+  left:45px;
 }
 
-.p1 .eye.r{
-  right:44px;
+.character-one .eye.right{
+  right:45px;
 }
 
-/* 中央主廚 */
+.character-two{
+  left:140px;
 
-.p2{
-  left:145px;
+  width:184px;
+  height:247px;
 
-  width:180px;
-  height:245px;
-
-  animation-delay:.15s;
+  animation-delay:.2s;
 }
 
-.p2 .body{
-  width:112px;
-  height:116px;
+.character-two .body{
+  width:114px;
+  height:118px;
 }
 
-.p2 .face{
+.character-two .face{
   top:42px;
 
-  width:84px;
-  height:84px;
+  width:85px;
+  height:85px;
 
-  background:#8f5d35;
+  background:#8e5c34;
 }
 
-.p2 .hat{
-  top:-28px;
+.character-two .hat{
+  top:-29px;
 
-  width:84px;
-  height:42px;
+  width:85px;
+  height:43px;
 }
 
-.p2 .eye.l{
-  left:69px;
+.character-two .eye.left{
+  left:71px;
 }
 
-.p2 .eye.r{
-  right:69px;
+.character-two .eye.right{
+  right:71px;
 }
 
-.p2::before{
+.character-two::before{
   content:"";
 
   position:absolute;
   left:50%;
   top:-2px;
 
-  width:108px;
-  height:108px;
+  width:110px;
+  height:110px;
 
   clip-path:
     polygon(
@@ -543,15 +650,15 @@ button{
       62% 14%,
       80% 10%,
       74% 29%,
-      90% 36%,
-      76% 46%,
-      82% 64%,
+      91% 36%,
+      77% 46%,
+      83% 64%,
       63% 60%,
-      50% 76%,
+      50% 77%,
       37% 60%,
-      18% 64%,
-      24% 46%,
-      10% 36%,
+      17% 64%,
+      23% 46%,
+      9% 36%,
       26% 29%,
       20% 10%,
       38% 14%
@@ -561,128 +668,191 @@ button{
 
   transform:
     translateX(-50%);
+
+  filter:
+    drop-shadow(
+      0 5px 0 rgba(80,52,23,.35)
+    );
 }
 
-/* 中間小廚師 */
+.character-three{
+  left:288px;
 
-.p3{
-  left:285px;
+  width:122px;
+  height:153px;
 
-  width:120px;
-  height:150px;
-
-  animation-delay:.3s;
+  animation-delay:.38s;
 }
 
-.p3 .body{
-  width:80px;
-  height:82px;
+.character-three .body{
+  width:82px;
+  height:84px;
 }
 
-.p3 .face{
-  top:32px;
+.character-three .face{
+  top:33px;
 
-  width:58px;
-  height:58px;
+  width:59px;
+  height:59px;
 
-  background:#d28f4f;
+  background:#d18d4f;
 }
 
-.p3 .hat{
+.character-three .hat{
   top:-20px;
 
-  width:62px;
-  height:32px;
+  width:63px;
+  height:33px;
 }
 
-.p3 .eye.l{
-  left:47px;
+.character-three .eye.left{
+  left:48px;
 }
 
-.p3 .eye.r{
-  right:47px;
+.character-three .eye.right{
+  right:48px;
 }
 
-/* 持刀廚師 */
+.character-four{
+  left:394px;
 
-.p4{
-  left:390px;
+  width:134px;
+  height:173px;
 
-  width:130px;
-  height:170px;
-
-  animation-delay:.45s;
+  animation-delay:.52s;
 }
 
-.p4 .body{
-  width:86px;
-  height:88px;
+.character-four .body{
+  width:88px;
+  height:90px;
 }
 
-.p4 .face{
+.character-four .face{
   top:35px;
 
-  width:62px;
-  height:62px;
+  width:63px;
+  height:63px;
 
-  background:#d3834c;
+  background:#d1814b;
 }
 
-.p4 .hat{
+.character-four .hat{
   top:-22px;
 
-  width:64px;
-  height:34px;
+  width:65px;
+  height:35px;
 }
 
-.p4 .eye.l{
-  left:51px;
+.character-four .eye.left{
+  left:52px;
 }
 
-.p4 .eye.r{
-  right:51px;
+.character-four .eye.right{
+  right:52px;
 }
 
-/* 狗角色 */
+.character-four::after{
+  content:"";
 
-.dog{
-  right:5px;
+  position:absolute;
+  right:7px;
+  top:58px;
 
-  width:130px;
-  height:182px;
+  width:17px;
+  height:77px;
 
-  animation-delay:.2s;
+  border:
+    4px solid var(--ink);
+
+  border-radius:10px;
+
+  background:
+    linear-gradient(
+      #f5f5f5,
+      #d7d7d7
+    );
+
+  transform:
+    rotate(29deg);
 }
 
-.dog .body{
-  width:84px;
-  height:90px;
+.character-dog{
+  right:0;
 
-  background:#f0cd66;
+  width:132px;
+  height:184px;
+
+  animation-delay:.13s;
 }
 
-.dog .face{
+.character-dog .body{
+  width:86px;
+  height:92px;
+
+  background:#f0cb63;
+}
+
+.character-dog .face{
   top:38px;
 
-  width:68px;
-  height:64px;
+  width:69px;
+  height:65px;
 
-  background:#c88d4d;
+  background:#c78b4b;
 }
 
-.dog .eye.l{
-  left:50px;
-}
-
-.dog .eye.r{
-  right:50px;
-}
-
-.dog .hat{
+.character-dog .hat{
   display:none;
 }
 
-@keyframes bob{
+.character-dog .eye.left{
+  left:51px;
+}
+
+.character-dog .eye.right{
+  right:51px;
+}
+
+.character-dog::before,
+.character-dog::after{
+  content:"";
+
+  position:absolute;
+  top:28px;
+
+  width:27px;
+  height:43px;
+
+  border:
+    4px solid var(--ink);
+
+  border-radius:
+    18px 18px 12px 12px;
+
+  background:#c78b4b;
+}
+
+.character-dog::before{
+  left:17px;
+
+  transform:
+    rotate(-28deg);
+}
+
+.character-dog::after{
+  right:17px;
+
+  transform:
+    rotate(28deg);
+}
+
+@keyframes characterBob{
+  0%,
+  100%{
+    transform:
+      translateY(0);
+  }
+
   50%{
     transform:
       translateY(-8px);
@@ -693,13 +863,13 @@ button{
    Loading 進度
 ========================================================= */
 
-.loadbox{
+.loading-progress{
   position:absolute;
   left:50%;
   bottom:28px;
-  z-index:6;
+  z-index:8;
 
-  width:720px;
+  width:730px;
 
   text-align:center;
 
@@ -707,84 +877,127 @@ button{
     translateX(-50%);
 }
 
-.loadline{
+.loading-status{
   display:flex;
+  align-items:center;
   justify-content:space-between;
 
-  margin-bottom:10px;
+  margin-bottom:11px;
+
+  color:#ffffff;
 
   font-size:18px;
   font-weight:1000;
 
   text-shadow:
-    0 2px 5px rgba(0,0,0,.55);
+    0 2px 6px rgba(0,0,0,.55);
 }
 
-.track{
-  height:18px;
+.loading-track{
+  height:19px;
 
   overflow:hidden;
 
   border:
     2px solid rgba(255,255,255,.86);
 
-  border-radius:99px;
+  border-radius:999px;
 
   background:
-    rgba(11,12,29,.54);
+    rgba(10,11,28,.54);
+
+  box-shadow:
+    inset 0 0 0 4px
+    rgba(255,255,255,.05);
 }
 
-.bar{
+#loading-bar{
+  position:relative;
+
   width:0;
   height:100%;
+
+  border-radius:inherit;
 
   background:
     linear-gradient(
       90deg,
-      #48a9d8,
-      #fbd668,
-      #ef7c4b
+      #47aadc,
+      #fbd66a,
+      #ef7b4a
     );
 
   transition:
-    width .08s;
+    width .08s linear;
 }
 
-.enter{
+#loading-bar::after{
+  content:"";
+
+  position:absolute;
+  inset:0 auto 0 -120px;
+
+  width:120px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.75),
+      transparent
+    );
+
+  animation:
+    loadingShine 1.35s linear infinite;
+}
+
+@keyframes loadingShine{
+  to{
+    transform:
+      translateX(850px);
+  }
+}
+
+#enter-button{
   visibility:hidden;
   opacity:0;
 
-  margin-top:18px;
-  padding:13px 30px;
+  min-width:240px;
+
+  margin-top:19px;
+  padding:14px 30px;
 
   border:
-    3px solid #ffffff;
+    3px solid rgba(255,255,255,.9);
 
   border-radius:16px;
 
   background:
     linear-gradient(
-      #f9a54c,
+      #f9a54d,
       #d85d32
     );
 
   box-shadow:
-    0 8px #7d3322;
+    0 8px 0 #7d3322,
+    0 18px 30px rgba(0,0,0,.28);
 
   color:#ffffff;
 
   font-size:22px;
   font-weight:1000;
 
+  letter-spacing:.08em;
+
   cursor:pointer;
 
   transform:
-    translateY(10px);
+    translateY(12px);
 
   transition:.3s;
 }
 
-.enter.show{
+#enter-button.visible{
   visibility:visible;
   opacity:1;
 
@@ -795,49 +1008,59 @@ button{
    模式選單
 ========================================================= */
 
-#menu{
-  z-index:20;
+#mode-screen{
+  z-index:800;
 
   display:none;
+
+  overflow:hidden;
 
   color:#ffffff;
 
   background:
     linear-gradient(
-      rgba(7,16,22,.72),
-      rgba(7,16,22,.88)
+      rgba(7,14,18,.7),
+      rgba(7,14,18,.88)
+    ),
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(94,180,197,.24),
+      transparent 36%
     );
 
   backdrop-filter:
-    blur(7px);
+    blur(9px);
 }
 
-.menuhead{
+.mode-header{
   position:absolute;
-  left:5%;
-  right:5%;
-  top:5%;
+  left:64px;
+  right:64px;
+  top:34px;
 
   display:flex;
   align-items:flex-end;
   justify-content:space-between;
 }
 
-.menuhead small{
+.mode-header small{
   color:#ffd27f;
 
+  font-size:13px;
   font-weight:900;
 
   letter-spacing:.25em;
 }
 
-.menuhead h2{
-  margin-top:5px;
+.mode-header h2{
+  margin-top:4px;
 
   font-size:40px;
+
+  letter-spacing:.06em;
 }
 
-.cards{
+.mode-grid{
   position:absolute;
   left:50%;
   top:55%;
@@ -845,7 +1068,6 @@ button{
   width:1120px;
 
   display:grid;
-
   grid-template-columns:
     repeat(4,1fr);
 
@@ -855,15 +1077,17 @@ button{
     translate(-50%,-50%);
 }
 
-.card{
+.mode-card{
   position:relative;
 
   height:410px;
 
+  overflow:hidden;
+
   padding:24px 22px;
 
   border:
-    1px solid rgba(255,255,255,.26);
+    1px solid rgba(255,255,255,.27);
 
   border-radius:28px;
 
@@ -874,121 +1098,219 @@ button{
       rgba(255,255,255,.07) 48%,
       rgba(255,255,255,.03)
     ),
-    rgba(13,26,31,.46);
+    rgba(13,26,31,.48);
 
   box-shadow:
-    inset 0 1px rgba(255,255,255,.33),
-    0 22px 48px rgba(0,0,0,.32);
+    inset 0 1px 0
+    rgba(255,255,255,.34),
+    0 22px 48px
+    rgba(0,0,0,.32);
 
   backdrop-filter:
-    blur(16px);
+    blur(17px)
+    saturate(135%);
 
-  transition:.2s;
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
 }
 
-.card:hover{
-  transform:
-    translateY(-9px)
-    scale(1.02);
-}
+.mode-card::before{
+  content:"";
 
-.card h3{
-  font-size:28px;
-}
+  position:absolute;
+  left:-20%;
+  right:-20%;
+  top:-35%;
 
-.card p{
-  margin-top:10px;
+  height:62%;
 
-  color:rgba(255,255,255,.77);
-
-  font-size:15px;
-  line-height:1.65;
-}
-
-.art{
-  height:155px;
-
-  margin-bottom:18px;
-
-  border:
-    1px solid rgba(255,255,255,.17);
-
-  border-radius:22px;
+  opacity:.65;
 
   background:
-    rgba(255,255,255,.07);
+    radial-gradient(
+      circle,
+      var(--card-glow),
+      transparent 68%
+    );
+}
+
+.mode-card:hover,
+.mode-card:focus-within{
+  border-color:
+    rgba(255,255,255,.48);
+
+  transform:
+    translateY(-10px)
+    scale(1.02);
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(255,255,255,.42),
+    0 30px 65px
+    rgba(0,0,0,.4);
+}
+
+.mode-card.story{
+  --card-glow:
+    rgba(244,140,72,.9);
+}
+
+.mode-card.online{
+  --card-glow:
+    rgba(77,166,196,.9);
+}
+
+.mode-card.event{
+  --card-glow:
+    rgba(177,101,206,.9);
+}
+
+.mode-card.dlc{
+  --card-glow:
+    rgba(239,191,80,.95);
+}
+
+.mode-tag{
+  position:absolute;
+  left:14px;
+  top:14px;
+  z-index:3;
+
+  padding:6px 10px;
+
+  border:
+    1px solid rgba(255,255,255,.25);
+
+  border-radius:999px;
+
+  background:
+    rgba(0,0,0,.22);
+
+  color:#fff4d8;
+
+  font-size:12px;
+  font-weight:900;
+}
+
+.mode-art{
+  position:relative;
+
+  height:156px;
 
   display:flex;
   align-items:center;
   justify-content:center;
+
+  margin-bottom:18px;
+
+  border:
+    1px solid rgba(255,255,255,.18);
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      rgba(255,255,255,.09),
+      rgba(255,255,255,.03)
+    );
 }
 
-.modeicon{
+.mode-icon{
   width:104px;
   height:104px;
 
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
   border:
-    5px solid rgba(255,255,255,.77);
+    5px solid rgba(255,255,255,.76);
 
   border-radius:28px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,.27),
-      rgba(255,255,255,.07)
+      rgba(255,255,255,.28),
+      rgba(255,255,255,.08)
     );
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  box-shadow:
+    0 16px 32px rgba(0,0,0,.22);
 
-  font-size:48px;
+  font-size:39px;
   font-weight:1000;
 }
 
-.footer{
+.mode-card h3{
+  position:relative;
+
+  font-size:29px;
+
+  letter-spacing:.05em;
+}
+
+.mode-card p{
+  position:relative;
+
+  min-height:70px;
+
+  margin-top:10px;
+
+  color:
+    rgba(255,255,255,.77);
+
+  font-size:15px;
+  font-weight:700;
+  line-height:1.65;
+}
+
+.mode-footer{
   position:absolute;
   left:22px;
   right:22px;
   bottom:22px;
 }
 
-.status{
+.mode-status{
   display:flex;
+  align-items:center;
   justify-content:space-between;
 
   margin-bottom:12px;
 
-  color:#fff1c6;
+  color:#fff3cf;
 
   font-size:13px;
   font-weight:900;
 }
 
-.modebtn{
+.mode-button{
   width:100%;
   min-height:48px;
 
   border:
-    1px solid rgba(255,255,255,.26);
+    1px solid rgba(255,255,255,.28);
 
   border-radius:13px;
 
   background:
     linear-gradient(
-      rgba(255,255,255,.23),
-      rgba(255,255,255,.09)
+      rgba(255,255,255,.24),
+      rgba(255,255,255,.1)
     );
 
   color:#ffffff;
 
+  font-size:16px;
   font-weight:1000;
 
   cursor:pointer;
 }
 
-.play{
+.mode-button.primary{
   background:
     linear-gradient(
       #ef8d51,
@@ -996,27 +1318,27 @@ button{
     );
 
   box-shadow:
-    0 6px #713222;
+    0 6px 0 #713222;
 }
 
-.locked{
+.mode-button.locked{
   opacity:.62;
 }
 
-.toast{
+#mode-toast{
   position:absolute;
   left:50%;
-  bottom:4%;
+  bottom:28px;
 
-  padding:10px 18px;
+  padding:11px 19px;
 
   border:
-    1px solid rgba(255,255,255,.24);
+    1px solid rgba(255,255,255,.25);
 
   border-radius:12px;
 
   background:
-    rgba(8,16,20,.85);
+    rgba(8,16,20,.84);
 
   color:#ffffff;
 
@@ -1025,51 +1347,45 @@ button{
   opacity:0;
 
   transform:
-    translate(
-      -50%,
-      12px
-    );
+    translate(-50%,12px);
 
-  transition:.2s;
+  transition:.22s;
 }
 
-.toast.show{
+#mode-toast.visible{
   opacity:1;
 
   transform:
-    translate(
-      -50%,
-      0
-    );
+    translate(-50%,0);
 }
 
 /* =========================================================
-   暫停／結算
+   暫停與結算
 ========================================================= */
 
 .overlay{
-  z-index:40;
+  z-index:1200;
 
   display:none;
   align-items:center;
   justify-content:center;
 
   background:
-    rgba(8,16,20,.74);
+    rgba(8,14,17,.74);
 
   backdrop-filter:
-    blur(5px);
+    blur(6px);
 }
 
-.panel{
+.overlay-card{
   width:620px;
 
-  padding:34px;
+  padding:36px;
 
   border:
     5px solid #503428;
 
-  border-radius:26px;
+  border-radius:27px;
 
   background:
     linear-gradient(
@@ -1077,47 +1393,52 @@ button{
       #efd09c
     );
 
+  box-shadow:
+    0 16px 0 #281914,
+    0 40px 90px rgba(0,0,0,.42);
+
   text-align:center;
 }
 
-.panel h2{
+.overlay-card h2{
   color:#bc4e3a;
 
-  font-size:44px;
+  font-size:46px;
 }
 
-.panel p{
-  margin-top:12px;
+.overlay-card p{
+  margin-top:13px;
 
   color:#65493a;
 
+  font-size:18px;
   font-weight:800;
 }
 
-.row{
+.overlay-actions{
   display:flex;
   justify-content:center;
 
   gap:14px;
 
-  margin-top:24px;
+  margin-top:26px;
 }
 
-.uibtn{
-  min-height:56px;
+.ui-button{
+  min-height:58px;
 
-  padding:12px 24px;
+  padding:13px 25px;
 
   border:0;
   border-radius:14px;
 
-  font-size:19px;
+  font-size:20px;
   font-weight:1000;
 
   cursor:pointer;
 }
 
-.primary{
+.ui-button.primary{
   color:#ffffff;
 
   background:
@@ -1127,10 +1448,10 @@ button{
     );
 
   box-shadow:
-    0 7px #843520;
+    0 8px 0 #843520;
 }
 
-.secondary{
+.ui-button.secondary{
   color:#4a3327;
 
   background:
@@ -1140,49 +1461,53 @@ button{
     );
 
   box-shadow:
-    0 7px #80613c;
+    0 8px 0 #80613c;
 }
 
 /* =========================================================
-   手機操作
+   觸控操作
 ========================================================= */
 
-#touch{
+#touch-controls{
   position:absolute;
   inset:0;
-  z-index:12;
+  z-index:600;
 
   display:none;
 
   pointer-events:none;
 }
 
-.joy{
+#joystick{
   position:absolute;
-  left:1.4%;
-  bottom:2.7%;
+  left:18px;
+  bottom:20px;
 
   width:122px;
   height:122px;
 
   border:
-    4px solid rgba(255,255,255,.8);
+    4px solid rgba(255,255,255,.78);
 
   border-radius:50%;
 
   background:
     rgba(20,31,36,.44);
 
+  box-shadow:
+    inset 0 0 0 8px
+    rgba(255,255,255,.07);
+
   pointer-events:auto;
 }
 
-.stick{
+#joystick-stick{
   position:absolute;
   left:50%;
   top:50%;
 
-  width:56px;
-  height:56px;
+  width:58px;
+  height:58px;
 
   border:
     4px solid #4a3025;
@@ -1195,14 +1520,18 @@ button{
       #d89b56
     );
 
+  box-shadow:
+    0 7px 0
+    rgba(70,41,29,.62);
+
   transform:
     translate(-50%,-50%);
 }
 
-.actions{
+.action-buttons{
   position:absolute;
-  right:1.3%;
-  bottom:3.2%;
+  right:18px;
+  bottom:23px;
 
   display:flex;
   align-items:flex-end;
@@ -1212,22 +1541,26 @@ button{
   pointer-events:auto;
 }
 
-.act{
+.action-button{
   display:flex;
   align-items:center;
   justify-content:center;
 
   border:
-    4px solid rgba(255,255,255,.86);
+    4px solid rgba(255,255,255,.82);
 
   border-radius:50%;
 
   font-weight:1000;
+
+  cursor:pointer;
 }
 
-.discard{
-  width:66px;
-  height:66px;
+#discard-button{
+  width:67px;
+  height:67px;
+
+  color:#493021;
 
   background:
     linear-gradient(
@@ -1236,12 +1569,14 @@ button{
     );
 
   box-shadow:
-    0 7px #70502f;
+    0 7px 0 #70502f;
 }
 
-.interact{
-  width:94px;
-  height:94px;
+#interact-button{
+  width:95px;
+  height:95px;
+
+  color:#ffffff;
 
   background:
     linear-gradient(
@@ -1250,16 +1585,45 @@ button{
     );
 
   box-shadow:
-    0 8px #7f2c25;
-
-  color:#ffffff;
+    0 8px 0 #7f2c25;
 
   font-size:19px;
 }
 
+#desktop-help{
+  position:absolute;
+  left:50%;
+  bottom:8px;
+  z-index:580;
+
+  padding:7px 14px;
+
+  border:
+    2px solid rgba(64,43,34,.8);
+
+  border-radius:10px;
+
+  background:
+    rgba(255,250,237,.93);
+
+  color:#51382c;
+
+  font-size:13px;
+  font-weight:900;
+
+  pointer-events:none;
+
+  transform:
+    translateX(-50%);
+}
+
 @media (pointer:coarse){
-  #touch.on{
+  #touch-controls.active{
     display:block;
+  }
+
+  #desktop-help{
+    display:none !important;
   }
 }
 </style>
@@ -1267,561 +1631,745 @@ button{
 
 <body>
 
-<main id="shell">
+<div id="viewport">
 
-  <canvas
-    id="game"
-    width="1280"
-    height="720"
-  ></canvas>
+  <main id="stage">
 
-  <section
-    id="rotate"
-    class="screen"
-  >
-    <div>
-      <h2>請將手機轉為橫向</h2>
-      <p>橫向模式可獲得最佳體驗</p>
-    </div>
-  </section>
+    <canvas
+      id="game"
+      width="1280"
+      height="720"
+    ></canvas>
 
-  <section
-    id="loading"
-    class="screen"
-  >
-    <div class="stars"></div>
+    <!-- Loading -->
 
-    <i class="comet c1"></i>
-    <i class="comet c2"></i>
-    <i class="comet c3"></i>
+    <section
+      id="loading-screen"
+      class="screen"
+    >
+      <div class="loading-stars"></div>
 
-    <div class="brand">
-      <small>
-        サニーポーカフェ
-      </small>
+      <span class="comet one"></span>
+      <span class="comet two"></span>
+      <span class="comet three"></span>
 
-      <h1>
-        キッチン大騒動
-      </h1>
-    </div>
-
-    <div class="globe"></div>
-
-    <div class="cast">
-
-      <div class="char p1">
-        <i class="shadow"></i>
-        <i class="hat"></i>
-        <i class="body"></i>
-        <i class="face"></i>
-        <i class="eye l"></i>
-        <i class="eye r"></i>
-      </div>
-
-      <div class="char p2">
-        <i class="shadow"></i>
-        <i class="hat"></i>
-        <i class="body"></i>
-        <i class="face"></i>
-        <i class="eye l"></i>
-        <i class="eye r"></i>
-      </div>
-
-      <div class="char p3">
-        <i class="shadow"></i>
-        <i class="hat"></i>
-        <i class="body"></i>
-        <i class="face"></i>
-        <i class="eye l"></i>
-        <i class="eye r"></i>
-      </div>
-
-      <div class="char p4">
-        <i class="shadow"></i>
-        <i class="hat"></i>
-        <i class="body"></i>
-        <i class="face"></i>
-        <i class="eye l"></i>
-        <i class="eye r"></i>
-      </div>
-
-      <div class="char dog">
-        <i class="shadow"></i>
-        <i class="body"></i>
-        <i class="face"></i>
-        <i class="eye l"></i>
-        <i class="eye r"></i>
-      </div>
-
-    </div>
-
-    <div class="loadbox">
-
-      <div class="loadline">
-        <span id="loadmsg">
-          食材を確認しています
-        </span>
-
-        <span id="loadnum">
-          0%
-        </span>
-      </div>
-
-      <div class="track">
-        <div
-          id="loadbar"
-          class="bar"
-        ></div>
-      </div>
-
-      <button
-        id="enter"
-        class="enter"
-      >
-        メニューへ
-      </button>
-
-    </div>
-  </section>
-
-  <section
-    id="menu"
-    class="screen"
-  >
-    <div class="menuhead">
-      <div>
+      <div class="loading-title">
         <small>
-          CHOOSE YOUR MODE
+          サニーポーカフェ
         </small>
 
-        <h2>
-          選擇營業模式
-        </h2>
+        <h1>
+          キッチン大騒動
+        </h1>
       </div>
-    </div>
 
-    <div class="cards">
+      <div class="loading-globe"></div>
 
-      <article class="card">
+      <div class="loading-cast">
 
-        <div class="art">
-          <div class="modeicon">
-            1-1
-          </div>
+        <div class="loading-character character-one">
+          <span class="shadow"></span>
+          <span class="hat"></span>
+          <span class="body"></span>
+          <span class="face"></span>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
         </div>
 
-        <h3>
-          故事模式
-        </h3>
-
-        <p>
-          經營咖啡廳並完成關卡目標，
-          逐步解鎖新餐點與店面。
-        </p>
-
-        <div class="footer">
-
-          <div class="status">
-            <span>目前進度</span>
-            <span>1-1</span>
-          </div>
-
-          <button
-            id="story"
-            class="modebtn play"
-          >
-            進入故事
-          </button>
-
-        </div>
-      </article>
-
-      <article class="card">
-
-        <div class="art">
-          <div class="modeicon">
-            2P
-          </div>
+        <div class="loading-character character-two">
+          <span class="shadow"></span>
+          <span class="hat"></span>
+          <span class="body"></span>
+          <span class="face"></span>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
         </div>
 
-        <h3>
-          連線模式
-        </h3>
-
-        <p>
-          與其他玩家組隊合作，
-          一起完成高壓廚房挑戰。
-        </p>
-
-        <div class="footer">
-
-          <div class="status">
-            <span>狀態</span>
-            <span>開發中</span>
-          </div>
-
-          <button
-            class="modebtn locked"
-            data-msg="連線模式目前開發中"
-          >
-            尚未開放
-          </button>
-
-        </div>
-      </article>
-
-      <article class="card">
-
-        <div class="art">
-          <div class="modeicon">
-            EV
-          </div>
+        <div class="loading-character character-three">
+          <span class="shadow"></span>
+          <span class="hat"></span>
+          <span class="body"></span>
+          <span class="face"></span>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
         </div>
 
-        <h3>
-          限時活動
-        </h3>
-
-        <p>
-          挑戰期間限定關卡，
-          取得活動料理與特殊獎勵。
-        </p>
-
-        <div class="footer">
-
-          <div class="status">
-            <span>活動</span>
-            <span>尚未開始</span>
-          </div>
-
-          <button
-            class="modebtn locked"
-            data-msg="目前沒有進行中的限時活動"
-          >
-            查看活動
-          </button>
-
-        </div>
-      </article>
-
-      <article class="card">
-
-        <div class="art">
-          <div class="modeicon">
-            +
-          </div>
+        <div class="loading-character character-four">
+          <span class="shadow"></span>
+          <span class="hat"></span>
+          <span class="body"></span>
+          <span class="face"></span>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
         </div>
 
-        <h3>
-          DLC
-        </h3>
-
-        <p>
-          額外店面、全新地圖，
-          以及更多特殊料理內容。
-        </p>
-
-        <div class="footer">
-
-          <div class="status">
-            <span>內容</span>
-            <span>準備中</span>
-          </div>
-
-          <button
-            class="modebtn locked"
-            data-msg="DLC 內容仍在準備中"
-          >
-            查看內容
-          </button>
-
+        <div class="loading-character character-dog">
+          <span class="shadow"></span>
+          <span class="body"></span>
+          <span class="face"></span>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
         </div>
-      </article>
 
-    </div>
+      </div>
 
-    <div
-      id="toast"
-      class="toast"
-    ></div>
-  </section>
+      <div class="loading-progress">
 
-  <section
-    id="pause"
-    class="screen overlay"
-  >
-    <div class="panel">
+        <div class="loading-status">
+          <span id="loading-message">
+            食材を確認しています
+          </span>
 
-      <h2>
-        暫停營業
-      </h2>
+          <span id="loading-number">
+            0%
+          </span>
+        </div>
 
-      <p>
-        遊戲時間與訂單耐心已暫停。
-      </p>
-
-      <div class="row">
+        <div class="loading-track">
+          <div id="loading-bar"></div>
+        </div>
 
         <button
-          id="resume"
-          class="uibtn primary"
+          id="enter-button"
+          type="button"
         >
-          繼續營業
-        </button>
-
-        <button
-          id="back"
-          class="uibtn secondary"
-        >
-          模式選單
+          メニューへ
         </button>
 
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section
-    id="result"
-    class="screen overlay"
-  >
-    <div class="panel">
+    <!-- 模式選單 -->
 
-      <h2 id="resultTitle">
-        營業結束
-      </h2>
-
-      <p id="resultText"></p>
-
-      <div class="row">
-
-        <button
-          id="retry"
-          class="uibtn primary"
-        >
-          再玩一次
-        </button>
-
-        <button
-          id="resultBack"
-          class="uibtn secondary"
-        >
-          模式選單
-        </button>
-
-      </div>
-    </div>
-  </section>
-
-  <div id="touch">
-
-    <div
-      id="joy"
-      class="joy"
+    <section
+      id="mode-screen"
+      class="screen"
     >
-      <div
-        id="stick"
-        class="stick"
-      ></div>
+      <header class="mode-header">
+        <div>
+          <small>
+            CHOOSE YOUR MODE
+          </small>
+
+          <h2>
+            選擇營業模式
+          </h2>
+        </div>
+      </header>
+
+      <div class="mode-grid">
+
+        <article class="mode-card story">
+          <span class="mode-tag">
+            第一章
+          </span>
+
+          <div class="mode-art">
+            <div class="mode-icon">
+              1-1
+            </div>
+          </div>
+
+          <h3>
+            故事模式
+          </h3>
+
+          <p>
+            經營咖啡廳、完成關卡目標，
+            逐步解鎖新餐點與全新店面。
+          </p>
+
+          <div class="mode-footer">
+
+            <div class="mode-status">
+              <span>目前進度</span>
+              <span>1-1</span>
+            </div>
+
+            <button
+              id="story-button"
+              class="mode-button primary"
+              type="button"
+            >
+              進入故事
+            </button>
+
+          </div>
+        </article>
+
+        <article class="mode-card online">
+          <span class="mode-tag">
+            CO-OP
+          </span>
+
+          <div class="mode-art">
+            <div class="mode-icon">
+              2P
+            </div>
+          </div>
+
+          <h3>
+            連線模式
+          </h3>
+
+          <p>
+            與其他玩家組隊合作，
+            一起完成高壓廚房挑戰。
+          </p>
+
+          <div class="mode-footer">
+
+            <div class="mode-status">
+              <span>狀態</span>
+              <span>開發中</span>
+            </div>
+
+            <button
+              class="mode-button locked"
+              data-message="連線模式目前開發中"
+              type="button"
+            >
+              尚未開放
+            </button>
+
+          </div>
+        </article>
+
+        <article class="mode-card event">
+          <span class="mode-tag">
+            EVENT
+          </span>
+
+          <div class="mode-art">
+            <div class="mode-icon">
+              EV
+            </div>
+          </div>
+
+          <h3>
+            限時活動
+          </h3>
+
+          <p>
+            挑戰期間限定關卡，
+            取得活動料理與特殊獎勵。
+          </p>
+
+          <div class="mode-footer">
+
+            <div class="mode-status">
+              <span>活動</span>
+              <span>尚未開始</span>
+            </div>
+
+            <button
+              class="mode-button locked"
+              data-message="目前沒有進行中的限時活動"
+              type="button"
+            >
+              查看活動
+            </button>
+
+          </div>
+        </article>
+
+        <article class="mode-card dlc">
+          <span class="mode-tag">
+            EXTRA
+          </span>
+
+          <div class="mode-art">
+            <div class="mode-icon">
+              +
+            </div>
+          </div>
+
+          <h3>
+            DLC
+          </h3>
+
+          <p>
+            額外店面、全新地圖，
+            以及更多特殊料理內容。
+          </p>
+
+          <div class="mode-footer">
+
+            <div class="mode-status">
+              <span>內容</span>
+              <span>準備中</span>
+            </div>
+
+            <button
+              class="mode-button locked"
+              data-message="DLC 內容仍在準備中"
+              type="button"
+            >
+              查看內容
+            </button>
+
+          </div>
+        </article>
+
+      </div>
+
+      <div id="mode-toast"></div>
+    </section>
+
+    <!-- 暫停 -->
+
+    <section
+      id="pause-screen"
+      class="screen overlay"
+    >
+      <div class="overlay-card">
+
+        <h2>
+          暫停營業
+        </h2>
+
+        <p>
+          遊戲時間與訂單耐心已暫停。
+        </p>
+
+        <div class="overlay-actions">
+
+          <button
+            id="resume-button"
+            class="ui-button primary"
+            type="button"
+          >
+            繼續營業
+          </button>
+
+          <button
+            id="pause-menu-button"
+            class="ui-button secondary"
+            type="button"
+          >
+            模式選單
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 結算 -->
+
+    <section
+      id="result-screen"
+      class="screen overlay"
+    >
+      <div class="overlay-card">
+
+        <h2 id="result-title">
+          營業結束
+        </h2>
+
+        <p id="result-text">
+          今日營業告一段落。
+        </p>
+
+        <div class="overlay-actions">
+
+          <button
+            id="retry-button"
+            class="ui-button primary"
+            type="button"
+          >
+            再玩一次
+          </button>
+
+          <button
+            id="result-menu-button"
+            class="ui-button secondary"
+            type="button"
+          >
+            模式選單
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 手機操作 -->
+
+    <div id="touch-controls">
+
+      <div id="joystick">
+        <div id="joystick-stick"></div>
+      </div>
+
+      <div class="action-buttons">
+
+        <button
+          id="discard-button"
+          class="action-button"
+          type="button"
+        >
+          丟棄
+        </button>
+
+        <button
+          id="interact-button"
+          class="action-button"
+          type="button"
+        >
+          互動
+        </button>
+
+      </div>
     </div>
 
-    <div class="actions">
-
-      <button
-        id="discard"
-        class="act discard"
-      >
-        丟棄
-      </button>
-
-      <button
-        id="interact"
-        class="act interact"
-      >
-        互動
-      </button>
-
+    <div id="desktop-help">
+      WASD／方向鍵移動　E／空白鍵互動　Q 丟棄　Esc 暫停
     </div>
+
+  </main>
+</div>
+
+<section
+  id="rotate-screen"
+>
+  <div>
+    <div class="rotate-phone"></div>
+
+    <h2>
+      請將手機轉為橫向
+    </h2>
+
+    <p>
+      橫向模式可獲得最佳遊戲體驗
+    </p>
   </div>
-
-</main>
+</section>
 
 <script>
 (() => {
   "use strict";
 
+  /* =======================================================
+     固定舞台自適應
+
+     舞台永遠維持 1280 × 720，
+     只縮放整個舞台，不改動內部座標。
+  ======================================================= */
+
+  const LOGICAL_WIDTH = 1280;
+  const LOGICAL_HEIGHT = 720;
+
+  const viewport =
+    document.getElementById(
+      "viewport"
+    );
+
+  const stage =
+    document.getElementById(
+      "stage"
+    );
+
+  function fitStage(){
+    const availableWidth =
+      viewport.clientWidth;
+
+    const availableHeight =
+      viewport.clientHeight;
+
+    const scale =
+      Math.min(
+        availableWidth /
+        LOGICAL_WIDTH,
+
+        availableHeight /
+        LOGICAL_HEIGHT
+      );
+
+    stage.style.transform =
+      `translate(-50%, -50%) scale(${scale})`;
+  }
+
+  window.addEventListener(
+    "resize",
+    fitStage,
+    {
+      passive:true
+    }
+  );
+
+  window.addEventListener(
+    "orientationchange",
+    () => {
+      setTimeout(
+        fitStage,
+        120
+      );
+    },
+    {
+      passive:true
+    }
+  );
+
+  if(window.visualViewport){
+    window.visualViewport.addEventListener(
+      "resize",
+      fitStage,
+      {
+        passive:true
+      }
+    );
+
+    window.visualViewport.addEventListener(
+      "scroll",
+      fitStage,
+      {
+        passive:true
+      }
+    );
+  }
+
+  fitStage();
+
+  /* =======================================================
+     DOM
+  ======================================================= */
+
   const canvas =
-    document.getElementById("game");
+    document.getElementById(
+      "game"
+    );
 
   const ctx =
-    canvas.getContext("2d");
+    canvas.getContext(
+      "2d"
+    );
+
+  const loadingScreen =
+    document.getElementById(
+      "loading-screen"
+    );
+
+  const modeScreen =
+    document.getElementById(
+      "mode-screen"
+    );
+
+  const pauseScreen =
+    document.getElementById(
+      "pause-screen"
+    );
+
+  const resultScreen =
+    document.getElementById(
+      "result-screen"
+    );
+
+  const touchControls =
+    document.getElementById(
+      "touch-controls"
+    );
+
+  const desktopHelp =
+    document.getElementById(
+      "desktop-help"
+    );
 
   const W = 1280;
   const H = 720;
-  const HUD = 132;
+  const HUD_HEIGHT = 132;
   const TILE = 96;
 
-  const menu =
-    document.getElementById("menu");
-
-  const loading =
-    document.getElementById("loading");
-
-  const pause =
-    document.getElementById("pause");
-
-  const result =
-    document.getElementById("result");
-
-  const touch =
-    document.getElementById("touch");
-
-  const C = {
-    ink:"#33251f",
+  const COLORS = {
+    outline:"#33251f",
     floor:"#d7b777",
-    line:"#b48d51",
-    top:"#ef9b4a",
-    front:"#af5d35",
-    inset:"#81432f",
+    floorLine:"#b48d51",
+    counterTop:"#ef9b4a",
+    counterLight:"#ffbd6a",
+    counterFront:"#af5d35",
+    counterInset:"#81432f",
     paper:"#fffaf0",
     red:"#e45b45",
     green:"#68a96d",
     yellow:"#e9b94f",
     gold:"#f5bf4c",
-    dark:"#1d3037"
+    dark:"#1d3037",
+    shadow:"rgba(41,27,20,.26)"
   };
 
-  const tiles = [];
+  /* =======================================================
+     餐台
+  ======================================================= */
+
+  const counterTiles = [];
 
   for(
-    let tileX = 96;
-    tileX <= 1088;
-    tileX += TILE
+    let x = 96;
+    x <= 1088;
+    x += TILE
   ){
-    tiles.push({
-      x:tileX,
-      y:HUD
+    counterTiles.push({
+      x,
+      y:HUD_HEIGHT
     });
   }
 
   for(
-    let tileY = HUD + TILE;
-    tileY <= 420;
-    tileY += TILE
+    let y = HUD_HEIGHT + TILE;
+    y <= 420;
+    y += TILE
   ){
-    tiles.push(
-      {
-        x:0,
-        y:tileY
-      },
-      {
-        x:1184,
-        y:tileY
-      }
-    );
+    counterTiles.push({
+      x:0,
+      y
+    });
+
+    counterTiles.push({
+      x:1184,
+      y
+    });
   }
 
   for(
-    let tileX = 400;
-    tileX <= 784;
-    tileX += TILE
+    let x = 400;
+    x <= 784;
+    x += TILE
   ){
-    tiles.push({
-      x:tileX,
+    counterTiles.push({
+      x,
       y:552
     });
   }
 
+  /* =======================================================
+     工作站
+
+     visualX / visualY：
+     工作站實際繪製位置。
+
+     interactX / interactY：
+     玩家站在此位置附近才能互動。
+  ======================================================= */
+
   const stations = [
-    [
-      "bun",
-      "麵包",
-      112,
-      140,
-      148,
-      258
-    ],
-    [
-      "lettuce",
-      "生菜",
-      208,
-      140,
-      244,
-      258
-    ],
-    [
-      "meat",
-      "肉排",
-      304,
-      140,
-      340,
-      258
-    ],
-    [
-      "board",
-      "砧板",
-      400,
-      140,
-      436,
-      258
-    ],
-    [
-      "pan",
-      "煎台",
-      688,
-      140,
-      724,
-      258
-    ],
-    [
-      "drink",
-      "飲料",
-      784,
-      140,
-      820,
-      258
-    ],
-    [
-      "plate",
-      "盤子",
-      880,
-      140,
-      916,
-      258
-    ],
-    [
-      "assembly",
-      "組裝",
-      12,
-      330,
-      120,
-      366
-    ],
-    [
-      "serve",
-      "出餐",
-      1196,
-      330,
-      1160,
-      366
-    ],
-    [
-      "trash",
-      "丟棄",
-      604,
-      560,
-      640,
-      520
-    ]
-  ].map(item => ({
-    id:item[0],
-    label:item[1],
+    {
+      id:"bun",
+      label:"麵包",
+      icon:"bun",
 
-    visualX:item[2],
-    visualY:item[3],
+      visualX:112,
+      visualY:140,
 
-    interactionX:item[4],
-    interactionY:item[5]
-  }));
+      interactX:148,
+      interactY:258
+    },
+
+    {
+      id:"lettuce",
+      label:"生菜",
+      icon:"lettuce",
+
+      visualX:208,
+      visualY:140,
+
+      interactX:244,
+      interactY:258
+    },
+
+    {
+      id:"meat",
+      label:"肉排",
+      icon:"rawMeat",
+
+      visualX:304,
+      visualY:140,
+
+      interactX:340,
+      interactY:258
+    },
+
+    {
+      id:"board",
+      label:"砧板",
+      icon:"board",
+
+      visualX:400,
+      visualY:140,
+
+      interactX:436,
+      interactY:258
+    },
+
+    {
+      id:"pan",
+      label:"煎台",
+      icon:"pan",
+
+      visualX:688,
+      visualY:140,
+
+      interactX:724,
+      interactY:258
+    },
+
+    {
+      id:"drink",
+      label:"飲料",
+      icon:"drink",
+
+      visualX:784,
+      visualY:140,
+
+      interactX:820,
+      interactY:258
+    },
+
+    {
+      id:"plate",
+      label:"盤子",
+      icon:"plate",
+
+      visualX:880,
+      visualY:140,
+
+      interactX:916,
+      interactY:258
+    },
+
+    {
+      id:"assembly",
+      label:"組裝",
+      icon:"assembly",
+
+      visualX:12,
+      visualY:330,
+
+      interactX:120,
+      interactY:366
+    },
+
+    {
+      id:"serve",
+      label:"出餐",
+      icon:"bell",
+
+      visualX:1196,
+      visualY:330,
+
+      interactX:1160,
+      interactY:366
+    },
+
+    {
+      id:"trash",
+      label:"丟棄",
+      icon:"trash",
+
+      visualX:604,
+      visualY:560,
+
+      interactX:640,
+      interactY:520
+    }
+  ];
 
   const recipes = [
     {
@@ -1830,9 +2378,10 @@ button{
 
       ingredients:[
         "bun",
-        "cooked"
+        "cookedMeat"
       ]
     },
+
     {
       name:"生菜漢堡",
       result:"lettuceBurger",
@@ -1840,9 +2389,10 @@ button{
       ingredients:[
         "bun",
         "lettuce",
-        "cooked"
+        "cookedMeat"
       ]
     },
+
     {
       name:"冰飲",
       result:"drink",
@@ -1854,6 +2404,8 @@ button{
   ];
 
   const state = {
+    screen:"menu",
+
     running:false,
     paused:false,
 
@@ -1873,7 +2425,7 @@ button{
     assembly:[],
 
     orders:[],
-    orderSpawnTimer:0,
+    orderSpawn:0,
 
     chef:{
       x:640,
@@ -1887,16 +2439,20 @@ button{
       y:0
     },
 
-    nearestStation:null,
+    nearest:null,
 
     message:
       "依照訂單開始準備餐點",
 
     messageTimer:0,
 
-    lastFrame:
+    last:
       performance.now()
   };
+
+  /* =======================================================
+     Canvas 工具
+  ======================================================= */
 
   function roundedRect(
     x,
@@ -1946,7 +2502,7 @@ button{
     weight = 700
   ){
     ctx.font =
-      `${weight} ${size}px Microsoft JhengHei`;
+      `${weight} ${size}px "Microsoft JhengHei", sans-serif`;
 
     ctx.fillStyle =
       color;
@@ -1964,11 +2520,15 @@ button{
     );
   }
 
+  /* =======================================================
+     圖示
+  ======================================================= */
+
   function drawIcon(
     type,
     x,
     y,
-    scale = .55
+    scale = 1
   ){
     ctx.save();
 
@@ -1983,12 +2543,15 @@ button{
     );
 
     ctx.strokeStyle =
-      C.ink;
+      COLORS.outline;
 
     ctx.lineWidth =
       4;
 
     ctx.lineJoin =
+      "round";
+
+    ctx.lineCap =
       "round";
 
     if(type === "bun"){
@@ -1999,9 +2562,31 @@ button{
         34,
         14,
         "#e9ad56",
-        C.ink,
+        COLORS.outline,
         4
       );
+
+      ctx.strokeStyle =
+        "#bd7737";
+
+      ctx.lineWidth =
+        3;
+
+      [-12,0,12].forEach(offset => {
+        ctx.beginPath();
+
+        ctx.moveTo(
+          offset - 5,
+          -6
+        );
+
+        ctx.lineTo(
+          offset + 4,
+          4
+        );
+
+        ctx.stroke();
+      });
     }
 
     else if(type === "lettuce"){
@@ -2047,11 +2632,11 @@ button{
     }
 
     else if(
-      type === "meat" ||
-      type === "cooked"
+      type === "rawMeat" ||
+      type === "cookedMeat"
     ){
       ctx.fillStyle =
-        type === "meat"
+        type === "rawMeat"
           ? "#d7554e"
           : "#80503b";
 
@@ -2079,12 +2664,30 @@ button{
         42,
         7,
         "#d99b56",
-        C.ink,
+        COLORS.outline,
         4
       );
+
+      ctx.fillStyle =
+        "#80563c";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        18,
+        0,
+        4,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
     }
 
     else if(type === "pan"){
+      ctx.fillStyle =
+        "#2b3b40";
+
       ctx.beginPath();
 
       ctx.arc(
@@ -2094,9 +2697,6 @@ button{
         0,
         Math.PI * 2
       );
-
-      ctx.fillStyle =
-        "#2b3b40";
 
       ctx.fill();
       ctx.stroke();
@@ -2117,9 +2717,27 @@ button{
         8;
 
       ctx.stroke();
+
+      ctx.fillStyle =
+        "#f1b944";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        -5,
+        -2,
+        8,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
     }
 
     else if(type === "drink"){
+      ctx.fillStyle =
+        "#e45745";
+
       ctx.beginPath();
 
       ctx.moveTo(
@@ -2144,10 +2762,27 @@ button{
 
       ctx.closePath();
 
-      ctx.fillStyle =
-        "#e45745";
-
       ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle =
+        "#fff3dd";
+
+      ctx.lineWidth =
+        5;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        -11,
+        -2
+      );
+
+      ctx.lineTo(
+        12,
+        -2
+      );
+
       ctx.stroke();
     }
 
@@ -2155,6 +2790,9 @@ button{
       type === "plate" ||
       type === "assembly"
     ){
+      ctx.fillStyle =
+        "#f8f3e7";
+
       ctx.beginPath();
 
       ctx.ellipse(
@@ -2167,14 +2805,32 @@ button{
         Math.PI * 2
       );
 
-      ctx.fillStyle =
-        "#f8f3e7";
-
       ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+
+      ctx.arc(
+        0,
+        3,
+        14,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.strokeStyle =
+        "#9db9b8";
+
+      ctx.lineWidth =
+        3;
+
       ctx.stroke();
     }
 
-    else if(type === "serve"){
+    else if(type === "bell"){
+      ctx.fillStyle =
+        "#f3bd40";
+
       ctx.beginPath();
 
       ctx.moveTo(
@@ -2198,9 +2854,6 @@ button{
 
       ctx.closePath();
 
-      ctx.fillStyle =
-        "#f3bd40";
-
       ctx.fill();
       ctx.stroke();
     }
@@ -2213,8 +2866,22 @@ button{
         39,
         4,
         "#748789",
-        C.ink,
+        COLORS.outline,
         4
+      );
+
+      ctx.fillRect(
+        -24,
+        -26,
+        48,
+        9
+      );
+
+      ctx.strokeRect(
+        -24,
+        -26,
+        48,
+        9
       );
     }
 
@@ -2229,7 +2896,7 @@ button{
         19,
         11,
         "#e9ad56",
-        C.ink,
+        COLORS.outline,
         4
       );
 
@@ -2269,7 +2936,7 @@ button{
         17,
         8,
         "#d89140",
-        C.ink,
+        COLORS.outline,
         4
       );
     }
@@ -2277,37 +2944,41 @@ button{
     ctx.restore();
   }
 
+  /* =======================================================
+     場景
+  ======================================================= */
+
   function drawBackground(){
     ctx.fillStyle =
-      C.floor;
+      COLORS.floor;
 
     ctx.fillRect(
       0,
-      HUD,
+      HUD_HEIGHT,
       W,
-      H - HUD
+      H - HUD_HEIGHT
     );
 
     ctx.strokeStyle =
-      C.line;
+      COLORS.floorLine;
 
     ctx.globalAlpha =
       .28;
 
     for(
-      let gridX = 0;
-      gridX <= W;
-      gridX += 64
+      let x = 0;
+      x <= W;
+      x += 64
     ){
       ctx.beginPath();
 
       ctx.moveTo(
-        gridX,
-        HUD
+        x,
+        HUD_HEIGHT
       );
 
       ctx.lineTo(
-        gridX,
+        x,
         H
       );
 
@@ -2315,20 +2986,20 @@ button{
     }
 
     for(
-      let gridY = HUD;
-      gridY <= H;
-      gridY += 64
+      let y = HUD_HEIGHT;
+      y <= H;
+      y += 64
     ){
       ctx.beginPath();
 
       ctx.moveTo(
         0,
-        gridY
+        y
       );
 
       ctx.lineTo(
         W,
-        gridY
+        y
       );
 
       ctx.stroke();
@@ -2338,7 +3009,7 @@ button{
       1;
   }
 
-  function drawCounter(
+  function drawCounterTile(
     tile
   ){
     roundedRect(
@@ -2347,7 +3018,7 @@ button{
       TILE - 3,
       TILE - 2,
       14,
-      "rgba(0,0,0,.2)"
+      COLORS.shadow
     );
 
     roundedRect(
@@ -2356,8 +3027,8 @@ button{
       TILE,
       TILE - 22,
       13,
-      C.front,
-      C.ink,
+      COLORS.counterFront,
+      COLORS.outline,
       5
     );
 
@@ -2367,7 +3038,7 @@ button{
       TILE - 16,
       TILE - 42,
       8,
-      C.inset
+      COLORS.counterInset
     );
 
     roundedRect(
@@ -2376,8 +3047,8 @@ button{
       TILE,
       38,
       14,
-      C.top,
-      C.ink,
+      COLORS.counterTop,
+      COLORS.outline,
       5
     );
 
@@ -2387,7 +3058,7 @@ button{
       TILE - 16,
       11,
       6,
-      "#ffbd6a"
+      COLORS.counterLight
     );
   }
 
@@ -2395,14 +3066,14 @@ button{
     station
   ){
     const isNear =
-      state.nearestStation ===
+      state.nearest ===
       station.id;
 
     if(isNear){
       ctx.save();
 
       ctx.shadowColor =
-        "#ffd852";
+        "rgba(255,216,82,.98)";
 
       ctx.shadowBlur =
         24;
@@ -2426,7 +3097,7 @@ button{
       64,
       12,
       "#f8dfaa",
-      C.ink,
+      COLORS.outline,
       4
     );
 
@@ -2440,9 +3111,10 @@ button{
     );
 
     drawIcon(
-      station.id,
+      station.icon,
       station.visualX + 36,
-      station.visualY + 25
+      station.visualY + 25,
+      .56
     );
 
     drawText(
@@ -2450,28 +3122,60 @@ button{
       station.visualX + 36,
       station.visualY + 51,
       13,
-      C.dark,
+      COLORS.dark,
       "center",
       1000
     );
+
+    if(
+      station.id === "pan" &&
+      state.panState !== "empty"
+    ){
+      const progress =
+        state.panState === "cooking"
+          ? 1 - state.panTimer / 3
+          : 1;
+
+      ctx.fillStyle =
+        "#5b4034";
+
+      ctx.fillRect(
+        station.visualX + 10,
+        station.visualY + 56,
+        52,
+        5
+      );
+
+      ctx.fillStyle =
+        state.panState === "done"
+          ? COLORS.green
+          : COLORS.gold;
+
+      ctx.fillRect(
+        station.visualX + 10,
+        station.visualY + 56,
+        52 * progress,
+        5
+      );
+    }
   }
 
   function drawChef(){
-    const chefX =
+    const x =
       state.chef.x;
 
-    const chefY =
+    const y =
       state.chef.y;
 
     ctx.save();
 
     ctx.translate(
-      chefX,
-      chefY
+      x,
+      y
     );
 
     ctx.fillStyle =
-      "rgba(0,0,0,.22)";
+      "rgba(38,31,26,.25)";
 
     ctx.beginPath();
 
@@ -2494,9 +3198,12 @@ button{
       58,
       17,
       "#fff8e9",
-      C.ink,
+      COLORS.outline,
       4
     );
+
+    ctx.fillStyle =
+      "#c97844";
 
     ctx.beginPath();
 
@@ -2508,9 +3215,6 @@ button{
       Math.PI * 2
     );
 
-    ctx.fillStyle =
-      "#c97844";
-
     ctx.fill();
     ctx.stroke();
 
@@ -2521,12 +3225,12 @@ button{
       31,
       13,
       "#fff8e9",
-      C.ink,
+      COLORS.outline,
       4
     );
 
     ctx.fillStyle =
-      C.red;
+      COLORS.red;
 
     ctx.fillRect(
       -4,
@@ -2534,6 +3238,33 @@ button{
       8,
       40
     );
+
+    ctx.fillStyle =
+      COLORS.outline;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      -8,
+      -21,
+      3,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      8,
+      -21,
+      3,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
 
     if(state.held){
       drawIcon(
@@ -2547,32 +3278,42 @@ button{
     ctx.restore();
   }
 
-  function patienceColor(
-    value
+  /* =======================================================
+     訂單 HUD
+  ======================================================= */
+
+  function getPatienceColor(
+    patience
   ){
-    if(value <= 34){
-      return C.red;
+    if(patience <= 34){
+      return COLORS.red;
     }
 
-    if(value <= 69){
-      return C.yellow;
+    if(patience <= 69){
+      return COLORS.yellow;
     }
 
-    return C.green;
+    return COLORS.green;
   }
 
   function drawTicket(
     order,
     x
   ){
+    const width =
+      176;
+
+    const height =
+      116;
+
     roundedRect(
       x,
       0,
-      176,
-      116,
+      width,
+      height,
       0,
-      C.paper,
-      C.ink,
+      COLORS.paper,
+      COLORS.outline,
       4
     );
 
@@ -2624,7 +3365,7 @@ button{
     );
 
     ctx.fillStyle =
-      patienceColor(
+      getPatienceColor(
         order.patience
       );
 
@@ -2649,15 +3390,15 @@ button{
       0,
       0,
       W,
-      HUD
+      HUD_HEIGHT
     );
 
     ctx.fillStyle =
-      C.dark;
+      COLORS.dark;
 
     ctx.fillRect(
       0,
-      HUD - 5,
+      HUD_HEIGHT - 5,
       W,
       5
     );
@@ -2712,8 +3453,8 @@ button{
       100,
       76,
       18,
-      "#fffaf0",
-      C.ink,
+      COLORS.paper,
+      COLORS.outline,
       4
     );
 
@@ -2734,7 +3475,7 @@ button{
       68,
       68,
       27,
-      C.dark,
+      COLORS.dark,
       "center",
       1000
     );
@@ -2745,8 +3486,8 @@ button{
       100,
       76,
       18,
-      "#fffaf0",
-      C.ink,
+      COLORS.paper,
+      COLORS.outline,
       4
     );
 
@@ -2769,7 +3510,7 @@ button{
       W - 68,
       68,
       29,
-      C.dark,
+      COLORS.dark,
       "center",
       1000
     );
@@ -2785,8 +3526,8 @@ button{
 
     drawBackground();
 
-    tiles.forEach(
-      drawCounter
+    counterTiles.forEach(
+      drawCounterTile
     );
 
     stations.forEach(
@@ -2802,8 +3543,8 @@ button{
       420,
       46,
       13,
-      "#fffaf0",
-      C.ink,
+      COLORS.paper,
+      COLORS.outline,
       4
     );
 
@@ -2812,11 +3553,15 @@ button{
       640,
       679,
       16,
-      C.dark,
+      COLORS.dark,
       "center",
       1000
     );
   }
+
+  /* =======================================================
+     訂單與遊戲流程
+  ======================================================= */
 
   function addOrder(){
     const recipe =
@@ -2829,6 +3574,11 @@ button{
 
     state.orders.push({
       ...recipe,
+
+      id:
+        Date.now() +
+        Math.random(),
+
       patience:100
     });
   }
@@ -2844,33 +3594,133 @@ button{
       duration;
   }
 
+  function showModeScreen(){
+    state.running =
+      false;
+
+    state.screen =
+      "menu";
+
+    modeScreen.style.display =
+      "block";
+
+    pauseScreen.style.display =
+      "none";
+
+    resultScreen.style.display =
+      "none";
+
+    touchControls.classList.remove(
+      "active"
+    );
+
+    desktopHelp.style.display =
+      "none";
+
+    render();
+  }
+
+  function startGame(){
+    Object.assign(
+      state,
+      {
+        screen:"game",
+
+        running:true,
+        paused:false,
+
+        time:75,
+
+        score:0,
+        served:0,
+
+        combo:0,
+        maxCombo:0,
+
+        held:null,
+
+        panState:"empty",
+        panTimer:0,
+
+        assembly:[],
+
+        orders:[],
+        orderSpawn:0,
+
+        chef:{
+          x:640,
+          y:375
+        },
+
+        joystick:{
+          x:0,
+          y:0
+        },
+
+        nearest:null,
+
+        message:
+          "依照訂單開始準備餐點",
+
+        messageTimer:0,
+
+        last:
+          performance.now()
+      }
+    );
+
+    modeScreen.style.display =
+      "none";
+
+    pauseScreen.style.display =
+      "none";
+
+    resultScreen.style.display =
+      "none";
+
+    addOrder();
+    addOrder();
+    addOrder();
+
+    touchControls.classList.add(
+      "active"
+    );
+
+    desktopHelp.style.display =
+      "";
+
+    requestAnimationFrame(
+      gameLoop
+    );
+  }
+
   function getNearestStation(){
     let nearest =
       null;
 
-    let nearestDistance =
+    let distance =
       Infinity;
 
     stations.forEach(station => {
-      const distance =
+      const currentDistance =
         Math.hypot(
           state.chef.x -
-          station.interactionX,
+          station.interactX,
 
           state.chef.y -
-          station.interactionY
+          station.interactY
         );
 
-      if(distance < nearestDistance){
-        nearestDistance =
-          distance;
+      if(currentDistance < distance){
+        distance =
+          currentDistance;
 
         nearest =
           station;
       }
     });
 
-    return nearestDistance <= 72
+    return distance <= 72
       ? nearest
       : null;
   }
@@ -2911,7 +3761,9 @@ button{
       }
 
       state.held =
-        station.id;
+        station.id === "meat"
+          ? "rawMeat"
+          : station.id;
 
       setMessage(
         `已拿取${station.label}`
@@ -2922,7 +3774,7 @@ button{
 
     if(station.id === "pan"){
       if(
-        state.held === "meat" &&
+        state.held === "rawMeat" &&
         state.panState === "empty"
       ){
         state.held =
@@ -2944,7 +3796,7 @@ button{
         !state.held
       ){
         state.held =
-          "cooked";
+          "cookedMeat";
 
         state.panState =
           "empty";
@@ -2954,11 +3806,17 @@ button{
         );
       }
 
+      else if(
+        state.panState === "cooking"
+      ){
+        setMessage(
+          "肉排仍在烹調"
+        );
+      }
+
       else{
         setMessage(
-          state.panState === "cooking"
-            ? "肉排仍在烹調"
-            : "需要先放入生肉排"
+          "需要先放入生肉排"
         );
       }
 
@@ -2970,7 +3828,7 @@ button{
         ![
           "bun",
           "lettuce",
-          "cooked"
+          "cookedMeat"
         ].includes(state.held)
       ){
         setMessage(
@@ -2987,17 +3845,17 @@ button{
       state.held =
         null;
 
-      const ingredientSet =
+      const ingredients =
         new Set(
           state.assembly
         );
 
       if(
-        ingredientSet.has("bun") &&
-        ingredientSet.has("cooked")
+        ingredients.has("bun") &&
+        ingredients.has("cookedMeat")
       ){
         state.held =
-          ingredientSet.has("lettuce")
+          ingredients.has("lettuce")
             ? "lettuceBurger"
             : "burger";
 
@@ -3026,7 +3884,7 @@ button{
         state.held ===
         currentOrder.result
       ){
-        const earnedScore =
+        const earned =
           Math.round(
             140 +
             currentOrder.patience +
@@ -3034,7 +3892,7 @@ button{
           );
 
         state.score +=
-          earnedScore;
+          earned;
 
         state.served +=
           1;
@@ -3056,7 +3914,7 @@ button{
         addOrder();
 
         setMessage(
-          `出餐成功 +${earnedScore}`
+          `出餐成功 +${earned}`
         );
       }
       else{
@@ -3079,6 +3937,22 @@ button{
 
     if(station.id === "trash"){
       discard();
+
+      return;
+    }
+
+    if(station.id === "board"){
+      setMessage(
+        "本關食材不需要切割"
+      );
+
+      return;
+    }
+
+    if(station.id === "plate"){
+      setMessage(
+        "盤子已備妥"
+      );
     }
   }
 
@@ -3104,124 +3978,71 @@ button{
     }
   }
 
-  function startGame(){
-    Object.assign(
-      state,
-      {
-        running:true,
-        paused:false,
+  /* =======================================================
+     更新
+  ======================================================= */
 
-        time:75,
-
-        score:0,
-        served:0,
-
-        combo:0,
-        maxCombo:0,
-
-        held:null,
-
-        panState:"empty",
-        panTimer:0,
-
-        assembly:[],
-
-        orders:[],
-        orderSpawnTimer:0,
-
-        chef:{
-          x:640,
-          y:375
-        },
-
-        nearestStation:null,
-
-        message:
-          "依照訂單開始準備餐點",
-
-        messageTimer:0,
-
-        lastFrame:
-          performance.now()
-      }
-    );
-
-    menu.style.display =
-      "none";
-
-    result.style.display =
-      "none";
-
-    pause.style.display =
-      "none";
-
-    addOrder();
-    addOrder();
-    addOrder();
-
-    touch.classList.add(
-      "on"
-    );
-
-    requestAnimationFrame(
-      gameLoop
-    );
-  }
-
-  function update(
+  function updateMovement(
     deltaTime
   ){
-    let movementX =
+    let moveX =
       state.joystick.x;
 
-    let movementY =
+    let moveY =
       state.joystick.y;
 
     if(
       state.keys.ArrowLeft ||
-      state.keys.a
+      state.keys.a ||
+      state.keys.A
     ){
-      movementX -=
+      moveX -=
         1;
     }
 
     if(
       state.keys.ArrowRight ||
-      state.keys.d
+      state.keys.d ||
+      state.keys.D
     ){
-      movementX +=
+      moveX +=
         1;
     }
 
     if(
       state.keys.ArrowUp ||
-      state.keys.w
+      state.keys.w ||
+      state.keys.W
     ){
-      movementY -=
+      moveY -=
         1;
     }
 
     if(
       state.keys.ArrowDown ||
-      state.keys.s
+      state.keys.s ||
+      state.keys.S
     ){
-      movementY +=
+      moveY +=
         1;
     }
 
-    const movementLength =
+    const length =
       Math.hypot(
-        movementX,
-        movementY
+        moveX,
+        moveY
       );
 
-    if(movementLength > 1){
-      movementX /=
-        movementLength;
+    if(length > 1){
+      moveX /=
+        length;
 
-      movementY /=
-        movementLength;
+      moveY /=
+        length;
     }
+
+    const speed =
+      250;
 
     state.chef.x =
       Math.max(
@@ -3229,8 +4050,8 @@ button{
         Math.min(
           1170,
           state.chef.x +
-          movementX *
-          250 *
+          moveX *
+          speed *
           deltaTime
         )
       );
@@ -3241,20 +4062,24 @@ button{
         Math.min(
           535,
           state.chef.y +
-          movementY *
-          250 *
+          moveY *
+          speed *
           deltaTime
         )
       );
 
-    state.nearestStation =
+    state.nearest =
       getNearestStation()?.id ||
       null;
+  }
 
+  function updateOrders(
+    deltaTime
+  ){
     state.time -=
       deltaTime;
 
-    state.orderSpawnTimer +=
+    state.orderSpawn +=
       deltaTime;
 
     state.orders.forEach(
@@ -3273,10 +4098,12 @@ button{
     );
 
     if(
-      state.orders[0]
-        ?.patience <= 0
+      state.orders[0]?.patience <= 0
     ){
       state.orders.shift();
+
+      state.combo =
+        0;
 
       state.score =
         Math.max(
@@ -3292,44 +4119,38 @@ button{
     }
 
     if(
-      state.orderSpawnTimer >= 9 &&
+      state.orderSpawn >= 9 &&
       state.orders.length < 5
     ){
-      state.orderSpawnTimer =
+      state.orderSpawn =
         0;
 
       addOrder();
     }
+  }
 
+  function updateCooking(
+    deltaTime
+  ){
     if(
-      state.panState === "cooking"
+      state.panState !== "cooking"
     ){
-      state.panTimer -=
-        deltaTime;
-
-      if(state.panTimer <= 0){
-        state.panState =
-          "done";
-
-        state.panTimer =
-          0;
-
-        setMessage(
-          "肉排烹調完成"
-        );
-      }
+      return;
     }
 
-    if(state.messageTimer > 0){
-      state.messageTimer -=
-        deltaTime;
+    state.panTimer -=
+      deltaTime;
 
-      if(state.messageTimer <= 0){
-        state.message =
-          state.held
-            ? "前往下一個工作台繼續處理"
-            : "依照訂單拿取需要的食材";
-      }
+    if(state.panTimer <= 0){
+      state.panTimer =
+        0;
+
+      state.panState =
+        "done";
+
+      setMessage(
+        "肉排烹調完成"
+      );
     }
   }
 
@@ -3337,13 +4158,16 @@ button{
     state.running =
       false;
 
-    touch.classList.remove(
-      "on"
+    touchControls.classList.remove(
+      "active"
     );
+
+    desktopHelp.style.display =
+      "none";
 
     document
       .getElementById(
-        "resultTitle"
+        "result-title"
       )
       .textContent =
         state.score >= 1000
@@ -3352,12 +4176,12 @@ button{
 
     document
       .getElementById(
-        "resultText"
+        "result-text"
       )
       .textContent =
         `總分 ${state.score}｜完成訂單 ${state.served}｜最高連擊 ${state.maxCombo}`;
 
-    result.style.display =
+    resultScreen.style.display =
       "flex";
   }
 
@@ -3373,18 +4197,38 @@ button{
         .033,
         (
           currentTime -
-          state.lastFrame
+          state.last
         ) /
         1000
       );
 
-    state.lastFrame =
+    state.last =
       currentTime;
 
     if(!state.paused){
-      update(
+      updateMovement(
         deltaTime
       );
+
+      updateOrders(
+        deltaTime
+      );
+
+      updateCooking(
+        deltaTime
+      );
+
+      if(state.messageTimer > 0){
+        state.messageTimer -=
+          deltaTime;
+
+        if(state.messageTimer <= 0){
+          state.message =
+            state.held
+              ? "前往下一個工作台繼續處理"
+              : "依照訂單拿取需要的食材";
+        }
+      }
 
       if(state.time <= 0){
         state.time =
@@ -3403,6 +4247,10 @@ button{
       gameLoop
     );
   }
+
+  /* =======================================================
+     鍵盤
+  ======================================================= */
 
   window.addEventListener(
     "keydown",
@@ -3455,7 +4303,7 @@ button{
         state.paused =
           true;
 
-        pause.style.display =
+        pauseScreen.style.display =
           "flex";
       }
     }
@@ -3469,11 +4317,23 @@ button{
     }
   );
 
+  /* =======================================================
+     虛擬搖桿
+
+     因為使用 getBoundingClientRect()，
+     取得的是縮放後的實際畫面尺寸，
+     所以觸控比例會跟隨舞台縮放。
+  ======================================================= */
+
   const joystick =
-    document.getElementById("joy");
+    document.getElementById(
+      "joystick"
+    );
 
   const joystickStick =
-    document.getElementById("stick");
+    document.getElementById(
+      "joystick-stick"
+    );
 
   let joystickPointer =
     null;
@@ -3540,10 +4400,11 @@ button{
     joystickPointer =
       null;
 
-    state.joystick = {
-      x:0,
-      y:0
-    };
+    state.joystick.x =
+      0;
+
+    state.joystick.y =
+      0;
 
     joystickStick.style.transform =
       "translate(-50%,-50%)";
@@ -3556,7 +4417,7 @@ button{
         event.pointerId;
 
       joystick.setPointerCapture(
-        joystickPointer
+        event.pointerId
       );
 
       moveJoystick(
@@ -3589,9 +4450,13 @@ button{
     resetJoystick
   );
 
+  /* =======================================================
+     UI
+  ======================================================= */
+
   document
     .getElementById(
-      "interact"
+      "interact-button"
     )
     .addEventListener(
       "pointerdown",
@@ -3604,7 +4469,7 @@ button{
 
   document
     .getElementById(
-      "discard"
+      "discard-button"
     )
     .addEventListener(
       "pointerdown",
@@ -3617,7 +4482,7 @@ button{
 
   document
     .getElementById(
-      "story"
+      "story-button"
     )
     .addEventListener(
       "click",
@@ -3626,7 +4491,7 @@ button{
 
   document
     .querySelectorAll(
-      ".locked"
+      ".mode-button.locked"
     )
     .forEach(button => {
       button.addEventListener(
@@ -3634,24 +4499,24 @@ button{
         () => {
           const toast =
             document.getElementById(
-              "toast"
+              "mode-toast"
             );
 
           toast.textContent =
-            button.dataset.msg;
+            button.dataset.message;
 
           toast.classList.add(
-            "show"
+            "visible"
           );
 
           clearTimeout(
-            toast.timer
+            toast.hideTimer
           );
 
-          toast.timer =
+          toast.hideTimer =
             setTimeout(() => {
               toast.classList.remove(
-                "show"
+                "visible"
               );
             },1600);
         }
@@ -3660,7 +4525,7 @@ button{
 
   document
     .getElementById(
-      "resume"
+      "resume-button"
     )
     .addEventListener(
       "click",
@@ -3668,39 +4533,26 @@ button{
         state.paused =
           false;
 
-        pause.style.display =
+        pauseScreen.style.display =
           "none";
 
-        state.lastFrame =
+        state.last =
           performance.now();
       }
     );
 
   document
     .getElementById(
-      "back"
+      "pause-menu-button"
     )
     .addEventListener(
       "click",
-      () => {
-        state.running =
-          false;
-
-        touch.classList.remove(
-          "on"
-        );
-
-        pause.style.display =
-          "none";
-
-        menu.style.display =
-          "block";
-      }
+      showModeScreen
     );
 
   document
     .getElementById(
-      "retry"
+      "retry-button"
     )
     .addEventListener(
       "click",
@@ -3709,21 +4561,16 @@ button{
 
   document
     .getElementById(
-      "resultBack"
+      "result-menu-button"
     )
     .addEventListener(
       "click",
-      () => {
-        state.running =
-          false;
-
-        result.style.display =
-          "none";
-
-        menu.style.display =
-          "block";
-      }
+      showModeScreen
     );
+
+  /* =======================================================
+     Loading
+  ======================================================= */
 
   let loadingReady =
     false;
@@ -3744,7 +4591,7 @@ button{
     ){
       document
         .getElementById(
-          "loadbar"
+          "loading-bar"
         )
         .style
         .width =
@@ -3752,19 +4599,19 @@ button{
 
       document
         .getElementById(
-          "loadnum"
+          "loading-number"
         )
         .textContent =
           `${progress}%`;
 
       document
         .getElementById(
-          "loadmsg"
+          "loading-message"
         )
         .textContent =
           loadingSteps[
             Math.min(
-              4,
+              loadingSteps.length - 1,
               Math.floor(
                 progress / 21
               )
@@ -3786,42 +4633,61 @@ button{
 
     document
       .getElementById(
-        "loadmsg"
+        "loading-message"
       )
       .textContent =
         "準備完了";
 
     document
       .getElementById(
-        "enter"
+        "enter-button"
       )
       .classList
       .add(
-        "show"
+        "visible"
       );
+  }
+
+  function enterMenu(){
+    if(!loadingReady){
+      return;
+    }
+
+    loadingScreen.style.display =
+      "none";
+
+    modeScreen.style.display =
+      "block";
+
+    desktopHelp.style.display =
+      "none";
+
+    render();
   }
 
   document
     .getElementById(
-      "enter"
+      "enter-button"
     )
     .addEventListener(
       "click",
-      () => {
-        if(!loadingReady){
-          return;
-        }
-
-        loading.style.display =
-          "none";
-
-        menu.style.display =
-          "block";
-      }
+      enterMenu
     );
 
-  boot();
+  modeScreen.style.display =
+    "none";
+
+  pauseScreen.style.display =
+    "none";
+
+  resultScreen.style.display =
+    "none";
+
+  desktopHelp.style.display =
+    "none";
+
   render();
+  boot();
 })();
 </script>
 
