@@ -1,1 +1,557 @@
+.menu-scene{
+  overflow:hidden;
 
+  color:#ffffff;
+
+  background:
+    linear-gradient(
+      rgba(7,14,18,.68),
+      rgba(7,14,18,.9)
+    ),
+
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(94,180,197,.24),
+      transparent 36%
+    ),
+
+    linear-gradient(
+      145deg,
+      #22333b,
+      #0c151a 72%
+    );
+}
+
+/* =========================================================
+   Header
+========================================================= */
+
+.menu-header{
+  position:absolute;
+
+  left:64px;
+  right:64px;
+
+  top:34px;
+}
+
+.menu-header small{
+  color:#ffd27f;
+
+  font-size:13px;
+  font-weight:900;
+
+  letter-spacing:.25em;
+}
+
+.menu-header h1{
+  margin-top:4px;
+
+  font-size:40px;
+
+  letter-spacing:.06em;
+}
+
+/* =========================================================
+   Cards
+========================================================= */
+
+.mode-grid{
+  position:absolute;
+
+  left:50%;
+  top:55%;
+
+  width:1120px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      1fr
+    );
+
+  gap:22px;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+}
+
+.mode-card{
+  --card-glow:
+    rgba(
+      255,
+      255,
+      255,
+      .35
+    );
+
+  position:relative;
+
+  height:410px;
+
+  overflow:hidden;
+
+  padding:
+    24px 22px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .27
+    );
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255,255,255,.22),
+      rgba(255,255,255,.07) 48%,
+      rgba(255,255,255,.03)
+    ),
+
+    rgba(
+      13,
+      26,
+      31,
+      .48
+    );
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      .34
+    ),
+
+    0 22px 48px
+    rgba(
+      0,
+      0,
+      0,
+      .32
+    );
+
+  backdrop-filter:
+    blur(17px)
+    saturate(135%);
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.mode-card::before{
+  content:"";
+
+  position:absolute;
+
+  left:-20%;
+  right:-20%;
+
+  top:-35%;
+
+  height:62%;
+
+  opacity:.65;
+
+  background:
+    radial-gradient(
+      circle,
+      var(--card-glow),
+      transparent 68%
+    );
+}
+
+.mode-card:hover,
+.mode-card:focus-within{
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      .48
+    );
+
+  transform:
+    translateY(-10px)
+    scale(1.02);
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      .42
+    ),
+
+    0 30px 65px
+    rgba(
+      0,
+      0,
+      0,
+      .4
+    );
+}
+
+.mode-card.story{
+  --card-glow:
+    rgba(
+      244,
+      140,
+      72,
+      .9
+    );
+}
+
+.mode-card.online{
+  --card-glow:
+    rgba(
+      77,
+      166,
+      196,
+      .9
+    );
+}
+
+.mode-card.event{
+  --card-glow:
+    rgba(
+      177,
+      101,
+      206,
+      .9
+    );
+}
+
+.mode-card.dlc{
+  --card-glow:
+    rgba(
+      239,
+      191,
+      80,
+      .95
+    );
+}
+
+.mode-tag{
+  position:absolute;
+
+  left:14px;
+  top:14px;
+
+  z-index:3;
+
+  padding:
+    6px 10px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .25
+    );
+
+  border-radius:999px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      .22
+    );
+
+  color:#fff4d8;
+
+  font-size:12px;
+  font-weight:900;
+}
+
+/* =========================================================
+   Art
+========================================================= */
+
+.mode-art{
+  position:relative;
+
+  height:156px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  margin-bottom:18px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .18
+    );
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      rgba(
+        255,
+        255,
+        255,
+        .09
+      ),
+
+      rgba(
+        255,
+        255,
+        255,
+        .03
+      )
+    );
+}
+
+.mode-mark{
+  position:relative;
+
+  width:104px;
+  height:104px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border:
+    5px solid
+    rgba(
+      255,
+      255,
+      255,
+      .76
+    );
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        255,
+        255,
+        255,
+        .28
+      ),
+
+      rgba(
+        255,
+        255,
+        255,
+        .08
+      )
+    );
+
+  box-shadow:
+    0 16px 32px
+    rgba(
+      0,
+      0,
+      0,
+      .22
+    );
+
+  color:#ffffff;
+
+  font-size:38px;
+  font-weight:1000;
+
+  letter-spacing:.02em;
+}
+
+.mode-card h2{
+  position:relative;
+
+  font-size:29px;
+
+  letter-spacing:.05em;
+}
+
+.mode-card p{
+  position:relative;
+
+  min-height:70px;
+
+  margin-top:10px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .77
+    );
+
+  font-size:15px;
+  font-weight:700;
+
+  line-height:1.65;
+}
+
+/* =========================================================
+   Footer
+========================================================= */
+
+.mode-footer{
+  position:absolute;
+
+  left:22px;
+  right:22px;
+
+  bottom:22px;
+}
+
+.mode-status{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:12px;
+
+  color:#fff3cf;
+
+  font-size:13px;
+  font-weight:900;
+}
+
+.mode-button{
+  width:100%;
+
+  min-height:48px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .28
+    );
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      rgba(
+        255,
+        255,
+        255,
+        .24
+      ),
+
+      rgba(
+        255,
+        255,
+        255,
+        .1
+      )
+    );
+
+  color:#ffffff;
+
+  font-size:16px;
+  font-weight:1000;
+
+  cursor:pointer;
+}
+
+.mode-button.primary{
+  background:
+    linear-gradient(
+      #ef8d51,
+      #c85334
+    );
+
+  box-shadow:
+    0 6px 0
+    #713222;
+}
+
+.mode-button.locked{
+  opacity:.62;
+}
+
+/* =========================================================
+   Toast
+========================================================= */
+
+.mode-toast{
+  position:absolute;
+
+  left:50%;
+  bottom:28px;
+
+  padding:
+    11px 19px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      .25
+    );
+
+  border-radius:12px;
+
+  background:
+    rgba(
+      8,
+      16,
+      20,
+      .84
+    );
+
+  color:#ffffff;
+
+  font-weight:900;
+
+  opacity:0;
+
+  transform:
+    translate(
+      -50%,
+      12px
+    );
+
+  transition:.22s;
+
+  pointer-events:none;
+}
+
+.mode-toast.visible{
+  opacity:1;
+
+  transform:
+    translate(
+      -50%,
+      0
+    );
+}
