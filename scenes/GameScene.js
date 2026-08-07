@@ -209,7 +209,7 @@ export class GameScene {
         new THREE.Vector3(
           0,
           0,
-          0
+          .15
         )
 
     };
@@ -258,32 +258,38 @@ export class GameScene {
           ></div>
 
           <div
-            class="hud-stat hud-time"
+            class="hud-right-group"
           >
 
-            <span
-              class="hud-stat-label"
+            <div
+              class="hud-stat hud-time"
             >
-              時間
-            </span>
 
-            <strong
-              class="hud-stat-value"
-              data-time
+              <span
+                class="hud-stat-label"
+              >
+                時間
+              </span>
+
+              <strong
+                class="hud-stat-value"
+                data-time
+              >
+                75
+              </strong>
+
+            </div>
+
+            <button
+              class="pause-trigger"
+              data-pause-trigger
+              type="button"
+              aria-label="暫停"
             >
-              75
-            </strong>
+              II
+            </button>
 
           </div>
-
-          <button
-            class="pause-trigger"
-            data-pause-trigger
-            type="button"
-            aria-label="暫停"
-          >
-            II
-          </button>
 
           <div
             class="station-hint"
@@ -551,7 +557,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Three.js 基礎
+     Three.js
   ======================================================= */
 
   createThreeScene(){
@@ -567,8 +573,8 @@ export class GameScene {
     this.scene.fog =
       new THREE.Fog(
         0xc6d7cf,
-        15,
-        24
+        16,
+        26
       );
 
     const aspect =
@@ -756,38 +762,53 @@ export class GameScene {
     floor.position.y =
       -.02;
 
+    floor.position.z =
+      .2;
+
     this.scene.add(
       floor
     );
 
     const grid =
       new THREE.GridHelper(
-        18,
-        18,
+        17,
+        17,
         0xb38d55,
         0xc9a96e
       );
 
-    grid.position.y =
-      .005;
+    grid.position.set(
+      0,
+      .005,
+      .2
+    );
 
     grid.scale.z =
-      10 / 18;
+      8.8 / 17;
 
     this.scene.add(
       grid
     );
 
+    const topZ =
+      -2.72;
+
+    const sideX =
+      6.9;
+
+    const bottomZ =
+      2.82;
+
     const topXs = [
-      -6,
-      -4.5,
-      -3,
-      -1.5,
+      -5.8,
+      -4.35,
+      -2.9,
+      -1.45,
       0,
-      1.5,
-      3,
-      4.5,
-      6
+      1.45,
+      2.9,
+      4.35,
+      5.8
     ];
 
     topXs.forEach(
@@ -795,51 +816,51 @@ export class GameScene {
 
         this.createCounter(
           x,
-          -3.35,
-          1.35,
-          1.1
+          topZ,
+          1.3,
+          1
         )
 
     );
 
     [
-      -1.7,
-      0,
-      1.7
+      -1.45,
+      .1,
+      1.65
     ]
     .forEach(
       z => {
 
         this.createCounter(
-          -7.45,
+          -sideX,
           z,
-          1.1,
-          1.35
+          1,
+          1.28
         );
 
         this.createCounter(
-          7.45,
+          sideX,
           z,
-          1.1,
-          1.35
+          1,
+          1.28
         );
 
       }
     );
 
     [
-      -1.5,
+      -1.35,
       0,
-      1.5
+      1.35
     ]
     .forEach(
       x =>
 
         this.createCounter(
           x,
-          3.35,
-          1.35,
-          1.1
+          bottomZ,
+          1.25,
+          1
         )
 
     );
@@ -851,11 +872,11 @@ export class GameScene {
         label:"麵包",
         type:"bun",
 
-        x:-6,
-        z:-3.35,
+        x:-5.8,
+        z:topZ,
 
-        ix:-6,
-        iz:-2.38
+        ix:-5.8,
+        iz:-1.82
       },
 
       {
@@ -863,11 +884,11 @@ export class GameScene {
         label:"生菜",
         type:"lettuce",
 
-        x:-4.5,
-        z:-3.35,
+        x:-4.35,
+        z:topZ,
 
-        ix:-4.5,
-        iz:-2.38
+        ix:-4.35,
+        iz:-1.82
       },
 
       {
@@ -875,11 +896,11 @@ export class GameScene {
         label:"肉排",
         type:"rawMeat",
 
-        x:-3,
-        z:-3.35,
+        x:-2.9,
+        z:topZ,
 
-        ix:-3,
-        iz:-2.38
+        ix:-2.9,
+        iz:-1.82
       },
 
       {
@@ -887,11 +908,11 @@ export class GameScene {
         label:"砧板",
         type:"board",
 
-        x:-1.5,
-        z:-3.35,
+        x:-1.45,
+        z:topZ,
 
-        ix:-1.5,
-        iz:-2.38
+        ix:-1.45,
+        iz:-1.82
       },
 
       {
@@ -899,11 +920,11 @@ export class GameScene {
         label:"煎台",
         type:"pan",
 
-        x:1.5,
-        z:-3.35,
+        x:1.45,
+        z:topZ,
 
-        ix:1.5,
-        iz:-2.38
+        ix:1.45,
+        iz:-1.82
       },
 
       {
@@ -911,11 +932,11 @@ export class GameScene {
         label:"飲料",
         type:"drinkStation",
 
-        x:3,
-        z:-3.35,
+        x:2.9,
+        z:topZ,
 
-        ix:3,
-        iz:-2.38
+        ix:2.9,
+        iz:-1.82
       },
 
       {
@@ -923,11 +944,11 @@ export class GameScene {
         label:"盤子",
         type:"plate",
 
-        x:4.5,
-        z:-3.35,
+        x:4.35,
+        z:topZ,
 
-        ix:4.5,
-        iz:-2.38
+        ix:4.35,
+        iz:-1.82
       },
 
       {
@@ -935,11 +956,11 @@ export class GameScene {
         label:"組裝",
         type:"assembly",
 
-        x:-7.45,
-        z:0,
+        x:-sideX,
+        z:.1,
 
-        ix:-6.42,
-        iz:0
+        ix:-5.95,
+        iz:.1
       },
 
       {
@@ -947,11 +968,11 @@ export class GameScene {
         label:"出餐",
         type:"serve",
 
-        x:7.45,
-        z:0,
+        x:sideX,
+        z:.1,
 
-        ix:6.42,
-        iz:0
+        ix:5.95,
+        iz:.1
       },
 
       {
@@ -960,10 +981,10 @@ export class GameScene {
         type:"trash",
 
         x:0,
-        z:3.35,
+        z:bottomZ,
 
         ix:0,
-        iz:2.38
+        iz:1.92
       }
 
     ];
@@ -1113,7 +1134,7 @@ export class GameScene {
 
     label.position.set(
       0,
-      1.05,
+      .92,
       0
     );
 
@@ -1567,7 +1588,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Three.js 站點文字
+     Labels
   ======================================================= */
 
   createTextSprite(
@@ -1606,8 +1627,9 @@ export class GameScene {
     context.lineWidth =
       8;
 
-    this.roundCanvasRect(
-      context,
+    context.beginPath();
+
+    context.roundRect(
       6,
       6,
       244,
@@ -1661,8 +1683,8 @@ export class GameScene {
       );
 
     sprite.scale.set(
-      1.65,
-      .52,
+      1.55,
+      .48,
       1
     );
 
@@ -1670,27 +1692,6 @@ export class GameScene {
       20;
 
     return sprite;
-
-  }
-
-  roundCanvasRect(
-    context,
-    x,
-    y,
-    width,
-    height,
-    radius
-  ){
-
-    context.beginPath();
-
-    context.roundRect(
-      x,
-      y,
-      width,
-      height,
-      radius
-    );
 
   }
 
@@ -2319,7 +2320,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Main Loop
+     Loop
   ======================================================= */
 
   loop(
@@ -2482,7 +2483,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Player Movement
+     Movement
   ======================================================= */
 
   updatePlayer(
@@ -3232,7 +3233,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Held item
+     Held / Station Visual
   ======================================================= */
 
   setHeld(
@@ -3560,7 +3561,7 @@ export class GameScene {
   }
 
   /* =======================================================
-     Pause
+     Pause / Result
   ======================================================= */
 
   togglePause(){
@@ -3619,10 +3620,6 @@ export class GameScene {
       performance.now();
 
   }
-
-  /* =======================================================
-     Result
-  ======================================================= */
 
   endGame(){
 
