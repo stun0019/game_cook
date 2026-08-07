@@ -1,3 +1,8 @@
+import {
+  GameConfig
+} from "../js/core/GameConfig.js";
+
+
 export class MenuScene {
 
   constructor({
@@ -27,12 +32,33 @@ export class MenuScene {
         class="app-scene menu-scene"
       >
 
+        <!--
+          使用 Loading Page 相同背景。
+          Menu 僅在 CSS 進行 Blur / Dark Overlay。
+        -->
+
+        <img
+          class="menu-background"
+          src="${GameConfig.assets.loadingBackground}"
+          alt=""
+          draggable="false"
+        >
+
+        <div
+          class="menu-background-overlay"
+        ></div>
+
+        <div
+          class="menu-background-vignette"
+        ></div>
+
+
         <header
           class="menu-header"
         >
 
           <small>
-            CHOOSE YOUR MODE
+            SUNNY PAW CAFÉ
           </small>
 
           <h1>
@@ -41,9 +67,12 @@ export class MenuScene {
 
         </header>
 
+
         <div
           class="mode-grid"
         >
+
+          <!-- STORY -->
 
           <article
             class="mode-card story"
@@ -106,6 +135,9 @@ export class MenuScene {
 
           </article>
 
+
+          <!-- ONLINE -->
+
           <article
             class="mode-card online"
           >
@@ -167,6 +199,9 @@ export class MenuScene {
 
           </article>
 
+
+          <!-- EVENT -->
+
           <article
             class="mode-card event"
           >
@@ -201,204 +236,3 @@ export class MenuScene {
             <div
               class="mode-footer"
             >
-
-              <div
-                class="mode-status"
-              >
-
-                <span>
-                  活動
-                </span>
-
-                <span>
-                  尚未開始
-                </span>
-
-              </div>
-
-              <button
-                class="mode-button locked"
-                data-message="目前沒有進行中的限時活動"
-                type="button"
-              >
-                查看活動
-              </button>
-
-            </div>
-
-          </article>
-
-          <article
-            class="mode-card dlc"
-          >
-
-            <span
-              class="mode-tag"
-            >
-              EXTRA
-            </span>
-
-            <div
-              class="mode-art"
-            >
-
-              <div
-                class="mode-mark"
-              >
-                +
-              </div>
-
-            </div>
-
-            <h2>
-              DLC
-            </h2>
-
-            <p>
-              額外店面、全新地圖，
-              以及更多特殊料理內容。
-            </p>
-
-            <div
-              class="mode-footer"
-            >
-
-              <div
-                class="mode-status"
-              >
-
-                <span>
-                  內容
-                </span>
-
-                <span>
-                  準備中
-                </span>
-
-              </div>
-
-              <button
-                class="mode-button locked"
-                data-message="DLC 內容仍在準備中"
-                type="button"
-              >
-                查看內容
-              </button>
-
-            </div>
-
-          </article>
-
-        </div>
-
-        <div
-          class="mode-toast"
-          data-toast
-        ></div>
-
-      </section>
-
-    `;
-
-    const storyButton =
-      this.sceneRoot.querySelector(
-        "[data-story-button]"
-      );
-
-    const toast =
-      this.sceneRoot.querySelector(
-        "[data-toast]"
-      );
-
-    const onStory =
-      () => {
-
-        this.sceneManager
-          .changeScene(
-            "game"
-          );
-
-      };
-
-    storyButton.addEventListener(
-      "click",
-      onStory
-    );
-
-    this.cleanups.push(
-      () =>
-        storyButton.removeEventListener(
-          "click",
-          onStory
-        )
-    );
-
-    this.sceneRoot
-      .querySelectorAll(
-        ".mode-button.locked"
-      )
-      .forEach(
-        button => {
-
-          const handler =
-            () => {
-
-              toast.textContent =
-                button.dataset.message ||
-                "準備中";
-
-              toast.classList.add(
-                "visible"
-              );
-
-              clearTimeout(
-                this.toastTimer
-              );
-
-              this.toastTimer =
-                setTimeout(
-                  () =>
-                    toast.classList.remove(
-                      "visible"
-                    ),
-                  1600
-                );
-
-            };
-
-          button.addEventListener(
-            "click",
-            handler
-          );
-
-          this.cleanups.push(
-            () =>
-              button.removeEventListener(
-                "click",
-                handler
-              )
-          );
-
-        }
-      );
-
-  }
-
-  destroy(){
-
-    clearTimeout(
-      this.toastTimer
-    );
-
-    this.cleanups
-      .splice(
-        0
-      )
-      .forEach(
-        cleanup =>
-          cleanup()
-      );
-
-  }
-
-}
