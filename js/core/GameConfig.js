@@ -37,29 +37,29 @@ export const GameConfig = {
   },
 
   world:{
-    minX:-8.2,
-    maxX:8.2,
+    minX:-7.7,
+    maxX:7.7,
 
-    minZ:-4.25,
-    maxZ:4.25,
+    minZ:-3.65,
+    maxZ:3.65,
 
-    floorWidth:18,
-    floorDepth:10
+    floorWidth:17,
+    floorDepth:8.8
   },
 
   camera:{
-    viewHeight:10.2,
+    viewHeight:11.7,
 
     position:{
       x:0,
-      y:12.5,
-      z:11.5
+      y:14,
+      z:13.2
     },
 
     target:{
       x:0,
-      y:0,
-      z:0
+      y:.15,
+      z:.25
     }
   }
 
