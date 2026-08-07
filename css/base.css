@@ -1,244 +1,593 @@
 :root{
+
   --ink:#33251f;
+
   --paper:#fffaf0;
+
   --cream:#fff3d5;
+
   --red:#e45a45;
+
   --orange:#f29a46;
+
   --gold:#f6c34f;
+
   --green:#68a96d;
+
   --yellow:#e9b94f;
+
   --dark:#132027;
+
+
+  /*
+   * 16:9 Stage 外側背景。
+   *
+   * Loading / Menu：
+   * 使用 Loading_page_BG.png。
+   *
+   * Menu → Game：
+   * MenuScene.js 會切換成淡綠色。
+   */
+  --outer-bg-image:
+    url("../asset/art/Loading_page_BG.png");
+
+  --outer-bg-color:
+    #101522;
+
 }
 
+
+/* =========================================================
+   Reset
+========================================================= */
+
 *{
+
   box-sizing:border-box;
 
   margin:0;
+
   padding:0;
 
+
   user-select:none;
+
   -webkit-user-select:none;
 
-  -webkit-tap-highlight-color:transparent;
+
+  -webkit-tap-highlight-color:
+    transparent;
+
 }
+
+
+/* =========================================================
+   Document
+========================================================= */
 
 html,
 body{
+
   width:100%;
+
   height:100%;
+
 
   overflow:hidden;
 
-  background:#080d12;
+
+  background:
+    var(
+      --outer-bg-color
+    );
+
 
   touch-action:none;
+
   overscroll-behavior:none;
+
 
   font-family:
     "Noto Sans TC",
     "PingFang TC",
     "Microsoft JhengHei",
     sans-serif;
+
 }
 
+
 body{
+
   position:fixed;
+
   inset:0;
+
 }
+
 
 button,
 input{
+
   font:inherit;
+
 }
 
+
 button{
+
   border:0;
+
 }
+
 
 /* =========================================================
    Viewport
 ========================================================= */
 
 #viewport{
+
   position:fixed;
 
-  left:env(safe-area-inset-left);
-  top:env(safe-area-inset-top);
+
+  left:
+    env(
+      safe-area-inset-left
+    );
+
+  top:
+    env(
+      safe-area-inset-top
+    );
+
 
   width:
     calc(
       100vw
-      - env(safe-area-inset-left)
-      - env(safe-area-inset-right)
+      - env(
+          safe-area-inset-left
+        )
+      - env(
+          safe-area-inset-right
+        )
     );
+
 
   height:
     calc(
       100dvh
-      - env(safe-area-inset-top)
-      - env(safe-area-inset-bottom)
+      - env(
+          safe-area-inset-top
+        )
+      - env(
+          safe-area-inset-bottom
+        )
     );
+
 
   overflow:hidden;
 
-  background:#080d12;
+
+  isolation:isolate;
+
+
+  background:
+    var(
+      --outer-bg-color
+    );
+
 }
 
+
 /* =========================================================
-   固定 1280 × 720 Stage
+   16:9 外側延伸背景
+
+   19.5:9 / 20:9 手機橫向時，
+   Stage 左右不再顯示純黑。
+========================================================= */
+
+#viewport::before{
+
+  content:"";
+
+
+  position:absolute;
+
+
+  inset:-36px;
+
+
+  z-index:-2;
+
+
+  background-color:
+    var(
+      --outer-bg-color
+    );
+
+
+  background-image:
+    var(
+      --outer-bg-image
+    );
+
+
+  background-repeat:
+    no-repeat;
+
+
+  background-position:
+    center;
+
+
+  background-size:
+    cover;
+
+
+  filter:
+    blur(22px)
+    brightness(.62)
+    saturate(.82);
+
+
+  transform:
+    scale(1.06);
+
+
+  pointer-events:none;
+
+}
+
+
+/*
+ * 外側背景再壓一層漸層，
+ * 避免左右延伸區搶過正式 16:9 Stage。
+ */
+
+#viewport::after{
+
+  content:"";
+
+
+  position:absolute;
+
+
+  inset:0;
+
+
+  z-index:-1;
+
+
+  background:
+
+    linear-gradient(
+      90deg,
+
+      rgba(
+        4,
+        9,
+        13,
+        .34
+      )
+      0%,
+
+      rgba(
+        4,
+        9,
+        13,
+        .08
+      )
+      18%,
+
+      transparent
+      36%,
+
+      transparent
+      64%,
+
+      rgba(
+        4,
+        9,
+        13,
+        .08
+      )
+      82%,
+
+      rgba(
+        4,
+        9,
+        13,
+        .34
+      )
+      100%
+    );
+
+
+  pointer-events:none;
+
+}
+
+
+/* =========================================================
+   Fixed Logical Stage
+
+   遊戲內容永遠使用 1280 × 720。
+   main.js 僅縮放整個 Stage。
 ========================================================= */
 
 #stage{
+
   position:absolute;
 
+
   left:50%;
+
   top:50%;
 
+
+  z-index:1;
+
+
   width:1280px;
+
   height:720px;
+
 
   overflow:hidden;
 
+
   background:#101820;
 
-  transform-origin:center center;
 
-  will-change:transform;
+  transform-origin:
+    center center;
+
+
+  will-change:
+    transform;
+
 
   box-shadow:
-    0 30px 80px
-    rgba(0,0,0,.55);
+
+    0 0 0
+    1px
+    rgba(
+      255,
+      255,
+      255,
+      .04
+    ),
+
+    0 24px 80px
+    rgba(
+      0,
+      0,
+      0,
+      .32
+    );
+
 }
 
+
 /* =========================================================
-   Layer
+   Stage Layers
 ========================================================= */
 
 #three-root,
 #scene-root,
 #ui-root{
+
   position:absolute;
+
 
   inset:0;
 
+
   width:1280px;
+
   height:720px;
+
 }
+
 
 #three-root{
+
   z-index:1;
 
+
   overflow:hidden;
+
 }
+
 
 #three-root canvas{
+
   display:block;
 
+
   width:1280px !important;
+
   height:720px !important;
+
 }
+
 
 #scene-root{
+
   z-index:10;
+
 }
+
 
 #ui-root{
+
   z-index:20;
 
+
   pointer-events:none;
+
 }
 
+
+/* =========================================================
+   Scene
+========================================================= */
+
 .app-scene{
+
   position:absolute;
+
 
   inset:0;
 
+
   width:1280px;
+
   height:720px;
+
 }
+
 
 .is-hidden{
+
   display:none !important;
+
 }
 
+
 /* =========================================================
-   手機直向提示
+   Mobile Portrait Rotate Screen
 ========================================================= */
 
 #rotate-screen{
+
   position:fixed;
+
 
   inset:0;
 
+
   z-index:9999;
+
 
   display:none;
 
+
   align-items:center;
+
   justify-content:center;
+
 
   padding:30px;
 
+
   background:
+
     radial-gradient(
       circle at center,
+
       #283d46,
+
       #091116 72%
     );
 
+
   color:#ffffff;
 
+
   text-align:center;
+
 }
+
 
 .rotate-content h2{
+
   margin-bottom:8px;
 
+
   font-size:28px;
+
 }
+
 
 .rotate-content p{
+
   color:
-    rgba(255,255,255,.76);
+    rgba(
+      255,
+      255,
+      255,
+      .76
+    );
+
 
   font-size:15px;
+
   font-weight:700;
+
 }
 
+
+/* =========================================================
+   Rotate Phone Icon
+========================================================= */
+
 .rotate-phone{
+
   width:62px;
+
   height:106px;
+
 
   margin:
     0 auto 22px;
 
+
   border:
-    4px solid #ffffff;
+    4px solid
+    #ffffff;
+
 
   border-radius:15px;
+
 
   animation:
     rotatePhone
     2s
     ease-in-out
     infinite;
+
 }
+
 
 @keyframes rotatePhone{
 
   0%,
   25%{
+
     transform:
-      rotate(-10deg);
+      rotate(
+        -10deg
+      );
+
   }
+
 
   70%,
   100%{
+
     transform:
-      rotate(80deg);
+      rotate(
+        80deg
+      );
+
   }
 
 }
+
+
+/* =========================================================
+   Portrait Mobile
+========================================================= */
 
 @media
   (orientation:portrait)
@@ -246,7 +595,96 @@ button{
   (max-width:900px){
 
   #rotate-screen{
+
     display:flex;
+
+  }
+
+}
+
+
+/* =========================================================
+   Landscape Mobile
+
+   Stage 本身仍維持 16:9。
+   外部 viewport 負責填滿 19.5:9 / 20:9。
+========================================================= */
+
+@media
+  (pointer:coarse)
+  and
+  (orientation:landscape){
+
+  #stage{
+
+    box-shadow:
+
+      0 0 0
+      1px
+      rgba(
+        255,
+        255,
+        255,
+        .035
+      ),
+
+      0 14px 46px
+      rgba(
+        0,
+        0,
+        0,
+        .24
+      );
+
+  }
+
+
+  #viewport::before{
+
+    filter:
+      blur(26px)
+      brightness(.6)
+      saturate(.8);
+
+  }
+
+}
+
+
+/* =========================================================
+   Very Wide Mobile
+
+   19:9 / 19.5:9 / 20:9
+========================================================= */
+
+@media
+  (pointer:coarse)
+  and
+  (orientation:landscape)
+  and
+  (min-aspect-ratio:19/9){
+
+  #viewport::before{
+
+    transform:
+      scale(1.12);
+
+  }
+
+}
+
+
+/* =========================================================
+   Reduced Motion
+========================================================= */
+
+@media
+  (prefers-reduced-motion:reduce){
+
+  .rotate-phone{
+
+    animation:none;
+
   }
 
 }
