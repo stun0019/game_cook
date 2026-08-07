@@ -24,10 +24,6 @@
 }
 
 .hud-stat{
-  position:absolute;
-
-  top:18px;
-
   width:108px;
   height:78px;
 
@@ -59,11 +55,29 @@
 }
 
 .hud-score{
+  position:absolute;
+
   left:18px;
+  top:18px;
+}
+
+.hud-right-group{
+  position:absolute;
+
+  right:18px;
+  top:18px;
+
+  display:flex;
+
+  align-items:flex-start;
+
+  gap:10px;
+
+  pointer-events:auto;
 }
 
 .hud-time{
-  right:18px;
+  position:relative;
 }
 
 .hud-stat-label{
@@ -88,9 +102,9 @@
   position:absolute;
 
   left:50%;
-  top:0;
+  top:8px;
 
-  max-width:930px;
+  max-width:900px;
 
   display:flex;
 
@@ -103,11 +117,11 @@
 .order-ticket{
   position:relative;
 
-  width:176px;
-  height:118px;
+  width:168px;
+  height:110px;
 
   padding:
-    10px 11px 12px;
+    9px 10px 11px;
 
   border:
     4px solid
@@ -155,14 +169,14 @@
 .order-name{
   text-align:center;
 
-  font-size:15px;
+  font-size:14px;
   font-weight:1000;
 }
 
 .order-ingredients{
-  min-height:42px;
+  min-height:38px;
 
-  margin-top:7px;
+  margin-top:6px;
 
   display:flex;
 
@@ -171,7 +185,7 @@
   align-content:center;
   justify-content:center;
 
-  gap:5px;
+  gap:4px;
 }
 
 .ingredient-chip{
@@ -192,15 +206,15 @@
 
   background:#fff3d5;
 
-  font-size:11px;
+  font-size:10px;
   font-weight:900;
 
   white-space:nowrap;
 }
 
 .ingredient-dot{
-  width:9px;
-  height:9px;
+  width:8px;
+  height:8px;
 
   border-radius:50%;
 
@@ -223,12 +237,12 @@
 .patience-track{
   position:absolute;
 
-  left:11px;
-  right:11px;
+  left:10px;
+  right:10px;
 
-  bottom:10px;
+  bottom:9px;
 
-  height:8px;
+  height:7px;
 
   overflow:hidden;
 
@@ -248,26 +262,26 @@
 }
 
 /* =========================================================
-   Game message
+   Message
 ========================================================= */
 
 .game-message{
   position:absolute;
 
   left:50%;
-  bottom:18px;
+  bottom:14px;
 
-  min-width:420px;
-  max-width:680px;
+  min-width:390px;
+  max-width:560px;
 
   padding:
-    10px 22px;
+    9px 18px;
 
   border:
     3px solid
     #33251f;
 
-  border-radius:14px;
+  border-radius:13px;
 
   background:
     rgba(
@@ -281,11 +295,11 @@
 
   text-align:center;
 
-  font-size:16px;
+  font-size:15px;
   font-weight:1000;
 
   box-shadow:
-    0 6px 0
+    0 5px 0
     rgba(
       58,
       38,
@@ -301,10 +315,10 @@
   position:absolute;
 
   left:50%;
-  bottom:79px;
+  bottom:65px;
 
   padding:
-    8px 14px;
+    7px 13px;
 
   border-radius:999px;
 
@@ -318,7 +332,7 @@
 
   color:#fff8df;
 
-  font-size:14px;
+  font-size:13px;
   font-weight:900;
 
   opacity:0;
@@ -339,15 +353,10 @@
 }
 
 /* =========================================================
-   Pause button
+   Pause
 ========================================================= */
 
 .pause-trigger{
-  position:absolute;
-
-  right:22px;
-  top:108px;
-
   width:52px;
   height:52px;
 
@@ -402,10 +411,10 @@
   position:absolute;
 
   left:18px;
-  bottom:20px;
+  bottom:18px;
 
-  width:122px;
-  height:122px;
+  width:108px;
+  height:108px;
 
   border:
     4px solid
@@ -423,7 +432,7 @@
       20,
       31,
       36,
-      .44
+      .42
     );
 
   box-shadow:
@@ -446,8 +455,8 @@
   left:50%;
   top:50%;
 
-  width:58px;
-  height:58px;
+  width:50px;
+  height:50px;
 
   border:
     4px solid
@@ -462,7 +471,7 @@
     );
 
   box-shadow:
-    0 7px 0
+    0 6px 0
     rgba(
       70,
       41,
@@ -481,13 +490,13 @@
   position:absolute;
 
   right:18px;
-  bottom:23px;
+  bottom:20px;
 
   display:flex;
 
   align-items:flex-end;
 
-  gap:12px;
+  gap:10px;
 
   pointer-events:auto;
 }
@@ -517,8 +526,8 @@
 }
 
 .touch-discard{
-  width:68px;
-  height:68px;
+  width:62px;
+  height:62px;
 
   color:#493021;
 
@@ -529,13 +538,13 @@
     );
 
   box-shadow:
-    0 7px 0
+    0 6px 0
     #70502f;
 }
 
 .touch-interact{
-  width:96px;
-  height:96px;
+  width:88px;
+  height:88px;
 
   color:#ffffff;
 
@@ -546,10 +555,10 @@
     );
 
   box-shadow:
-    0 8px 0
+    0 7px 0
     #7f2c25;
 
-  font-size:19px;
+  font-size:17px;
 }
 
 /* =========================================================
@@ -680,6 +689,181 @@
     0 8px 0
     #80613c;
 }
+
+/* =========================================================
+   Mobile Landscape
+========================================================= */
+
+@media
+  (pointer:coarse)
+  and
+  (orientation:landscape){
+
+  .hud-stat{
+    width:88px;
+    height:62px;
+
+    border-width:3px;
+
+    border-radius:15px;
+  }
+
+  .hud-score{
+    left:14px;
+    top:12px;
+  }
+
+  .hud-right-group{
+    right:14px;
+    top:12px;
+
+    gap:7px;
+  }
+
+  .hud-stat-label{
+    font-size:12px;
+  }
+
+  .hud-stat-value{
+    font-size:23px;
+  }
+
+  .pause-trigger{
+    width:44px;
+    height:44px;
+
+    border-width:3px;
+
+    border-radius:12px;
+
+    font-size:15px;
+  }
+
+  .order-strip{
+    top:6px;
+
+    max-width:780px;
+
+    gap:6px;
+  }
+
+  .order-ticket{
+    width:146px;
+    height:96px;
+
+    padding:
+      7px 8px 10px;
+
+    border-width:3px;
+  }
+
+  .order-name{
+    font-size:12px;
+  }
+
+  .order-ingredients{
+    min-height:33px;
+
+    margin-top:4px;
+
+    gap:3px;
+  }
+
+  .ingredient-chip{
+    padding:
+      2px 5px;
+
+    border-width:1.5px;
+
+    font-size:9px;
+  }
+
+  .ingredient-dot{
+    width:7px;
+    height:7px;
+  }
+
+  .patience-track{
+    left:8px;
+    right:8px;
+
+    bottom:7px;
+
+    height:6px;
+  }
+
+  .game-message{
+    bottom:10px;
+
+    min-width:320px;
+    max-width:420px;
+
+    padding:
+      7px 14px;
+
+    border-width:2px;
+
+    border-radius:11px;
+
+    font-size:13px;
+  }
+
+  .station-hint{
+    bottom:51px;
+
+    padding:
+      6px 11px;
+
+    font-size:11px;
+  }
+
+  .touch-joystick{
+    left:14px;
+    bottom:14px;
+
+    width:96px;
+    height:96px;
+
+    border-width:3px;
+  }
+
+  .touch-stick{
+    width:44px;
+    height:44px;
+
+    border-width:3px;
+  }
+
+  .touch-actions{
+    right:14px;
+    bottom:15px;
+
+    gap:8px;
+  }
+
+  .touch-discard{
+    width:56px;
+    height:56px;
+
+    border-width:3px;
+
+    font-size:13px;
+  }
+
+  .touch-interact{
+    width:80px;
+    height:80px;
+
+    border-width:3px;
+
+    font-size:15px;
+  }
+
+}
+
+/* =========================================================
+   Desktop
+========================================================= */
 
 @media (pointer:fine){
 
