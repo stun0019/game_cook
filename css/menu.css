@@ -1,25 +1,81 @@
 .menu-scene{
+  position:absolute;
+
+  inset:0;
+
   overflow:hidden;
 
   color:#ffffff;
 
+  background:#101820;
+}
+
+/* =========================================================
+   Loading 背景延續
+========================================================= */
+
+.menu-background{
+  position:absolute;
+
+  inset:-36px;
+
+  width:calc(100% + 72px);
+  height:calc(100% + 72px);
+
+  object-fit:cover;
+  object-position:center;
+
+  filter:
+    blur(16px)
+    saturate(.88)
+    brightness(.72);
+
+  transform:
+    scale(1.05);
+
+  pointer-events:none;
+}
+
+.menu-background-blur{
+  position:absolute;
+
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(255,255,255,.08),
+      transparent 42%
+    );
+
+  backdrop-filter:
+    blur(3px);
+
+  pointer-events:none;
+}
+
+.menu-background-shade{
+  position:absolute;
+
+  inset:0;
+
   background:
     linear-gradient(
-      rgba(7,14,18,.68),
-      rgba(7,14,18,.9)
-    ),
-
-    radial-gradient(
-      circle at 50% 35%,
-      rgba(94,180,197,.24),
-      transparent 36%
-    ),
-
-    linear-gradient(
-      145deg,
-      #22333b,
-      #0c151a 72%
+      180deg,
+      rgba(8,13,20,.34) 0%,
+      rgba(8,13,20,.52) 38%,
+      rgba(7,12,18,.72) 100%
     );
+
+  pointer-events:none;
+}
+
+.menu-content{
+  position:absolute;
+
+  inset:0;
+
+  z-index:2;
 }
 
 /* =========================================================
@@ -42,6 +98,10 @@
   font-weight:900;
 
   letter-spacing:.25em;
+
+  text-shadow:
+    0 2px 8px
+    rgba(0,0,0,.45);
 }
 
 .menu-header h1{
@@ -50,6 +110,10 @@
   font-size:40px;
 
   letter-spacing:.06em;
+
+  text-shadow:
+    0 3px 10px
+    rgba(0,0,0,.45);
 }
 
 /* =========================================================
@@ -105,7 +169,7 @@
       255,
       255,
       255,
-      .27
+      .3
     );
 
   border-radius:28px;
@@ -113,16 +177,16 @@
   background:
     linear-gradient(
       160deg,
-      rgba(255,255,255,.22),
-      rgba(255,255,255,.07) 48%,
-      rgba(255,255,255,.03)
+      rgba(255,255,255,.2),
+      rgba(255,255,255,.08) 48%,
+      rgba(255,255,255,.035)
     ),
 
     rgba(
-      13,
-      26,
-      31,
-      .48
+      12,
+      24,
+      30,
+      .45
     );
 
   box-shadow:
@@ -139,11 +203,11 @@
       0,
       0,
       0,
-      .32
+      .34
     );
 
   backdrop-filter:
-    blur(17px)
+    blur(18px)
     saturate(135%);
 
   transition:
@@ -181,7 +245,7 @@
       255,
       255,
       255,
-      .48
+      .5
     );
 
   transform:
@@ -404,7 +468,7 @@
       255,
       255,
       255,
-      .77
+      .8
     );
 
   font-size:15px;
