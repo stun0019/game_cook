@@ -1,9 +1,15 @@
 import * as THREE
 from "three";
 
+
 import {
   GameConfig
 } from "../js/core/GameConfig.js";
+
+
+import {
+  getRuntimeKitchenLayout
+} from "../js/data/KitchenLayout.js";
 
 
 export class GameScene {
@@ -18,59 +24,82 @@ export class GameScene {
     this.sceneManager =
       sceneManager;
 
+
     this.threeRoot =
       threeRoot;
+
 
     this.uiRoot =
       uiRoot;
 
+
     this.input =
       input;
+
 
     this.scene =
       null;
 
+
     this.camera =
       null;
+
 
     this.renderer =
       null;
 
+
     this.animationFrame =
       0;
+
 
     this.running =
       false;
 
+
     this.lastTime =
       0;
+
+
+    this.layout =
+      null;
+
 
     this.player =
       null;
 
+
     this.heldAnchor =
       null;
+
 
     this.heldVisual =
       null;
 
+
     this.panContent =
       null;
+
 
     this.assemblyContent =
       null;
 
+
     this.obstacles =
       [];
+
 
     this.stationById =
       new Map();
 
+
     this.cleanups =
       [];
 
+
     this.hudRefreshTimer =
       0;
+
 
     this.recipes = [
 
@@ -115,12 +144,31 @@ export class GameScene {
 
     ];
 
+
     this.state =
+      null;
+
+
+    this.ui =
       null;
 
   }
 
+
+  /* =======================================================
+     ENTER
+  ======================================================= */
+
   async enter(){
+
+    /*
+     * 優先讀取 Editor 的本機預覽 Layout。
+     * 若沒有本機配置，則使用正式 KitchenLayout.js。
+     */
+
+    this.layout =
+      getRuntimeKitchenLayout();
+
 
     this.createState();
 
@@ -134,60 +182,76 @@ export class GameScene {
 
     this.bindControls();
 
+
     this.addOrder();
+
     this.addOrder();
+
     this.addOrder();
+
 
     this.renderOrders();
 
     this.updateHud();
 
+
     this.setMessage(
       "依照訂單開始準備餐點"
     );
 
+
     this.running =
       true;
+
 
     this.lastTime =
       performance.now();
 
+
     this.animationFrame =
       requestAnimationFrame(
+
         time =>
           this.loop(
             time
           )
+
       );
 
   }
 
+
   /* =======================================================
-     State
+     STATE
   ======================================================= */
 
   createState(){
 
     this.state = {
 
-      paused:false,
+      paused:
+        false,
 
-      ended:false,
+      ended:
+        false,
 
       time:
-        GameConfig
-          .gameplay
-          .duration,
+        GameConfig.gameplay.duration,
 
-      score:0,
+      score:
+        0,
 
-      served:0,
+      served:
+        0,
 
-      combo:0,
+      combo:
+        0,
 
-      maxCombo:0,
+      maxCombo:
+        0,
 
-      held:null,
+      held:
+        null,
 
       nearestStation:
         null,
@@ -195,26 +259,42 @@ export class GameScene {
       panState:
         "empty",
 
-      panTimer:0,
+      panTimer:
+        0,
 
-      assembly:[],
+      assembly:
+        [],
 
-      orders:[],
+      orders:
+        [],
 
-      orderSpawnTimer:0,
+      orderSpawnTimer:
+        0,
 
-      messageTimer:0,
+      messageTimer:
+        0,
 
       playerPosition:
         new THREE.Vector3(
+
+          Number(
+            this.layout.player.x
+          ) ||
           0,
+
           0,
-          .15
+
+          Number(
+            this.layout.player.z
+          ) ||
+          0
+
         )
 
     };
 
   }
+
 
   /* =======================================================
      UI
@@ -252,10 +332,12 @@ export class GameScene {
 
           </div>
 
+
           <div
             class="order-strip"
             data-order-strip
           ></div>
+
 
           <div
             class="hud-right-group"
@@ -275,10 +357,11 @@ export class GameScene {
                 class="hud-stat-value"
                 data-time
               >
-                75
+                ${GameConfig.gameplay.duration}
               </strong>
 
             </div>
+
 
             <button
               class="pause-trigger"
@@ -291,10 +374,12 @@ export class GameScene {
 
           </div>
 
+
           <div
             class="station-hint"
             data-station-hint
           ></div>
+
 
           <div
             class="game-message"
@@ -304,6 +389,11 @@ export class GameScene {
           </div>
 
         </div>
+
+
+        <!-- ===============================================
+             TOUCH
+        ================================================ -->
 
         <div
           class="touch-controls"
@@ -322,6 +412,7 @@ export class GameScene {
 
           </div>
 
+
           <div
             class="touch-actions"
           >
@@ -334,6 +425,7 @@ export class GameScene {
               丟棄
             </button>
 
+
             <button
               class="touch-button touch-interact"
               data-interact
@@ -345,6 +437,11 @@ export class GameScene {
           </div>
 
         </div>
+
+
+        <!-- ===============================================
+             PAUSE
+        ================================================ -->
 
         <div
           class="game-overlay is-hidden"
@@ -363,6 +460,7 @@ export class GameScene {
               遊戲時間與訂單耐心已暫停。
             </p>
 
+
             <div
               class="panel-actions"
             >
@@ -374,6 +472,7 @@ export class GameScene {
               >
                 繼續營業
               </button>
+
 
               <button
                 class="panel-button secondary"
@@ -388,6 +487,11 @@ export class GameScene {
           </div>
 
         </div>
+
+
+        <!-- ===============================================
+             RESULT
+        ================================================ -->
 
         <div
           class="game-overlay is-hidden"
@@ -404,9 +508,11 @@ export class GameScene {
               營業結束
             </h2>
 
+
             <p
               data-result-text
             ></p>
+
 
             <div
               class="panel-actions"
@@ -419,6 +525,7 @@ export class GameScene {
               >
                 再玩一次
               </button>
+
 
               <button
                 class="panel-button secondary"
@@ -437,6 +544,7 @@ export class GameScene {
       </div>
 
     `;
+
 
     this.ui = {
 
@@ -537,16 +645,15 @@ export class GameScene {
 
     };
 
+
     if(
-      window
-        .matchMedia(
-          "(pointer:coarse)"
-        )
-        .matches
+      window.matchMedia(
+        "(pointer:coarse)"
+      )
+      .matches
     ){
 
-      this.ui
-        .touchControls
+      this.ui.touchControls
         .classList
         .add(
           "active"
@@ -556,8 +663,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Three.js
+     THREE
   ======================================================= */
 
   createThreeScene(){
@@ -565,10 +673,12 @@ export class GameScene {
     this.scene =
       new THREE.Scene();
 
+
     this.scene.background =
       new THREE.Color(
         0xc6d7cf
       );
+
 
     this.scene.fog =
       new THREE.Fog(
@@ -577,18 +687,20 @@ export class GameScene {
         26
       );
 
+
     const aspect =
       GameConfig.logicalWidth /
       GameConfig.logicalHeight;
 
+
     const viewHeight =
-      GameConfig
-        .camera
-        .viewHeight;
+      GameConfig.camera.viewHeight;
+
 
     const viewWidth =
       viewHeight *
       aspect;
+
 
     this.camera =
       new THREE.OrthographicCamera(
@@ -607,100 +719,112 @@ export class GameScene {
 
       );
 
+
     this.camera.position.set(
 
-      GameConfig
-        .camera
-        .position
-        .x,
+      GameConfig.camera.position.x,
 
-      GameConfig
-        .camera
-        .position
-        .y,
+      GameConfig.camera.position.y,
 
-      GameConfig
-        .camera
-        .position
-        .z
+      GameConfig.camera.position.z
 
     );
+
 
     this.camera.lookAt(
 
-      GameConfig
-        .camera
-        .target
-        .x,
+      GameConfig.camera.target.x,
 
-      GameConfig
-        .camera
-        .target
-        .y,
+      GameConfig.camera.target.y,
 
-      GameConfig
-        .camera
-        .target
-        .z
+      GameConfig.camera.target.z
 
     );
+
 
     this.renderer =
       new THREE.WebGLRenderer({
 
-        antialias:true,
+        antialias:
+          true,
 
-        alpha:false,
+        alpha:
+          false,
 
         powerPreference:
           "high-performance"
 
       });
 
+
     this.renderer.setPixelRatio(
+
       Math.min(
+
         window.devicePixelRatio ||
         1,
 
         1.5
+
       )
+
     );
 
+
     this.renderer.setSize(
+
       GameConfig.logicalWidth,
+
       GameConfig.logicalHeight,
+
       false
+
     );
+
 
     this.renderer.outputColorSpace =
       THREE.SRGBColorSpace;
 
+
     this.renderer.toneMapping =
       THREE.ACESFilmicToneMapping;
 
+
     this.renderer.toneMappingExposure =
       1.05;
+
 
     this.threeRoot.appendChild(
       this.renderer.domElement
     );
 
+
     const hemisphere =
       new THREE.HemisphereLight(
+
         0xfff6df,
+
         0x6b765e,
+
         2.35
+
       );
+
 
     this.scene.add(
       hemisphere
     );
 
+
     const keyLight =
       new THREE.DirectionalLight(
+
         0xffe4b8,
+
         2.4
+
       );
+
 
     keyLight.position.set(
       -5,
@@ -708,15 +832,21 @@ export class GameScene {
       7
     );
 
+
     this.scene.add(
       keyLight
     );
 
+
     const fillLight =
       new THREE.DirectionalLight(
+
         0xaad9ff,
+
         1.15
+
       );
+
 
     fillLight.position.set(
       8,
@@ -724,14 +854,16 @@ export class GameScene {
       -5
     );
 
+
     this.scene.add(
       fillLight
     );
 
   }
 
+
   /* =======================================================
-     Kitchen
+     KITCHEN
   ======================================================= */
 
   buildKitchen(){
@@ -740,42 +872,55 @@ export class GameScene {
       new THREE.Mesh(
 
         new THREE.PlaneGeometry(
-          GameConfig
-            .world
-            .floorWidth,
 
-          GameConfig
-            .world
-            .floorDepth
+          GameConfig.world.floorWidth,
+
+          GameConfig.world.floorDepth
+
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xd8b877,
-          roughness:.92
+
+          color:
+            0xd8b877,
+
+          roughness:
+            .92
+
         })
 
       );
 
+
     floor.rotation.x =
       -Math.PI / 2;
 
-    floor.position.y =
-      -.02;
 
-    floor.position.z =
-      .2;
+    floor.position.set(
+      0,
+      -.02,
+      .2
+    );
+
 
     this.scene.add(
       floor
     );
 
+
     const grid =
       new THREE.GridHelper(
+
         17,
+
         17,
+
         0xb38d55,
+
         0xc9a96e
+
       );
+
 
     grid.position.set(
       0,
@@ -783,222 +928,115 @@ export class GameScene {
       .2
     );
 
+
     grid.scale.z =
-      8.8 / 17;
+      GameConfig.world.floorDepth /
+      17;
+
 
     this.scene.add(
       grid
     );
 
-    const topZ =
-      -2.72;
 
-    const sideX =
-      6.9;
+    /*
+     * Counter 不再寫死。
+     * 全部由 KitchenLayout.js 建立。
+     */
 
-    const bottomZ =
-      2.82;
-
-    const topXs = [
-      -5.8,
-      -4.35,
-      -2.9,
-      -1.45,
-      0,
-      1.45,
-      2.9,
-      4.35,
-      5.8
-    ];
-
-    topXs.forEach(
-      x =>
+    this.layout.counters.forEach(
+      counter => {
 
         this.createCounter(
-          x,
-          topZ,
-          1.3,
-          1
-        )
 
-    );
+          Number(
+            counter.x
+          ),
 
-    [
-      -1.45,
-      .1,
-      1.65
-    ]
-    .forEach(
-      z => {
+          Number(
+            counter.z
+          ),
 
-        this.createCounter(
-          -sideX,
-          z,
-          1,
-          1.28
-        );
+          Number(
+            counter.width
+          ),
 
-        this.createCounter(
-          sideX,
-          z,
-          1,
-          1.28
+          Number(
+            counter.depth
+          )
+
         );
 
       }
     );
 
-    [
-      -1.35,
-      0,
-      1.35
-    ]
-    .forEach(
-      x =>
 
-        this.createCounter(
-          x,
-          bottomZ,
-          1.25,
-          1
-        )
+    /*
+     * Station 亦改成讀 Layout。
+     *
+     * Interaction Position：
+     *
+     * station.x
+     * +
+     * interactionOffset.x
+     */
 
-    );
+    this.layout.stations.forEach(
+      station => {
 
-    const stationDefinitions = [
+        const offsetX =
+          Number(
+            station.interactionOffset
+              ?.x ||
+            0
+          );
 
-      {
-        id:"bun",
-        label:"麵包",
-        type:"bun",
 
-        x:-5.8,
-        z:topZ,
+        const offsetZ =
+          Number(
+            station.interactionOffset
+              ?.z ||
+            0
+          );
 
-        ix:-5.8,
-        iz:-1.82
-      },
 
-      {
-        id:"lettuce",
-        label:"生菜",
-        type:"lettuce",
+        this.createStation({
 
-        x:-4.35,
-        z:topZ,
+          ...station,
 
-        ix:-4.35,
-        iz:-1.82
-      },
+          x:
+            Number(
+              station.x
+            ),
 
-      {
-        id:"meat",
-        label:"肉排",
-        type:"rawMeat",
+          z:
+            Number(
+              station.z
+            ),
 
-        x:-2.9,
-        z:topZ,
+          ix:
+            Number(
+              station.x
+            ) +
+            offsetX,
 
-        ix:-2.9,
-        iz:-1.82
-      },
+          iz:
+            Number(
+              station.z
+            ) +
+            offsetZ
 
-      {
-        id:"board",
-        label:"砧板",
-        type:"board",
+        });
 
-        x:-1.45,
-        z:topZ,
-
-        ix:-1.45,
-        iz:-1.82
-      },
-
-      {
-        id:"pan",
-        label:"煎台",
-        type:"pan",
-
-        x:1.45,
-        z:topZ,
-
-        ix:1.45,
-        iz:-1.82
-      },
-
-      {
-        id:"drink",
-        label:"飲料",
-        type:"drinkStation",
-
-        x:2.9,
-        z:topZ,
-
-        ix:2.9,
-        iz:-1.82
-      },
-
-      {
-        id:"plate",
-        label:"盤子",
-        type:"plate",
-
-        x:4.35,
-        z:topZ,
-
-        ix:4.35,
-        iz:-1.82
-      },
-
-      {
-        id:"assembly",
-        label:"組裝",
-        type:"assembly",
-
-        x:-sideX,
-        z:.1,
-
-        ix:-5.95,
-        iz:.1
-      },
-
-      {
-        id:"serve",
-        label:"出餐",
-        type:"serve",
-
-        x:sideX,
-        z:.1,
-
-        ix:5.95,
-        iz:.1
-      },
-
-      {
-        id:"trash",
-        label:"丟棄",
-        type:"trash",
-
-        x:0,
-        z:bottomZ,
-
-        ix:0,
-        iz:1.92
       }
-
-    ];
-
-    stationDefinitions.forEach(
-      definition =>
-
-        this.createStation(
-          definition
-        )
-
     );
 
   }
+
+
+  /* =======================================================
+     COUNTER
+  ======================================================= */
 
   createCounter(
     x,
@@ -1010,11 +1048,13 @@ export class GameScene {
     const group =
       new THREE.Group();
 
+
     group.position.set(
       x,
       0,
       z
     );
+
 
     const body =
       new THREE.Mesh(
@@ -1026,84 +1066,138 @@ export class GameScene {
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xaa5d37,
-          roughness:.82
+
+          color:
+            0xaa5d37,
+
+          roughness:
+            .82
+
         })
 
       );
 
+
     body.position.y =
       .41;
+
 
     group.add(
       body
     );
 
+
     const inset =
       new THREE.Mesh(
 
         new THREE.BoxGeometry(
-          width * .76,
+
+          width *
+          .76,
+
           .48,
-          depth + .03
+
+          depth +
+          .03
+
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0x7e432f,
-          roughness:.9
+
+          color:
+            0x7e432f,
+
+          roughness:
+            .9
+
         })
 
       );
 
+
     inset.position.set(
+
       0,
+
       .38,
+
       depth > width
         ? 0
         : depth * .04
+
     );
+
 
     group.add(
       inset
     );
 
+
     const top =
       new THREE.Mesh(
 
         new THREE.BoxGeometry(
-          width + .08,
+
+          width +
+          .08,
+
           .16,
-          depth + .08
+
+          depth +
+          .08
+
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xef9b4a,
-          roughness:.65
+
+          color:
+            0xef9b4a,
+
+          roughness:
+            .65
+
         })
 
       );
 
+
     top.position.y =
       .9;
+
 
     group.add(
       top
     );
 
+
     this.scene.add(
       group
     );
 
+
+    /*
+     * Collision 也直接使用
+     * KitchenLayout Counter 尺寸。
+     */
+
     this.obstacles.push({
 
       x,
+
       z,
+
       width,
+
       depth
 
     });
 
   }
+
+
+  /* =======================================================
+     STATION
+  ======================================================= */
 
   createStation(
     definition
@@ -1112,25 +1206,32 @@ export class GameScene {
     const group =
       new THREE.Group();
 
+
     group.position.set(
+
       definition.x,
+
       .99,
+
       definition.z
+
     );
 
-    const prop =
-      this.createStationProp(
-        definition.type
-      );
 
     group.add(
-      prop
+
+      this.createStationProp(
+        definition.type
+      )
+
     );
+
 
     const label =
       this.createTextSprite(
         definition.label
       );
+
 
     label.position.set(
       0,
@@ -1138,13 +1239,16 @@ export class GameScene {
       0
     );
 
+
     group.add(
       label
     );
 
+
     this.scene.add(
       group
     );
+
 
     const station = {
 
@@ -1157,15 +1261,18 @@ export class GameScene {
 
     };
 
+
     station.content.position.set(
       0,
       .32,
       0
     );
 
+
     group.add(
       station.content
     );
+
 
     if(
       definition.id ===
@@ -1177,6 +1284,7 @@ export class GameScene {
 
     }
 
+
     if(
       definition.id ===
       "assembly"
@@ -1187,12 +1295,21 @@ export class GameScene {
 
     }
 
+
     this.stationById.set(
+
       definition.id,
+
       station
+
     );
 
   }
+
+
+  /* =======================================================
+     STATION PROP
+  ======================================================= */
 
   createStationProp(
     type
@@ -1201,10 +1318,16 @@ export class GameScene {
     const group =
       new THREE.Group();
 
+
     if(
-      type === "bun" ||
-      type === "lettuce" ||
-      type === "rawMeat"
+      [
+        "bun",
+        "lettuce",
+        "rawMeat"
+      ]
+      .includes(
+        type
+      )
     ){
 
       const tray =
@@ -1217,18 +1340,26 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xf3dfb2,
-            roughness:.75
+
+            color:
+              0xf3dfb2,
+
+            roughness:
+              .75
+
           })
 
         );
 
+
       tray.position.y =
         .08;
+
 
       group.add(
         tray
       );
+
 
       const food =
         this.createFoodMesh(
@@ -1236,14 +1367,17 @@ export class GameScene {
           .78
         );
 
+
       food.position.y =
         .28;
+
 
       group.add(
         food
       );
 
     }
+
 
     if(
       type ===
@@ -1260,20 +1394,28 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xd99b56,
-            roughness:.82
+
+            color:
+              0xd99b56,
+
+            roughness:
+              .82
+
           })
 
         );
 
+
       board.position.y =
         .08;
+
 
       group.add(
         board
       );
 
     }
+
 
     if(
       type ===
@@ -1291,19 +1433,29 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0x2b3b40,
-            roughness:.5,
-            metalness:.18
+
+            color:
+              0x2b3b40,
+
+            roughness:
+              .5,
+
+            metalness:
+              .18
+
           })
 
         );
 
+
       pan.position.y =
         .09;
+
 
       group.add(
         pan
       );
+
 
       const handle =
         new THREE.Mesh(
@@ -1315,11 +1467,17 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0x2b3b40,
-            roughness:.55
+
+            color:
+              0x2b3b40,
+
+            roughness:
+              .55
+
           })
 
         );
+
 
       handle.position.set(
         .48,
@@ -1327,11 +1485,13 @@ export class GameScene {
         0
       );
 
+
       group.add(
         handle
       );
 
     }
+
 
     if(
       type ===
@@ -1348,18 +1508,26 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xd95645,
-            roughness:.6
+
+            color:
+              0xd95645,
+
+            roughness:
+              .6
+
           })
 
         );
 
+
       machine.position.y =
         .39;
+
 
       group.add(
         machine
       );
+
 
       const front =
         new THREE.Mesh(
@@ -1371,11 +1539,17 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xf4e7d0,
-            roughness:.5
+
+            color:
+              0xf4e7d0,
+
+            roughness:
+              .5
+
           })
 
         );
+
 
       front.position.set(
         0,
@@ -1383,11 +1557,13 @@ export class GameScene {
         .275
       );
 
+
       group.add(
         front
       );
 
     }
+
 
     if(
       type ===
@@ -1411,16 +1587,23 @@ export class GameScene {
             ),
 
             new THREE.MeshStandardMaterial({
-              color:0xf7f1e7,
-              roughness:.48
+
+              color:
+                0xf7f1e7,
+
+              roughness:
+                .48
+
             })
 
           );
+
 
         plate.position.y =
           .05 +
           index *
           .07;
+
 
         group.add(
           plate
@@ -1429,6 +1612,7 @@ export class GameScene {
       }
 
     }
+
 
     if(
       type ===
@@ -1446,20 +1630,28 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xf7f1e7,
-            roughness:.48
+
+            color:
+              0xf7f1e7,
+
+            roughness:
+              .48
+
           })
 
         );
 
+
       plate.position.y =
         .05;
+
 
       group.add(
         plate
       );
 
     }
+
 
     if(
       type ===
@@ -1477,52 +1669,83 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xe0aa35,
-            roughness:.38,
-            metalness:.35
+
+            color:
+              0xe0aa35,
+
+            roughness:
+              .38,
+
+            metalness:
+              .35
+
           })
 
         );
 
+
       bellBase.position.y =
         .05;
+
 
       group.add(
         bellBase
       );
 
+
       const bell =
         new THREE.Mesh(
 
           new THREE.SphereGeometry(
+
             .3,
+
             24,
+
             16,
+
             0,
-            Math.PI * 2,
+
+            Math.PI *
+            2,
+
             0,
-            Math.PI / 2
+
+            Math.PI /
+            2
+
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0xf3bd40,
-            roughness:.3,
-            metalness:.3
+
+            color:
+              0xf3bd40,
+
+            roughness:
+              .3,
+
+            metalness:
+              .3
+
           })
 
         );
 
+
       bell.scale.y =
         .75;
 
+
       bell.position.y =
         .18;
+
 
       group.add(
         bell
       );
 
     }
+
 
     if(
       type ===
@@ -1540,19 +1763,29 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0x748789,
-            roughness:.72,
-            metalness:.12
+
+            color:
+              0x748789,
+
+            roughness:
+              .72,
+
+            metalness:
+              .12
+
           })
 
         );
 
+
       can.position.y =
         .34;
+
 
       group.add(
         can
       );
+
 
       const rim =
         new THREE.Mesh(
@@ -1565,17 +1798,26 @@ export class GameScene {
           ),
 
           new THREE.MeshStandardMaterial({
-            color:0x49595c,
-            roughness:.6
+
+            color:
+              0x49595c,
+
+            roughness:
+              .6
+
           })
 
         );
 
+
       rim.rotation.x =
-        Math.PI / 2;
+        Math.PI /
+        2;
+
 
       rim.position.y =
         .7;
+
 
       group.add(
         rim
@@ -1583,12 +1825,14 @@ export class GameScene {
 
     }
 
+
     return group;
 
   }
 
+
   /* =======================================================
-     Labels
+     LABEL
   ======================================================= */
 
   createTextSprite(
@@ -1600,34 +1844,35 @@ export class GameScene {
         "canvas"
       );
 
+
     canvas.width =
       256;
 
+
     canvas.height =
       80;
+
 
     const context =
       canvas.getContext(
         "2d"
       );
 
-    context.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
 
     context.fillStyle =
       "rgba(255,250,240,.94)";
 
+
     context.strokeStyle =
       "#33251f";
+
 
     context.lineWidth =
       8;
 
+
     context.beginPath();
+
 
     context.roundRect(
       6,
@@ -1637,20 +1882,27 @@ export class GameScene {
       18
     );
 
+
     context.fill();
+
     context.stroke();
+
 
     context.fillStyle =
       "#26363b";
 
+
     context.font =
       "900 30px Microsoft JhengHei, sans-serif";
+
 
     context.textAlign =
       "center";
 
+
     context.textBaseline =
       "middle";
+
 
     context.fillText(
       text,
@@ -1658,29 +1910,37 @@ export class GameScene {
       41
     );
 
+
     const texture =
       new THREE.CanvasTexture(
         canvas
       );
 
+
     texture.colorSpace =
       THREE.SRGBColorSpace;
+
 
     const material =
       new THREE.SpriteMaterial({
 
-        map:texture,
+        map:
+          texture,
 
-        transparent:true,
+        transparent:
+          true,
 
-        depthTest:false
+        depthTest:
+          false
 
       });
+
 
     const sprite =
       new THREE.Sprite(
         material
       );
+
 
     sprite.scale.set(
       1.55,
@@ -1688,21 +1948,25 @@ export class GameScene {
       1
     );
 
+
     sprite.renderOrder =
       20;
+
 
     return sprite;
 
   }
 
+
   /* =======================================================
-     Player
+     PLAYER
   ======================================================= */
 
   createPlayer(){
 
     const group =
       new THREE.Group();
+
 
     const body =
       new THREE.Mesh(
@@ -1715,18 +1979,26 @@ export class GameScene {
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xfff8e9,
-          roughness:.7
+
+          color:
+            0xfff8e9,
+
+          roughness:
+            .7
+
         })
 
       );
 
+
     body.position.y =
       .52;
+
 
     group.add(
       body
     );
+
 
     const apron =
       new THREE.Mesh(
@@ -1738,11 +2010,17 @@ export class GameScene {
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xe45b45,
-          roughness:.7
+
+          color:
+            0xe45b45,
+
+          roughness:
+            .7
+
         })
 
       );
+
 
     apron.position.set(
       0,
@@ -1750,9 +2028,11 @@ export class GameScene {
       .36
     );
 
+
     group.add(
       apron
     );
+
 
     const head =
       new THREE.Mesh(
@@ -1764,18 +2044,26 @@ export class GameScene {
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xc97844,
-          roughness:.75
+
+          color:
+            0xc97844,
+
+          roughness:
+            .75
+
         })
 
       );
 
+
     head.position.y =
       1.16;
+
 
     group.add(
       head
     );
+
 
     const hatBase =
       new THREE.Mesh(
@@ -1788,51 +2076,79 @@ export class GameScene {
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xfffbef,
-          roughness:.65
+
+          color:
+            0xfffbef,
+
+          roughness:
+            .65
+
         })
 
       );
 
+
     hatBase.position.y =
       1.44;
+
 
     group.add(
       hatBase
     );
 
+
     const hatTop =
       new THREE.Mesh(
 
         new THREE.SphereGeometry(
+
           .37,
+
           24,
+
           14,
+
           0,
-          Math.PI * 2,
+
+          Math.PI *
+          2,
+
           0,
-          Math.PI / 2
+
+          Math.PI /
+          2
+
         ),
 
         new THREE.MeshStandardMaterial({
-          color:0xfffbef,
-          roughness:.65
+
+          color:
+            0xfffbef,
+
+          roughness:
+            .65
+
         })
 
       );
 
+
     hatTop.scale.y =
       .72;
 
+
     hatTop.position.y =
       1.5;
+
 
     group.add(
       hatTop
     );
 
+
     this.heldAnchor =
       new THREE.Group();
+
 
     this.heldAnchor.position.set(
       .56,
@@ -1840,25 +2156,30 @@ export class GameScene {
       .08
     );
 
+
     group.add(
       this.heldAnchor
     );
+
 
     group.position.copy(
       this.state.playerPosition
     );
 
+
     this.scene.add(
       group
     );
+
 
     this.player =
       group;
 
   }
 
+
   /* =======================================================
-     Food
+     FOOD
   ======================================================= */
 
   createFoodMesh(
@@ -1869,16 +2190,24 @@ export class GameScene {
     const group =
       new THREE.Group();
 
+
     group.scale.setScalar(
       scale
     );
 
+
     const material =
       color =>
+
         new THREE.MeshStandardMaterial({
+
           color,
-          roughness:.68
+
+          roughness:
+            .68
+
         });
+
 
     if(
       type ===
@@ -1900,20 +2229,24 @@ export class GameScene {
 
         );
 
+
       bun.scale.set(
         1.25,
         .62,
         1
       );
 
+
       bun.position.y =
         .08;
+
 
       group.add(
         bun
       );
 
     }
+
 
     if(
       type ===
@@ -1936,8 +2269,10 @@ export class GameScene {
 
         );
 
+
       lettuce.position.y =
         .04;
+
 
       group.add(
         lettuce
@@ -1945,9 +2280,13 @@ export class GameScene {
 
     }
 
+
     if(
-      type === "rawMeat" ||
-      type === "cookedMeat"
+      type ===
+        "rawMeat" ||
+
+      type ===
+        "cookedMeat"
     ){
 
       const meat =
@@ -1961,21 +2300,29 @@ export class GameScene {
           ),
 
           material(
-            type === "rawMeat"
+
+            type ===
+            "rawMeat"
+
               ? 0xd7554e
+
               : 0x80503b
+
           )
 
         );
 
+
       meat.position.y =
         .05;
+
 
       group.add(
         meat
       );
 
     }
+
 
     if(
       type ===
@@ -1998,12 +2345,15 @@ export class GameScene {
 
         );
 
+
       cup.position.y =
         .21;
+
 
       group.add(
         cup
       );
+
 
       const lid =
         new THREE.Mesh(
@@ -2021,8 +2371,10 @@ export class GameScene {
 
         );
 
+
       lid.position.y =
         .44;
+
 
       group.add(
         lid
@@ -2030,9 +2382,13 @@ export class GameScene {
 
     }
 
+
     if(
-      type === "burger" ||
-      type === "lettuceBurger"
+      type ===
+        "burger" ||
+
+      type ===
+        "lettuceBurger"
     ){
 
       const bottom =
@@ -2051,12 +2407,15 @@ export class GameScene {
 
         );
 
+
       bottom.position.y =
         .045;
+
 
       group.add(
         bottom
       );
+
 
       const meat =
         new THREE.Mesh(
@@ -2074,15 +2433,19 @@ export class GameScene {
 
         );
 
+
       meat.position.y =
         .14;
+
 
       group.add(
         meat
       );
 
+
       let nextY =
         .23;
+
 
       if(
         type ===
@@ -2105,17 +2468,21 @@ export class GameScene {
 
           );
 
+
         lettuce.position.y =
           .23;
+
 
         group.add(
           lettuce
         );
 
+
         nextY =
           .31;
 
       }
+
 
       const top =
         new THREE.Mesh(
@@ -2132,15 +2499,18 @@ export class GameScene {
 
         );
 
+
       top.scale.set(
         1.05,
         .52,
         1
       );
 
+
       top.position.y =
         nextY +
         .07;
+
 
       group.add(
         top
@@ -2148,12 +2518,14 @@ export class GameScene {
 
     }
 
+
     return group;
 
   }
 
+
   /* =======================================================
-     Input
+     INPUT
   ======================================================= */
 
   bindControls(){
@@ -2161,55 +2533,81 @@ export class GameScene {
     this.cleanups.push(
 
       this.input.on(
+
         "interact",
+
         () =>
           this.interact()
+
       )
 
     );
 
+
     this.cleanups.push(
 
       this.input.on(
+
         "discard",
+
         () =>
           this.discard()
+
       )
 
     );
+
 
     this.cleanups.push(
 
       this.input.on(
+
         "pause",
+
         () =>
           this.togglePause()
+
       )
 
     );
 
+
     this.input.attachJoystick(
+
       this.ui.joystick,
+
       this.ui.stick
+
     );
 
+
     this.input.bindActionButton(
+
       this.ui.interact,
+
       "interact"
+
     );
 
+
     this.input.bindActionButton(
+
       this.ui.discard,
+
       "discard"
+
     );
+
 
     const pauseClick =
       () =>
         this.togglePause();
 
+
     const resumeClick =
       () =>
         this.resumeGame();
+
 
     const pauseMenuClick =
       () =>
@@ -2218,12 +2616,14 @@ export class GameScene {
             "menu"
           );
 
+
     const retryClick =
       () =>
         this.sceneManager
           .changeScene(
             "game"
           );
+
 
     const resultMenuClick =
       () =>
@@ -2232,95 +2632,106 @@ export class GameScene {
             "menu"
           );
 
-    this.ui
-      .pauseTrigger
+
+    this.ui.pauseTrigger
       .addEventListener(
         "click",
         pauseClick
       );
 
-    this.ui
-      .resume
+
+    this.ui.resume
       .addEventListener(
         "click",
         resumeClick
       );
 
-    this.ui
-      .pauseMenu
+
+    this.ui.pauseMenu
       .addEventListener(
         "click",
         pauseMenuClick
       );
 
-    this.ui
-      .retry
+
+    this.ui.retry
       .addEventListener(
         "click",
         retryClick
       );
 
-    this.ui
-      .resultMenu
+
+    this.ui.resultMenu
       .addEventListener(
         "click",
         resultMenuClick
       );
 
+
     this.cleanups.push(
+
       () =>
-        this.ui
-          .pauseTrigger
+        this.ui.pauseTrigger
           .removeEventListener(
             "click",
             pauseClick
           )
+
     );
 
+
     this.cleanups.push(
+
       () =>
-        this.ui
-          .resume
+        this.ui.resume
           .removeEventListener(
             "click",
             resumeClick
           )
+
     );
 
+
     this.cleanups.push(
+
       () =>
-        this.ui
-          .pauseMenu
+        this.ui.pauseMenu
           .removeEventListener(
             "click",
             pauseMenuClick
           )
+
     );
 
+
     this.cleanups.push(
+
       () =>
-        this.ui
-          .retry
+        this.ui.retry
           .removeEventListener(
             "click",
             retryClick
           )
+
     );
 
+
     this.cleanups.push(
+
       () =>
-        this.ui
-          .resultMenu
+        this.ui.resultMenu
           .removeEventListener(
             "click",
             resultMenuClick
           )
+
     );
 
   }
 
+
   /* =======================================================
-     Loop
+     LOOP
   ======================================================= */
 
   loop(
@@ -2334,6 +2745,7 @@ export class GameScene {
       return;
 
     }
+
 
     const delta =
       Math.min(
@@ -2349,8 +2761,10 @@ export class GameScene {
 
       );
 
+
     this.lastTime =
       time;
+
 
     if(
       !this.state.paused &&
@@ -2364,20 +2778,32 @@ export class GameScene {
 
     }
 
+
     this.renderer.render(
+
       this.scene,
+
       this.camera
+
     );
+
 
     this.animationFrame =
       requestAnimationFrame(
+
         nextTime =>
           this.loop(
             nextTime
           )
+
       );
 
   }
+
+
+  /* =======================================================
+     UPDATE
+  ======================================================= */
 
   update(
     delta,
@@ -2389,37 +2815,44 @@ export class GameScene {
       time
     );
 
+
     this.updateOrders(
       delta
     );
+
 
     this.updateCooking(
       delta
     );
 
+
     this.state.orderSpawnTimer +=
       delta;
 
+
     if(
+
       this.state.orderSpawnTimer >=
-        GameConfig
-          .gameplay
-          .orderSpawnInterval
+      GameConfig.gameplay.orderSpawnInterval
+
       &&
+
       this.state.orders.length <
-        GameConfig
-          .gameplay
-          .maxOrders
+      GameConfig.gameplay.maxOrders
+
     ){
 
       this.state.orderSpawnTimer =
         0;
 
+
       this.addOrder();
+
 
       this.renderOrders();
 
     }
+
 
     if(
       this.state.messageTimer >
@@ -2429,6 +2862,7 @@ export class GameScene {
       this.state.messageTimer -=
         delta;
 
+
       if(
         this.state.messageTimer <=
         0
@@ -2437,7 +2871,9 @@ export class GameScene {
         this.setMessage(
 
           this.state.held
+
             ? "前往下一個工作台繼續處理"
+
             : "依照訂單拿取需要的食材",
 
           0
@@ -2448,8 +2884,10 @@ export class GameScene {
 
     }
 
+
     this.state.time -=
       delta;
+
 
     if(
       this.state.time <=
@@ -2459,12 +2897,15 @@ export class GameScene {
       this.state.time =
         0;
 
+
       this.endGame();
 
     }
 
+
     this.hudRefreshTimer +=
       delta;
+
 
     if(
       this.hudRefreshTimer >=
@@ -2474,6 +2915,7 @@ export class GameScene {
       this.hudRefreshTimer =
         0;
 
+
       this.updateHud();
 
       this.renderOrders();
@@ -2482,8 +2924,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Movement
+     MOVEMENT
   ======================================================= */
 
   updatePlayer(
@@ -2494,11 +2937,16 @@ export class GameScene {
     const movement =
       this.input.getMovement();
 
+
     const length =
       Math.hypot(
+
         movement.x,
+
         movement.y
+
       );
+
 
     if(
       length >
@@ -2506,25 +2954,34 @@ export class GameScene {
     ){
 
       const speed =
-        GameConfig
-          .gameplay
-          .playerSpeed;
+        GameConfig.gameplay.playerSpeed;
+
 
       const current =
-        this.state
-          .playerPosition;
+        this.state.playerPosition;
+
 
       const nextX =
+
         current.x +
+
         movement.x *
+
         speed *
+
         delta;
 
+
       const nextZ =
+
         current.z +
+
         movement.y *
+
         speed *
+
         delta;
+
 
       if(
         !this.collides(
@@ -2538,17 +2995,14 @@ export class GameScene {
 
             nextX,
 
-            GameConfig
-              .world
-              .minX,
+            GameConfig.world.minX,
 
-            GameConfig
-              .world
-              .maxX
+            GameConfig.world.maxX
 
           );
 
       }
+
 
       if(
         !this.collides(
@@ -2562,23 +3016,24 @@ export class GameScene {
 
             nextZ,
 
-            GameConfig
-              .world
-              .minZ,
+            GameConfig.world.minZ,
 
-            GameConfig
-              .world
-              .maxZ
+            GameConfig.world.maxZ
 
           );
 
       }
 
+
       this.player.rotation.y =
         Math.atan2(
+
           movement.x,
+
           movement.y
+
         );
+
 
       this.player.position.y =
         Math.sin(
@@ -2592,26 +3047,34 @@ export class GameScene {
 
       this.player.position.y =
         THREE.MathUtils.lerp(
+
           this.player.position.y,
+
           0,
+
           .18
+
         );
 
     }
 
+
     this.player.position.x =
-      this.state
-        .playerPosition
-        .x;
+      this.state.playerPosition.x;
+
 
     this.player.position.z =
-      this.state
-        .playerPosition
-        .z;
+      this.state.playerPosition.z;
+
 
     this.updateNearestStation();
 
   }
+
+
+  /* =======================================================
+     COLLISION
+  ======================================================= */
 
   collides(
     x,
@@ -2619,9 +3082,8 @@ export class GameScene {
   ){
 
     const radius =
-      GameConfig
-        .gameplay
-        .playerRadius;
+      GameConfig.gameplay.playerRadius;
+
 
     return this.obstacles.some(
       obstacle => {
@@ -2632,8 +3094,10 @@ export class GameScene {
             x -
             obstacle.x
           ) <
+
           obstacle.width /
           2 +
+
           radius
 
           &&
@@ -2642,8 +3106,10 @@ export class GameScene {
             z -
             obstacle.z
           ) <
+
           obstacle.depth /
           2 +
+
           radius
 
         );
@@ -2653,13 +3119,20 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     NEAREST STATION
+  ======================================================= */
+
   updateNearestStation(){
 
     let nearest =
       null;
 
+
     let nearestDistance =
       Infinity;
+
 
     this.stationById.forEach(
       station => {
@@ -2667,17 +3140,14 @@ export class GameScene {
         const distance =
           Math.hypot(
 
-            this.state
-              .playerPosition
-              .x -
+            this.state.playerPosition.x -
             station.ix,
 
-            this.state
-              .playerPosition
-              .z -
+            this.state.playerPosition.z -
             station.iz
 
           );
+
 
         if(
           distance <
@@ -2687,6 +3157,7 @@ export class GameScene {
           nearestDistance =
             distance;
 
+
           nearest =
             station;
 
@@ -2695,28 +3166,29 @@ export class GameScene {
       }
     );
 
+
     if(
-      nearest &&
+
+      nearest
+
+      &&
+
       nearestDistance <=
-        GameConfig
-          .gameplay
-          .interactionDistance
+      GameConfig.gameplay.interactionDistance
+
     ){
 
       this.state.nearestStation =
         nearest.id;
 
-      this.ui
-        .stationHint
-        .textContent =
-          `互動：${nearest.label}`;
 
-      this.ui
-        .stationHint
-        .classList
-        .add(
-          "visible"
-        );
+      this.ui.stationHint.textContent =
+        `互動：${nearest.label}`;
+
+
+      this.ui.stationHint.classList.add(
+        "visible"
+      );
 
     }
     else{
@@ -2724,19 +3196,18 @@ export class GameScene {
       this.state.nearestStation =
         null;
 
-      this.ui
-        .stationHint
-        .classList
-        .remove(
-          "visible"
-        );
+
+      this.ui.stationHint.classList.remove(
+        "visible"
+      );
 
     }
 
   }
 
+
   /* =======================================================
-     Orders
+     ORDERS
   ======================================================= */
 
   updateOrders(
@@ -2744,44 +3215,60 @@ export class GameScene {
   ){
 
     this.state.orders.forEach(
+
       (
         order,
         index
       ) => {
 
         order.patience -=
+
           delta *
+
           (
             index === 0
+
               ? 4.1
+
               : 2
           );
 
       }
+
     );
+
 
     if(
       this.state.orders[0]
-        ?.patience <= 0
+        ?.patience <=
+      0
     ){
 
       this.state.orders.shift();
 
+
       this.state.combo =
         0;
 
+
       this.state.score =
         Math.max(
+
           0,
+
           this.state.score -
           60
+
         );
 
+
       this.addOrder();
+
 
       this.setMessage(
         "客人等不及離開了"
       );
+
 
       this.renderOrders();
 
@@ -2789,8 +3276,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Cooking
+     COOKING
   ======================================================= */
 
   updateCooking(
@@ -2806,8 +3294,10 @@ export class GameScene {
 
     }
 
+
     this.state.panTimer -=
       delta;
+
 
     if(
       this.state.panTimer <=
@@ -2817,10 +3307,13 @@ export class GameScene {
       this.state.panTimer =
         0;
 
+
       this.state.panState =
         "done";
 
+
       this.refreshPanVisual();
+
 
       this.setMessage(
         "肉排烹調完成"
@@ -2830,8 +3323,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Interaction
+     INTERACT
   ======================================================= */
 
   interact(){
@@ -2845,9 +3339,10 @@ export class GameScene {
 
     }
 
+
     const stationId =
-      this.state
-        .nearestStation;
+      this.state.nearestStation;
+
 
     if(
       !stationId
@@ -2857,14 +3352,19 @@ export class GameScene {
         "請再靠近工作台"
       );
 
+
       return;
 
     }
+
 
     const station =
       this.stationById.get(
         stationId
       );
+
+
+    /* Ingredient */
 
     if(
       [
@@ -2886,27 +3386,38 @@ export class GameScene {
           "手上已經有物品"
         );
 
+
         return;
 
       }
 
+
       const item =
+
         station.id ===
         "meat"
+
           ? "rawMeat"
+
           : station.id;
+
 
       this.setHeld(
         item
       );
 
+
       this.setMessage(
         `已拿取${station.label}`
       );
 
+
       return;
 
     }
+
+
+    /* Pan */
 
     if(
       station.id ===
@@ -2914,61 +3425,79 @@ export class GameScene {
     ){
 
       if(
+
         this.state.held ===
-          "rawMeat"
+        "rawMeat"
+
         &&
+
         this.state.panState ===
-          "empty"
+        "empty"
+
       ){
 
         this.setHeld(
           null
         );
 
+
         this.state.panState =
           "cooking";
 
+
         this.state.panTimer =
-          GameConfig
-            .gameplay
-            .panCookTime;
+          GameConfig.gameplay.panCookTime;
+
 
         this.refreshPanVisual();
+
 
         this.setMessage(
           "肉排開始烹調"
         );
 
+
         return;
 
       }
 
+
       if(
+
         this.state.panState ===
-          "done"
+        "done"
+
         &&
+
         !this.state.held
+
       ){
 
         this.state.panState =
           "empty";
 
+
         this.state.panTimer =
           0;
 
+
         this.refreshPanVisual();
+
 
         this.setHeld(
           "cookedMeat"
         );
 
+
         this.setMessage(
           "已拿起熟肉排"
         );
 
+
         return;
 
       }
+
 
       this.setMessage(
 
@@ -2981,9 +3510,13 @@ export class GameScene {
 
       );
 
+
       return;
 
     }
+
+
+    /* Assembly */
 
     if(
       station.id ===
@@ -3005,36 +3538,47 @@ export class GameScene {
           "請放入可組裝食材"
         );
 
+
         return;
 
       }
+
 
       this.state.assembly.push(
         this.state.held
       );
 
+
       this.setHeld(
         null
       );
 
+
       this.refreshAssemblyVisual();
+
 
       const ingredients =
         new Set(
           this.state.assembly
         );
 
+
       if(
+
         ingredients.has(
           "bun"
         )
+
         &&
+
         ingredients.has(
           "cookedMeat"
         )
+
       ){
 
         const result =
+
           ingredients.has(
             "lettuce"
           )
@@ -3043,14 +3587,18 @@ export class GameScene {
 
             : "burger";
 
+
         this.state.assembly =
           [];
 
+
         this.refreshAssemblyVisual();
+
 
         this.setHeld(
           result
         );
+
 
         this.setMessage(
           "漢堡組裝完成"
@@ -3065,9 +3613,13 @@ export class GameScene {
 
       }
 
+
       return;
 
     }
+
+
+    /* Serve */
 
     if(
       station.id ===
@@ -3077,10 +3629,16 @@ export class GameScene {
       const order =
         this.state.orders[0];
 
+
       if(
-        order &&
+
+        order
+
+        &&
+
         this.state.held ===
         order.result
+
       ){
 
         const earned =
@@ -3095,14 +3653,18 @@ export class GameScene {
 
           );
 
+
         this.state.score +=
           earned;
+
 
         this.state.served +=
           1;
 
+
         this.state.combo +=
           1;
+
 
         this.state.maxCombo =
           Math.max(
@@ -3113,17 +3675,23 @@ export class GameScene {
 
           );
 
+
         this.setHeld(
           null
         );
 
+
         this.state.orders.shift();
+
 
         this.addOrder();
 
+
         this.renderOrders();
 
+
         this.updateHud();
+
 
         this.setMessage(
           `出餐成功 +${earned}`
@@ -3135,14 +3703,20 @@ export class GameScene {
         this.state.combo =
           0;
 
+
         this.state.score =
           Math.max(
+
             0,
+
             this.state.score -
             40
+
           );
 
+
         this.updateHud();
+
 
         this.setMessage(
           "餐點與目前訂單不符"
@@ -3150,9 +3724,13 @@ export class GameScene {
 
       }
 
+
       return;
 
     }
+
+
+    /* Trash */
 
     if(
       station.id ===
@@ -3165,6 +3743,7 @@ export class GameScene {
 
     }
 
+
     if(
       station.id ===
       "board"
@@ -3174,9 +3753,11 @@ export class GameScene {
         "目前版本砧板先保留為工作站"
       );
 
+
       return;
 
     }
+
 
     if(
       station.id ===
@@ -3191,6 +3772,11 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     DISCARD
+  ======================================================= */
+
   discard(){
 
     if(
@@ -3202,20 +3788,29 @@ export class GameScene {
 
     }
 
+
     if(
-      this.state.held ||
+
+      this.state.held
+
+      ||
+
       this.state.assembly.length >
       0
+
     ){
 
       this.setHeld(
         null
       );
 
+
       this.state.assembly =
         [];
 
+
       this.refreshAssemblyVisual();
+
 
       this.setMessage(
         "已丟棄目前內容"
@@ -3232,8 +3827,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Held / Station Visual
+     HELD
   ======================================================= */
 
   setHeld(
@@ -3243,22 +3839,26 @@ export class GameScene {
     this.state.held =
       type;
 
+
     if(
       this.heldVisual
     ){
-
-      this.disposeObject(
-        this.heldVisual
-      );
 
       this.heldAnchor.remove(
         this.heldVisual
       );
 
+
+      this.disposeObject(
+        this.heldVisual
+      );
+
+
       this.heldVisual =
         null;
 
     }
+
 
     if(
       type
@@ -3270,8 +3870,10 @@ export class GameScene {
           .9
         );
 
+
       this.heldVisual.rotation.y =
         -.25;
+
 
       this.heldAnchor.add(
         this.heldVisual
@@ -3281,11 +3883,17 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     PAN VISUAL
+  ======================================================= */
+
   refreshPanVisual(){
 
     this.clearGroup(
       this.panContent
     );
+
 
     if(
       this.state.panState ===
@@ -3298,14 +3906,17 @@ export class GameScene {
           .72
         );
 
+
       meat.position.y =
         .05;
+
 
       this.panContent.add(
         meat
       );
 
     }
+
 
     if(
       this.state.panState ===
@@ -3318,8 +3929,10 @@ export class GameScene {
           .72
         );
 
+
       meat.position.y =
         .05;
+
 
       this.panContent.add(
         meat
@@ -3329,13 +3942,20 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     ASSEMBLY VISUAL
+  ======================================================= */
+
   refreshAssemblyVisual(){
 
     this.clearGroup(
       this.assemblyContent
     );
 
+
     this.state.assembly.forEach(
+
       (
         type,
         index
@@ -3346,6 +3966,7 @@ export class GameScene {
             type,
             .56
           );
+
 
         food.position.set(
 
@@ -3363,44 +3984,54 @@ export class GameScene {
 
         );
 
+
         this.assemblyContent.add(
           food
         );
 
       }
+
     );
 
   }
 
+
   /* =======================================================
-     Order
+     ORDER
   ======================================================= */
 
   addOrder(){
 
     if(
       this.state.orders.length >=
-      GameConfig
-        .gameplay
-        .maxOrders
+      GameConfig.gameplay.maxOrders
     ){
 
       return;
 
     }
 
+
     const recipe =
+
       this.recipes[
+
         Math.floor(
+
           Math.random() *
+
           this.recipes.length
+
         )
+
       ];
+
 
     this.state.orders.push({
 
       id:
         crypto.randomUUID?.() ||
+
         `${Date.now()}-${Math.random()}`,
 
       name:
@@ -3413,25 +4044,27 @@ export class GameScene {
         ...recipe.ingredients
       ],
 
-      patience:100
+      patience:
+        100
 
     });
 
   }
 
+
+  /* =======================================================
+     ORDER DOM
+  ======================================================= */
+
   renderOrders(){
 
-    this.ui
-      .orderStrip
-      .innerHTML =
+    this.ui.orderStrip.innerHTML =
 
       this.state.orders
 
         .slice(
           0,
-          GameConfig
-            .gameplay
-            .maxOrders
+          GameConfig.gameplay.maxOrders
         )
 
         .map(
@@ -3468,23 +4101,28 @@ export class GameScene {
                   ""
                 );
 
+
             const patience =
               Math.max(
                 0,
                 order.patience
               );
 
+
             const patienceColor =
 
-              patience <= 34
+              patience <=
+              34
 
                 ? "#e45a45"
 
-                : patience <= 69
+                : patience <=
+                  69
 
                   ? "#e9b94f"
 
                   : "#68a96d";
+
 
             return `
 
@@ -3498,11 +4136,13 @@ export class GameScene {
                   ${order.name}
                 </div>
 
+
                 <div
                   class="order-ingredients"
                 >
                   ${ingredients}
                 </div>
+
 
                 <div
                   class="patience-track"
@@ -3512,7 +4152,7 @@ export class GameScene {
                     class="patience-bar"
                     style="
                       width:${patience}%;
-                      background:${patienceColor}
+                      background:${patienceColor};
                     "
                   ></div>
 
@@ -3531,12 +4171,18 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     HUD
+  ======================================================= */
+
   updateHud(){
 
     this.ui.score.textContent =
       String(
         this.state.score
       );
+
 
     this.ui.time.textContent =
       String(
@@ -3547,6 +4193,7 @@ export class GameScene {
 
   }
 
+
   setMessage(
     text,
     duration = 1.5
@@ -3555,13 +4202,15 @@ export class GameScene {
     this.ui.message.textContent =
       text;
 
+
     this.state.messageTimer =
       duration;
 
   }
 
+
   /* =======================================================
-     Pause / Result
+     PAUSE
   ======================================================= */
 
   togglePause(){
@@ -3574,6 +4223,7 @@ export class GameScene {
 
     }
 
+
     if(
       this.state.paused
     ){
@@ -3584,17 +4234,19 @@ export class GameScene {
 
     }
 
+
     this.state.paused =
       true;
 
-    this.ui
-      .pauseOverlay
+
+    this.ui.pauseOverlay
       .classList
       .remove(
         "is-hidden"
       );
 
   }
+
 
   resumeGame(){
 
@@ -3606,20 +4258,27 @@ export class GameScene {
 
     }
 
+
     this.state.paused =
       false;
 
-    this.ui
-      .pauseOverlay
+
+    this.ui.pauseOverlay
       .classList
       .add(
         "is-hidden"
       );
 
+
     this.lastTime =
       performance.now();
 
   }
+
+
+  /* =======================================================
+     RESULT
+  ======================================================= */
 
   endGame(){
 
@@ -3631,45 +4290,45 @@ export class GameScene {
 
     }
 
+
     this.state.ended =
       true;
+
 
     this.state.paused =
       false;
 
-    this.ui
-      .touchControls
+
+    this.ui.touchControls
       .classList
       .remove(
         "active"
       );
 
-    this.ui
-      .pauseOverlay
+
+    this.ui.pauseOverlay
       .classList
       .add(
         "is-hidden"
       );
 
-    this.ui
-      .resultTitle
-      .textContent =
 
-        this.state.score >=
-        1000
+    this.ui.resultTitle.textContent =
 
-          ? "今日營業成功"
+      this.state.score >=
+      1000
 
-          : "營業結束";
+        ? "今日營業成功"
 
-    this.ui
-      .resultText
-      .textContent =
+        : "營業結束";
 
-        `總分 ${this.state.score}｜完成訂單 ${this.state.served}｜最高連擊 ${this.state.maxCombo}`;
 
-    this.ui
-      .resultOverlay
+    this.ui.resultText.textContent =
+
+      `總分 ${this.state.score}｜完成訂單 ${this.state.served}｜最高連擊 ${this.state.maxCombo}`;
+
+
+    this.ui.resultOverlay
       .classList
       .remove(
         "is-hidden"
@@ -3677,8 +4336,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Food UI
+     FOOD LABEL
   ======================================================= */
 
   foodLabel(
@@ -3713,6 +4373,7 @@ export class GameScene {
 
   }
 
+
   foodColor(
     type
   ){
@@ -3745,8 +4406,9 @@ export class GameScene {
 
   }
 
+
   /* =======================================================
-     Dispose
+     DISPOSE
   ======================================================= */
 
   clearGroup(
@@ -3761,6 +4423,7 @@ export class GameScene {
 
     }
 
+
     while(
       group.children.length
     ){
@@ -3768,9 +4431,11 @@ export class GameScene {
       const child =
         group.children[0];
 
+
       group.remove(
         child
       );
+
 
       this.disposeObject(
         child
@@ -3779,6 +4444,7 @@ export class GameScene {
     }
 
   }
+
 
   disposeObject(
     object
@@ -3790,44 +4456,57 @@ export class GameScene {
         child.geometry
           ?.dispose?.();
 
+
         if(
-          child.material
+          !child.material
         ){
 
-          const materials =
-            Array.isArray(
-              child.material
-            )
-
-              ? child.material
-
-              : [
-                  child.material
-                ];
-
-          materials.forEach(
-            material => {
-
-              material.map
-                ?.dispose?.();
-
-              material.dispose
-                ?.();
-
-            }
-          );
+          return;
 
         }
+
+
+        const materials =
+
+          Array.isArray(
+            child.material
+          )
+
+            ? child.material
+
+            : [
+                child.material
+              ];
+
+
+        materials.forEach(
+          material => {
+
+            material.map
+              ?.dispose?.();
+
+
+            material.dispose
+              ?.();
+
+          }
+        );
 
       }
     );
 
   }
 
+
+  /* =======================================================
+     EXIT
+  ======================================================= */
+
   async exit(){
 
     this.running =
       false;
+
 
     cancelAnimationFrame(
       this.animationFrame
@@ -3835,14 +4514,21 @@ export class GameScene {
 
   }
 
+
+  /* =======================================================
+     DESTROY
+  ======================================================= */
+
   destroy(){
 
     this.running =
       false;
 
+
     cancelAnimationFrame(
       this.animationFrame
     );
+
 
     this.cleanups
       .splice(
@@ -3852,6 +4538,7 @@ export class GameScene {
         cleanup =>
           cleanup?.()
       );
+
 
     if(
       this.scene
@@ -3863,48 +4550,63 @@ export class GameScene {
 
     }
 
+
     if(
       this.renderer
     ){
 
       this.renderer.dispose();
 
-      this.renderer
-        .renderLists
+
+      this.renderer.renderLists
         ?.dispose?.();
 
-      this.renderer
-        .domElement
+
+      this.renderer.domElement
         .remove();
 
     }
 
+
     this.scene =
       null;
+
 
     this.camera =
       null;
 
+
     this.renderer =
       null;
+
+
+    this.layout =
+      null;
+
 
     this.player =
       null;
 
+
     this.heldAnchor =
       null;
+
 
     this.heldVisual =
       null;
 
+
     this.panContent =
       null;
+
 
     this.assemblyContent =
       null;
 
+
     this.obstacles =
       [];
+
 
     this.stationById.clear();
 
