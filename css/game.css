@@ -1,29 +1,43 @@
+/* =========================================================
+   Game Root
+========================================================= */
+
 .game-ui{
+
   position:absolute;
 
   inset:0;
 
-  width:1280px;
-  height:720px;
+  width:100%;
+  height:100%;
 
   pointer-events:none;
 
   color:#ffffff;
+
 }
+
 
 /* =========================================================
    HUD
 ========================================================= */
 
 .game-hud{
+
   position:absolute;
 
   inset:0;
 
+  width:100%;
+  height:100%;
+
   pointer-events:none;
+
 }
 
+
 .hud-stat{
+
   width:108px;
   height:78px;
 
@@ -52,16 +66,22 @@
     );
 
   color:#1d3037;
+
 }
 
+
 .hud-score{
+
   position:absolute;
 
   left:18px;
   top:18px;
+
 }
 
+
 .hud-right-group{
+
   position:absolute;
 
   right:18px;
@@ -74,31 +94,45 @@
   gap:10px;
 
   pointer-events:auto;
+
 }
+
 
 .hud-time{
+
   position:relative;
+
 }
 
+
 .hud-stat-label{
+
   color:#765444;
 
   font-size:14px;
+
   font-weight:900;
+
 }
 
+
 .hud-stat-value{
+
   margin-top:2px;
 
   font-size:28px;
+
   font-weight:1000;
+
 }
+
 
 /* =========================================================
    Orders
 ========================================================= */
 
 .order-strip{
+
   position:absolute;
 
   left:50%;
@@ -111,11 +145,18 @@
   gap:8px;
 
   transform:
-    translateX(-50%);
+    translateX(
+      -50%
+    );
+
 }
 
+
 .order-ticket{
+
   position:relative;
+
+  flex:0 0 auto;
 
   width:168px;
   height:110px;
@@ -141,9 +182,12 @@
       35,
       .18
     );
+
 }
 
+
 .order-ticket::after{
+
   content:"";
 
   position:absolute;
@@ -164,16 +208,23 @@
     0 0 /
     14px 10px
     repeat-x;
+
 }
 
+
 .order-name{
+
   text-align:center;
 
   font-size:14px;
+
   font-weight:1000;
+
 }
 
+
 .order-ingredients{
+
   min-height:38px;
 
   margin-top:6px;
@@ -186,9 +237,12 @@
   justify-content:center;
 
   gap:4px;
+
 }
 
+
 .ingredient-chip{
+
   display:inline-flex;
 
   align-items:center;
@@ -207,12 +261,16 @@
   background:#fff3d5;
 
   font-size:10px;
+
   font-weight:900;
 
   white-space:nowrap;
+
 }
 
+
 .ingredient-dot{
+
   width:8px;
   height:8px;
 
@@ -232,9 +290,12 @@
       31,
       .6
     );
+
 }
 
+
 .patience-track{
+
   position:absolute;
 
   left:10px;
@@ -249,9 +310,12 @@
   border-radius:99px;
 
   background:#ddcfad;
+
 }
 
+
 .patience-bar{
+
   height:100%;
 
   width:100%;
@@ -259,19 +323,24 @@
   border-radius:inherit;
 
   background:#68a96d;
+
 }
+
 
 /* =========================================================
    Message
 ========================================================= */
 
 .game-message{
+
   position:absolute;
 
   left:50%;
-  bottom:14px;
+
+  bottom:18px;
 
   min-width:390px;
+
   max-width:560px;
 
   padding:
@@ -296,6 +365,7 @@
   text-align:center;
 
   font-size:15px;
+
   font-weight:1000;
 
   box-shadow:
@@ -308,14 +378,20 @@
     );
 
   transform:
-    translateX(-50%);
+    translateX(
+      -50%
+    );
+
 }
 
+
 .station-hint{
+
   position:absolute;
 
   left:50%;
-  bottom:65px;
+
+  bottom:70px;
 
   padding:
     7px 13px;
@@ -333,30 +409,47 @@
   color:#fff8df;
 
   font-size:13px;
+
   font-weight:900;
 
   opacity:0;
 
   transform:
-    translateX(-50%)
-    translateY(8px);
+    translateX(
+      -50%
+    )
+    translateY(
+      8px
+    );
 
-  transition:.15s;
+  transition:
+    opacity .15s ease,
+    transform .15s ease;
+
 }
 
+
 .station-hint.visible{
+
   opacity:1;
 
   transform:
-    translateX(-50%)
-    translateY(0);
+    translateX(
+      -50%
+    )
+    translateY(
+      0
+    );
+
 }
 
+
 /* =========================================================
-   Pause
+   Pause Button
 ========================================================= */
 
 .pause-trigger{
+
   width:52px;
   height:52px;
 
@@ -382,101 +475,160 @@
   color:#ffffff;
 
   font-size:18px;
+
   font-weight:1000;
 
   pointer-events:auto;
 
   cursor:pointer;
+
 }
 
+
 /* =========================================================
-   Touch
+   Touch Root
 ========================================================= */
 
 .touch-controls{
+
   position:absolute;
 
   inset:0;
 
+  width:100%;
+  height:100%;
+
   display:none;
 
   pointer-events:none;
+
 }
+
 
 .touch-controls.active{
+
   display:block;
+
 }
 
+
+/* =========================================================
+   Joystick
+
+   原：
+   108px / Mobile 96px
+
+   新：
+   148px / Mobile 156px
+========================================================= */
+
 .touch-joystick{
+
   position:absolute;
 
-  left:18px;
-  bottom:18px;
+  left:28px;
+  bottom:28px;
 
-  width:108px;
-  height:108px;
+  width:148px;
+  height:148px;
 
   border:
-    4px solid
+    5px solid
     rgba(
       255,
       255,
       255,
-      .8
+      .86
     );
 
   border-radius:50%;
 
   background:
-    rgba(
-      20,
-      31,
-      36,
-      .42
+    radial-gradient(
+      circle at center,
+      rgba(
+        255,
+        255,
+        255,
+        .16
+      )
+      0%,
+      rgba(
+        37,
+        44,
+        39,
+        .34
+      )
+      62%,
+      rgba(
+        26,
+        31,
+        29,
+        .48
+      )
+      100%
     );
 
   box-shadow:
-    inset 0 0 0 8px
+    inset 0 0 0 10px
     rgba(
       255,
       255,
       255,
-      .07
+      .08
+    ),
+    0 8px 22px
+    rgba(
+      0,
+      0,
+      0,
+      .2
     );
 
   pointer-events:auto;
 
   touch-action:none;
+
 }
 
+
 .touch-stick{
+
   position:absolute;
 
   left:50%;
   top:50%;
 
-  width:50px;
-  height:50px;
+  width:72px;
+  height:72px;
 
   border:
-    4px solid
+    5px solid
     #4a3025;
 
   border-radius:50%;
 
   background:
     linear-gradient(
+      180deg,
       #ffe4a8,
       #d89b56
     );
 
   box-shadow:
-    0 6px 0
+    0 7px 0
     rgba(
       70,
       41,
       29,
       .62
+    ),
+    inset 0 5px 7px
+    rgba(
+      255,
+      255,
+      255,
+      .2
     );
 
   transform:
@@ -484,36 +636,59 @@
       -50%,
       -50%
     );
+
+  will-change:
+    transform;
+
 }
 
+
+/* =========================================================
+   Touch Actions
+========================================================= */
+
 .touch-actions{
+
   position:absolute;
 
-  right:18px;
-  bottom:20px;
+  right:30px;
+  bottom:30px;
 
   display:flex;
 
   align-items:flex-end;
-
-  gap:10px;
+  justify-content:flex-end;
 
   pointer-events:auto;
+
 }
 
+
+.touch-actions.single-action{
+
+  gap:0;
+
+}
+
+
+/* =========================================================
+   Touch Button
+========================================================= */
+
 .touch-button{
+
   display:flex;
 
   align-items:center;
   justify-content:center;
 
   border:
-    4px solid
+    5px solid
     rgba(
       255,
       255,
       255,
-      .84
+      .88
     );
 
   border-radius:50%;
@@ -523,52 +698,75 @@
   cursor:pointer;
 
   touch-action:none;
+
+  transition:
+    transform .08s ease,
+    filter .08s ease;
+
 }
 
-.touch-discard{
-  width:62px;
-  height:62px;
 
-  color:#493021;
+.touch-button:active{
 
-  background:
-    linear-gradient(
-      #ffe3a6,
-      #c89654
+  transform:
+    translateY(
+      4px
     );
 
-  box-shadow:
-    0 6px 0
-    #70502f;
+  filter:
+    brightness(
+      .92
+    );
+
 }
 
+
+/*
+ * 手機畫面只有這一顆主要操作鍵。
+ */
+
 .touch-interact{
-  width:88px;
-  height:88px;
+
+  width:126px;
+  height:126px;
 
   color:#ffffff;
 
   background:
     linear-gradient(
+      180deg,
       #f47a56,
       #c84233
     );
 
   box-shadow:
-    0 7px 0
-    #7f2c25;
+    0 9px 0
+    #7f2c25,
+    0 13px 26px
+    rgba(
+      0,
+      0,
+      0,
+      .2
+    );
 
-  font-size:17px;
+  font-size:22px;
+
 }
+
 
 /* =========================================================
    Pause / Result
 ========================================================= */
 
 .game-overlay{
+
   position:absolute;
 
   inset:0;
+
+  width:100%;
+  height:100%;
 
   display:flex;
 
@@ -584,12 +782,17 @@
     );
 
   backdrop-filter:
-    blur(6px);
+    blur(
+      6px
+    );
 
   pointer-events:auto;
+
 }
 
+
 .game-panel{
+
   width:620px;
 
   padding:36px;
@@ -609,7 +812,6 @@
   box-shadow:
     0 16px 0
     #281914,
-
     0 40px 90px
     rgba(
       0,
@@ -621,24 +823,34 @@
   color:#49382f;
 
   text-align:center;
+
 }
 
+
 .game-panel h2{
+
   color:#bc4e3a;
 
   font-size:46px;
+
 }
 
+
 .game-panel p{
+
   margin-top:13px;
 
   color:#65493a;
 
   font-size:18px;
+
   font-weight:800;
+
 }
 
+
 .panel-actions{
+
   display:flex;
 
   justify-content:center;
@@ -646,9 +858,12 @@
   gap:14px;
 
   margin-top:26px;
+
 }
 
+
 .panel-button{
+
   min-height:58px;
 
   padding:
@@ -657,12 +872,16 @@
   border-radius:14px;
 
   font-size:20px;
+
   font-weight:1000;
 
   cursor:pointer;
+
 }
 
+
 .panel-button.primary{
+
   color:#ffffff;
 
   background:
@@ -674,9 +893,12 @@
   box-shadow:
     0 8px 0
     #843520;
+
 }
 
+
 .panel-button.secondary{
+
   color:#4a3327;
 
   background:
@@ -688,7 +910,9 @@
   box-shadow:
     0 8px 0
     #80613c;
+
 }
+
 
 /* =========================================================
    Mobile Landscape
@@ -699,36 +923,57 @@
   and
   (orientation:landscape){
 
+
+  /* =======================================================
+     HUD
+  ======================================================= */
+
   .hud-stat{
+
     width:88px;
     height:62px;
 
     border-width:3px;
 
     border-radius:15px;
+
   }
+
 
   .hud-score{
-    left:14px;
+
+    left:18px;
     top:12px;
+
   }
 
+
   .hud-right-group{
-    right:14px;
+
+    right:18px;
     top:12px;
 
     gap:7px;
+
   }
+
 
   .hud-stat-label{
+
     font-size:12px;
+
   }
+
 
   .hud-stat-value{
+
     font-size:23px;
+
   }
 
+
   .pause-trigger{
+
     width:44px;
     height:44px;
 
@@ -737,17 +982,27 @@
     border-radius:12px;
 
     font-size:15px;
+
   }
+
+
+  /* =======================================================
+     Order
+  ======================================================= */
 
   .order-strip{
+
     top:6px;
 
-    max-width:780px;
+    max-width:900px;
 
     gap:6px;
+
   }
 
+
   .order-ticket{
+
     width:146px;
     height:96px;
 
@@ -755,48 +1010,71 @@
       7px 8px 10px;
 
     border-width:3px;
+
   }
+
 
   .order-name{
+
     font-size:12px;
+
   }
 
+
   .order-ingredients{
+
     min-height:33px;
 
     margin-top:4px;
 
     gap:3px;
+
   }
 
+
   .ingredient-chip{
+
     padding:
       2px 5px;
 
     border-width:1.5px;
 
     font-size:9px;
+
   }
+
 
   .ingredient-dot{
+
     width:7px;
     height:7px;
+
   }
 
+
   .patience-track{
+
     left:8px;
     right:8px;
 
     bottom:7px;
 
     height:6px;
+
   }
 
+
+  /* =======================================================
+     Message
+  ======================================================= */
+
   .game-message{
-    bottom:10px;
+
+    bottom:15px;
 
     min-width:320px;
-    max-width:420px;
+
+    max-width:440px;
 
     padding:
       7px 14px;
@@ -806,69 +1084,150 @@
     border-radius:11px;
 
     font-size:13px;
+
   }
 
+
   .station-hint{
-    bottom:51px;
+
+    bottom:58px;
 
     padding:
       6px 11px;
 
     font-size:11px;
+
   }
+
+
+  /* =======================================================
+     Mobile Joystick
+  ======================================================= */
 
   .touch-joystick{
-    left:14px;
-    bottom:14px;
 
-    width:96px;
-    height:96px;
+    left:28px;
 
-    border-width:3px;
+    bottom:26px;
+
+    width:156px;
+
+    height:156px;
+
+    border-width:5px;
+
   }
+
 
   .touch-stick{
-    width:44px;
-    height:44px;
 
-    border-width:3px;
+    width:76px;
+
+    height:76px;
+
+    border-width:5px;
+
   }
+
+
+  /* =======================================================
+     Mobile Interact Button
+  ======================================================= */
 
   .touch-actions{
-    right:14px;
-    bottom:15px;
 
-    gap:8px;
+    right:30px;
+
+    bottom:28px;
+
   }
 
-  .touch-discard{
-    width:56px;
-    height:56px;
-
-    border-width:3px;
-
-    font-size:13px;
-  }
 
   .touch-interact{
-    width:80px;
-    height:80px;
 
-    border-width:3px;
+    width:132px;
 
-    font-size:15px;
+    height:132px;
+
+    border-width:5px;
+
+    font-size:23px;
+
   }
 
 }
+
+
+/* =========================================================
+   Lower-height Landscape Devices
+
+   避免高度非常低的小手機
+   操作區過度佔畫面。
+========================================================= */
+
+@media
+  (pointer:coarse)
+  and
+  (orientation:landscape)
+  and
+  (max-height:430px){
+
+  .touch-joystick{
+
+    width:136px;
+
+    height:136px;
+
+  }
+
+
+  .touch-stick{
+
+    width:66px;
+
+    height:66px;
+
+  }
+
+
+  .touch-interact{
+
+    width:116px;
+
+    height:116px;
+
+    font-size:20px;
+
+  }
+
+
+  .touch-joystick{
+
+    bottom:20px;
+
+  }
+
+
+  .touch-actions{
+
+    bottom:22px;
+
+  }
+
+}
+
 
 /* =========================================================
    Desktop
 ========================================================= */
 
-@media (pointer:fine){
+@media
+  (pointer:fine){
 
   .touch-controls{
+
     display:none !important;
+
   }
 
 }
