@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+  >
+
+  <title>
+    灶咖大亂鬥｜Kitchen Layout Editor
+  </title>
+
+
+  <style>
+
+    :root{
+
+      --bg:#0f1519;
+      --panel:#172027;
+      --panel-2:#202b33;
+      --line:#31414c;
+
+      --text:#f3f6f7;
+      --muted:#9fb0bb;
+
+      --accent:#f19a50;
+      --danger:#c8574e;
+
+    }
+
+
+    *{
+
+      box-sizing:border-box;
+
+      margin:0;
+      padding:0;
+
+    }
+
+
+    html,
+    body{
+
+      width:100%;
+      height:100%;
+
+      overflow:hidden;
+
+      background:
+        var(--bg);
+
+      color:
+        var(--text);
+
+      font-family:
+        "Noto Sans TC",
+        "PingFang TC",
+        "Microsoft JhengHei",
+        sans-serif;
+
+    }
+
+
+    button,
+    input,
+    select,
+    textarea{
+
+      font:inherit;
+
+    }
+
+
+    button{
+
+      cursor:pointer;
+
+    }
+
+
+    /* =====================================================
+       APP
+    ===================================================== */
+
+    .editor-app{
+
+      width:100%;
+      height:100%;
+
+      display:grid;
+
+      grid-template-rows:
+        56px
+        minmax(0,1fr);
+
+    }
+
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar{
+
+      display:flex;
+
+      align-items:center;
+
+      gap:10px;
+
+
+      padding:
+        0 14px;
+
+
+      border-bottom:
+        1px solid
+        var(--line);
+
+
+      background:
+        #11191e;
+
+    }
+
+
+    .topbar-title{
+
+      margin-right:auto;
+
+    }
+
+
+    .topbar-title strong{
+
+      display:block;
+
+      font-size:15px;
+
+    }
+
+
+    .topbar-title span{
+
+      display:block;
+
+      margin-top:2px;
+
+      color:
+        var(--muted);
+
+      font-size:11px;
+
+    }
+
+
+    .toolbar-button{
+
+      min-height:34px;
+
+      padding:
+        0 12px;
+
+
+      border:
+        1px solid
+        var(--line);
+
+
+      border-radius:8px;
+
+
+      background:
+        var(--panel-2);
+
+
+      color:
+        var(--text);
+
+
+      font-weight:700;
+
+    }
+
+
+    .toolbar-button.primary{
+
+      border-color:
+        #9b5c2d;
+
+      background:
+        #b96e35;
+
+    }
+
+
+    .toolbar-button.danger{
+
+      border-color:
+        #7c3c37;
+
+      background:
+        #61312e;
+
+    }
+
+
+    /* =====================================================
+       MAIN GRID
+    ===================================================== */
+
+    .editor-grid{
+
+      min-height:0;
+
+      display:grid;
+
+      grid-template-columns:
+        230px
+        minmax(0,1fr)
+        260px;
+
+    }
+
+
+    .sidebar,
+    .inspector{
+
+      min-height:0;
+
+      overflow:auto;
+
+      background:
+        var(--panel);
+
+    }
+
+
+    .sidebar{
+
+      border-right:
+        1px solid
+        var(--line);
+
+    }
+
+
+    .inspector{
+
+      border-left:
+        1px solid
+        var(--line);
+
+    }
+
+
+    .panel-section{
+
+      padding:14px;
+
+      border-bottom:
+        1px solid
+        var(--line);
+
+    }
+
+
+    .panel-section h2{
+
+      margin-bottom:10px;
+
+      font-size:13px;
+
+    }
+
+
+    .panel-section p{
+
+      color:
+        var(--muted);
+
+      font-size:11px;
+
+      line-height:1.6;
+
+    }
+
+
+    /* =====================================================
+       ENTITY LIST
+    ===================================================== */
+
+    .entity-list{
+
+      display:grid;
+
+      gap:5px;
+
+    }
+
+
+    .entity-button{
+
+      width:100%;
+
+      padding:
+        8px 10px;
+
+
+      border:
+        1px solid
+        transparent;
+
+
+      border-radius:7px;
+
+
+      background:
+        #1b252c;
+
+
+      color:
+        var(--text);
+
+
+      text-align:left;
+
+      font-size:12px;
+
+    }
+
+
+    .entity-button:hover{
+
+      background:
+        #25323a;
+
+    }
+
+
+    .entity-button.active{
+
+      border-color:
+        #d28a4b;
+
+      background:
+        #3a2c22;
+
+    }
+
+
+    .entity-button small{
+
+      float:right;
+
+      color:
+        var(--muted);
+
+      font-size:10px;
+
+    }
+
+
+    /* =====================================================
+       THREE VIEWPORT
+    ===================================================== */
+
+    .viewport-panel{
+
+      position:relative;
+
+      min-width:0;
+      min-height:0;
+
+      overflow:hidden;
+
+      background:
+        #0b1013;
+
+    }
+
+
+    #editor-canvas-root{
+
+      position:absolute;
+
+      inset:0;
+
+    }
+
+
+    #editor-canvas-root canvas{
+
+      display:block;
+
+      width:100%;
+      height:100%;
+
+    }
+
+
+    /* =====================================================
+       SAFE AREA
+    ===================================================== */
+
+    .safe-overlay{
+
+      position:absolute;
+
+      left:0;
+      right:0;
+
+      z-index:5;
+
+
+      display:flex;
+
+      align-items:center;
+      justify-content:center;
+
+
+      pointer-events:none;
+
+
+      color:
+        rgba(
+          255,
+          255,
+          255,
+          .76
+        );
+
+
+      font-size:11px;
+
+      font-weight:800;
+
+      letter-spacing:.08em;
+
+    }
+
+
+    .safe-overlay.top{
+
+      top:0;
+
+      height:15.3%;
+
+
+      border-bottom:
+        1px dashed
+        rgba(
+          244,
+          192,
+          85,
+          .75
+        );
+
+
+      background:
+        rgba(
+          181,
+          123,
+          36,
+          .14
+        );
+
+    }
+
+
+    .safe-overlay.bottom{
+
+      bottom:0;
+
+      height:15.3%;
+
+
+      border-top:
+        1px dashed
+        rgba(
+          89,
+          166,
+          220,
+          .75
+        );
+
+
+      background:
+        rgba(
+          43,
+          114,
+          159,
+          .14
+        );
+
+    }
+
+
+    /* =====================================================
+       VIEWPORT INFO
+    ===================================================== */
+
+    .viewport-help{
+
+      position:absolute;
+
+      left:12px;
+      bottom:12px;
+
+      z-index:6;
+
+
+      max-width:360px;
+
+
+      padding:
+        8px 10px;
+
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          .14
+        );
+
+
+      border-radius:8px;
+
+
+      background:
+        rgba(
+          6,
+          10,
+          12,
+          .74
+        );
+
+
+      color:
+        #d8e1e5;
+
+
+      font-size:11px;
+
+      line-height:1.55;
+
+
+      pointer-events:none;
+
+    }
+
+
+    .statusbar{
+
+      position:absolute;
+
+      right:12px;
+      bottom:12px;
+
+      z-index:8;
+
+
+      min-width:180px;
+
+
+      padding:
+        8px 10px;
+
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          .13
+        );
+
+
+      border-radius:8px;
+
+
+      background:
+        rgba(
+          6,
+          10,
+          12,
+          .78
+        );
+
+
+      color:
+        #e9eff1;
+
+
+      text-align:right;
+
+      font-size:11px;
+
+
+      pointer-events:none;
+
+    }
+
+
+    /* =====================================================
+       INSPECTOR
+    ===================================================== */
+
+    .field-grid{
+
+      display:grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap:9px;
+
+    }
+
+
+    .field{
+
+      display:grid;
+
+      gap:5px;
+
+    }
+
+
+    .field.full{
+
+      grid-column:
+        1 / -1;
+
+    }
+
+
+    .field label{
+
+      color:
+        var(--muted);
+
+      font-size:10px;
+
+      font-weight:700;
+
+    }
+
+
+    .field input{
+
+      width:100%;
+
+      min-width:0;
+
+      height:34px;
+
+
+      padding:
+        0 9px;
+
+
+      border:
+        1px solid
+        var(--line);
+
+
+      border-radius:7px;
+
+
+      background:
+        #11191e;
+
+
+      color:
+        var(--text);
+
+    }
+
+
+    .field input:disabled{
+
+      color:
+        #7f8c94;
+
+      background:
+        #151b1f;
+
+    }
+
+
+    .toggle-row{
+
+      display:flex;
+
+      align-items:center;
+      justify-content:space-between;
+
+
+      gap:12px;
+
+
+      min-height:32px;
+
+
+      color:
+        #dfe7ea;
+
+
+      font-size:11px;
+
+    }
+
+
+    .toggle-row input[type="checkbox"]{
+
+      width:17px;
+      height:17px;
+
+    }
+
+
+    .inspector-empty{
+
+      padding:18px;
+
+      color:
+        var(--muted);
+
+      font-size:12px;
+
+      line-height:1.7;
+
+    }
+
+
+    /* =====================================================
+       EXPORT
+    ===================================================== */
+
+    .export-modal{
+
+      position:fixed;
+
+      inset:0;
+
+      z-index:100;
+
+
+      display:none;
+
+      align-items:center;
+      justify-content:center;
+
+
+      padding:24px;
+
+
+      background:
+        rgba(
+          5,
+          8,
+          10,
+          .8
+        );
+
+    }
+
+
+    .export-modal.open{
+
+      display:flex;
+
+    }
+
+
+    .export-dialog{
+
+      width:
+        min(
+          900px,
+          100%
+        );
+
+
+      max-height:92vh;
+
+      overflow:auto;
+
+
+      border:
+        1px solid
+        var(--line);
+
+
+      border-radius:12px;
+
+
+      background:
+        var(--panel);
+
+    }
+
+
+    .export-header{
+
+      display:flex;
+
+      align-items:center;
+
+      gap:8px;
+
+
+      padding:
+        12px 14px;
+
+
+      border-bottom:
+        1px solid
+        var(--line);
+
+    }
+
+
+    .export-header strong{
+
+      margin-right:auto;
+
+      font-size:13px;
+
+    }
+
+
+    .export-body{
+
+      padding:14px;
+
+    }
+
+
+    #export-text{
+
+      width:100%;
+
+      min-height:480px;
+
+
+      padding:12px;
+
+
+      border:
+        1px solid
+        var(--line);
+
+
+      border-radius:8px;
+
+
+      background:
+        #0d1418;
+
+
+      color:
+        #ecf1f3;
+
+
+      resize:vertical;
+
+
+      font-family:
+        Consolas,
+        Monaco,
+        monospace;
+
+
+      font-size:11px;
+
+      line-height:1.5;
+
+    }
+
+
+    @media (max-width:1000px){
+
+      .editor-grid{
+
+        grid-template-columns:
+          190px
+          minmax(0,1fr)
+          220px;
+
+      }
+
+    }
+
+  </style>
+
+
+  <script type="importmap">
+
+  {
+    "imports": {
+
+      "three":
+        "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+
+      "three/addons/":
+        "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+
+    }
+  }
+
+  </script>
+
+</head>
+
+
+<body>
+
+  <main class="editor-app">
+
+
+    <!-- ===================================================
+         TOPBAR
+    ==================================================== -->
+
+    <header class="topbar">
+
+      <div class="topbar-title">
+
+        <strong>
+          Kitchen Layout Editor
+        </strong>
+
+        <span>
+          拖曳 Three.js 物件後，可直接套用到本機遊戲預覽或匯出 KitchenLayout.js
+        </span>
+
+      </div>
+
+
+      <button
+        id="save-preview"
+        class="toolbar-button primary"
+        type="button"
+      >
+        套用到遊戲預覽
+      </button>
+
+
+      <button
+        id="open-game"
+        class="toolbar-button"
+        type="button"
+      >
+        開啟遊戲
+      </button>
+
+
+      <button
+        id="export-layout"
+        class="toolbar-button"
+        type="button"
+      >
+        匯出 Layout
+      </button>
+
+
+      <button
+        id="reset-layout"
+        class="toolbar-button danger"
+        type="button"
+      >
+        回復原始配置
+      </button>
+
+    </header>
+
+
+    <!-- ===================================================
+         MAIN
+    ==================================================== -->
+
+    <div class="editor-grid">
+
+
+      <!-- =================================================
+           LEFT
+      ================================================== -->
+
+      <aside class="sidebar">
+
+        <section class="panel-section">
+
+          <h2>
+            物件
+          </h2>
+
+          <p>
+            可直接點選場景物件，或從下面的清單選取。
+          </p>
+
+        </section>
+
+
+        <section class="panel-section">
+
+          <h2>
+            工作台
+          </h2>
+
+          <div
+            id="counter-list"
+            class="entity-list"
+          ></div>
+
+        </section>
+
+
+        <section class="panel-section">
+
+          <h2>
+            功能站
+          </h2>
+
+          <div
+            id="station-list"
+            class="entity-list"
+          ></div>
+
+        </section>
+
+
+        <section class="panel-section">
+
+          <h2>
+            玩家
+          </h2>
+
+          <div
+            id="player-list"
+            class="entity-list"
+          ></div>
+
+        </section>
+
+      </aside>
+
+
+      <!-- =================================================
+           THREE VIEW
+      ================================================== -->
+
+      <section class="viewport-panel">
+
+        <div
+          id="editor-canvas-root"
+        ></div>
+
+
+        <div
+          id="safe-top"
+          class="safe-overlay top"
+        >
+          MOBILE HUD SAFE AREA
+        </div>
+
+
+        <div
+          id="safe-bottom"
+          class="safe-overlay bottom"
+        >
+          MOBILE TOUCH SAFE AREA
+        </div>
+
+
+        <div class="viewport-help">
+          點物件選取｜拖曳紅色 X / 藍色 Z 軸調整位置｜右側可輸入精確座標
+        </div>
+
+
+        <div
+          id="editor-status"
+          class="statusbar"
+        >
+          Ready
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           RIGHT
+      ================================================== -->
+
+      <aside class="inspector">
+
+
+        <section class="panel-section">
+
+          <h2>
+            顯示設定
+          </h2>
+
+
+          <label class="toggle-row">
+
+            <span>
+              手機 Safe Area
+            </span>
+
+            <input
+              id="show-safe-area"
+              type="checkbox"
+              checked
+            >
+
+          </label>
+
+
+          <label class="toggle-row">
+
+            <span>
+              Interaction Range
+            </span>
+
+            <input
+              id="show-interaction"
+              type="checkbox"
+              checked
+            >
+
+          </label>
+
+
+          <label class="toggle-row">
+
+            <span>
+              Counter Collision
+            </span>
+
+            <input
+              id="show-collision"
+              type="checkbox"
+              checked
+            >
+
+          </label>
+
+
+          <label class="toggle-row">
+
+            <span>
+              Grid Snap
+            </span>
+
+            <input
+              id="snap-enabled"
+              type="checkbox"
+              checked
+            >
+
+          </label>
+
+
+          <div
+            class="field"
+            style="margin-top:8px;"
+          >
+
+            <label for="snap-size">
+              Snap Step
+            </label>
+
+            <input
+              id="snap-size"
+              type="number"
+              step="0.05"
+              min="0.05"
+              value="0.1"
+            >
+
+          </div>
+
+        </section>
+
+
+        <!-- ===============================================
+             INSPECTOR
+        ================================================ -->
+
+        <section class="panel-section">
+
+          <h2>
+            Inspector
+          </h2>
+
+
+          <div
+            id="inspector-empty"
+            class="inspector-empty"
+          >
+            尚未選取物件。
+          </div>
+
+
+          <div
+            id="inspector-fields"
+            class="field-grid"
+            hidden
+          >
+
+
+            <div class="field full">
+
+              <label for="entity-kind">
+                類型
+              </label>
+
+              <input
+                id="entity-kind"
+                type="text"
+                disabled
+              >
+
+            </div>
+
+
+            <div class="field full">
+
+              <label for="entity-id">
+                ID
+              </label>
+
+              <input
+                id="entity-id"
+                type="text"
+                disabled
+              >
+
+            </div>
+
+
+            <div
+              class="field full"
+              id="label-field"
+              hidden
+            >
+
+              <label for="entity-label">
+                名稱
+              </label>
+
+              <input
+                id="entity-label"
+                type="text"
+                disabled
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="entity-x">
+                X
+              </label>
+
+              <input
+                id="entity-x"
+                type="number"
+                step="0.05"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="entity-z">
+                Z
+              </label>
+
+              <input
+                id="entity-z"
+                type="number"
+                step="0.05"
+              >
+
+            </div>
+
+
+            <!-- Counter -->
+
+            <div
+              id="counter-fields"
+              class="field-grid full"
+              hidden
+            >
+
+              <div class="field">
+
+                <label for="counter-width">
+                  Width
+                </label>
+
+                <input
+                  id="counter-width"
+                  type="number"
+                  step="0.05"
+                  min="0.1"
+                >
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="counter-depth">
+                  Depth
+                </label>
+
+                <input
+                  id="counter-depth"
+                  type="number"
+                  step="0.05"
+                  min="0.1"
+                >
+
+              </div>
+
+            </div>
+
+
+            <!-- Station -->
+
+            <div
+              id="station-fields"
+              class="field-grid full"
+              hidden
+            >
+
+              <div class="field">
+
+                <label for="interaction-x">
+                  Interaction Offset X
+                </label>
+
+                <input
+                  id="interaction-x"
+                  type="number"
+                  step="0.05"
+                >
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="interaction-z">
+                  Interaction Offset Z
+                </label>
+
+                <input
+                  id="interaction-z"
+                  type="number"
+                  step="0.05"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ===============================================
+             PREVIEW
+        ================================================ -->
+
+        <section class="panel-section">
+
+          <h2>
+            本機預覽
+          </h2>
+
+          <p>
+            「套用到遊戲預覽」只寫入目前瀏覽器。
+            正式 GitHub 版本仍需匯出並覆蓋
+            js/data/KitchenLayout.js。
+          </p>
+
+
+          <button
+            id="clear-preview"
+            class="toolbar-button danger"
+            style="
+              width:100%;
+              margin-top:10px;
+            "
+            type="button"
+          >
+            清除本機預覽配置
+          </button>
+
+        </section>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================================================
+       EXPORT MODAL
+  ====================================================== -->
+
+  <div
+    id="export-modal"
+    class="export-modal"
+  >
+
+    <section class="export-dialog">
+
+      <header class="export-header">
+
+        <strong>
+          KitchenLayout.js
+        </strong>
+
+
+        <button
+          id="copy-export"
+          class="toolbar-button"
+          type="button"
+        >
+          複製
+        </button>
+
+
+        <button
+          id="download-export"
+          class="toolbar-button primary"
+          type="button"
+        >
+          下載 JS
+        </button>
+
+
+        <button
+          id="close-export"
+          class="toolbar-button"
+          type="button"
+        >
+          關閉
+        </button>
+
+      </header>
+
+
+      <div class="export-body">
+
+        <textarea
+          id="export-text"
+          spellcheck="false"
+        ></textarea>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <script
+    type="module"
+    src="./js/editor/KitchenEditor.js"
+  ></script>
+
+</body>
+
+</html>
