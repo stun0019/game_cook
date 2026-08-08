@@ -59,49 +59,196 @@ const uiRoot =
 
 
 /* =========================================================
-   1280 × 720 FIT
+   Dynamic Full Screen Stage
+
+   基準：
+   高度永遠使用 720 logical px。
+
+   16:9
+   1280 × 720
+
+   20:9
+   1600 × 720
+
+   這樣不是把 1280 × 720 拉伸，
+   而是真的增加左右可視範圍。
 ========================================================= */
 
 function fitStage(){
 
   const visualWidth =
-    window.visualViewport
-      ?.width ||
+    window.visualViewport?.width ||
     window.innerWidth;
 
   const visualHeight =
-    window.visualViewport
-      ?.height ||
+    window.visualViewport?.height ||
     window.innerHeight;
 
+
+  const viewportWidth =
+    viewport.clientWidth ||
+    visualWidth;
+
+  const viewportHeight =
+    viewport.clientHeight ||
+    visualHeight;
+
+
   const availableWidth =
-    Math.min(
-      viewport.clientWidth,
-      visualWidth
+    Math.max(
+      1,
+      Math.min(
+        viewportWidth,
+        visualWidth
+      )
     );
 
   const availableHeight =
-    Math.min(
-      viewport.clientHeight,
-      visualHeight
+    Math.max(
+      1,
+      Math.min(
+        viewportHeight,
+        visualHeight
+      )
     );
+
+
+  /*
+   * 高度固定以 720 為 logical resolution。
+   */
+
+  const logicalHeight =
+    GameConfig.logicalHeight;
+
+
+  /*
+   * 先讓 720 logical px
+   * 剛好填滿裝置高度。
+   */
 
   const scale =
-    Math.min(
+    availableHeight /
+    logicalHeight;
 
-      availableWidth /
+
+  /*
+   * 根據實際螢幕比例反算
+   * 這個裝置需要多少 logical width。
+   *
+   * 最低仍保留 1280。
+   */
+
+  const logicalWidth =
+    Math.max(
       GameConfig.logicalWidth,
 
-      availableHeight /
-      GameConfig.logicalHeight
-
+      availableWidth /
+      scale
     );
+
+
+  /*
+   * Stage 本體真的變寬。
+   */
+
+  stage.style.width =
+    `${logicalWidth}px`;
+
+  stage.style.height =
+    `${logicalHeight}px`;
+
+
+  stage.dataset.logicalWidth =
+    String(
+      logicalWidth
+    );
+
+  stage.dataset.logicalHeight =
+    String(
+      logicalHeight
+    );
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--stage-logical-width",
+      `${logicalWidth}px`
+    );
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--stage-logical-height",
+      `${logicalHeight}px`
+    );
+
+
+  /*
+   * Stage 高度剛好貼滿 viewport。
+   *
+   * Stage 寬度已依裝置比例動態計算，
+   * 所以寬度也會剛好填滿。
+   */
 
   stage.style.transform =
     `translate(-50%,-50%) scale(${scale})`;
 
+
+  const metrics = {
+
+    logicalWidth,
+
+    logicalHeight,
+
+    physicalWidth:
+      availableWidth,
+
+    physicalHeight:
+      availableHeight,
+
+    scale,
+
+    aspect:
+      logicalWidth /
+      logicalHeight
+
+  };
+
+
+  /*
+   * 讓新進入的 GameScene
+   * 可以立即取得目前 Stage 尺寸。
+   */
+
+  window.__GAME_STAGE_METRICS__ =
+    metrics;
+
+
+  /*
+   * 如果 GameScene 已經存在，
+   * 通知 Three.js 更新 Renderer / Camera。
+   */
+
+  window.dispatchEvent(
+
+    new CustomEvent(
+      "game-stage-resize",
+      {
+        detail:
+          metrics
+      }
+    )
+
+  );
+
 }
 
+
+/* =========================================================
+   Resize
+========================================================= */
 
 window.addEventListener(
   "resize",
@@ -114,11 +261,14 @@ window.addEventListener(
 
 window.addEventListener(
   "orientationchange",
-  () =>
+  () => {
+
     setTimeout(
       fitStage,
       160
-    ),
+    );
+
+  },
   {
     passive:true
   }
@@ -138,6 +288,7 @@ if(
       }
     );
 
+
   window.visualViewport
     .addEventListener(
       "scroll",
@@ -150,6 +301,11 @@ if(
 }
 
 
+/*
+ * Scene 建立前先完成一次
+ * Stage 尺寸計算。
+ */
+
 fitStage();
 
 
@@ -159,6 +315,7 @@ fitStage();
 
 const assetManager =
   new AssetManager();
+
 
 const input =
   new InputManager();
@@ -220,6 +377,7 @@ sceneManager
       console.error(
         error
       );
+
 
       sceneRoot.innerHTML = `
 
