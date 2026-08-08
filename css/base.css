@@ -20,14 +20,17 @@
 
 
   /*
-   * 16:9 Stage 外側背景。
-   *
-   * Loading / Menu：
-   * 使用 Loading_page_BG.png。
-   *
-   * Menu → Game：
-   * MenuScene.js 會切換成淡綠色。
+   * Stage 預設仍是 1280 × 720。
+   * main.js 啟動後會即時更新 width。
    */
+
+  --stage-logical-width:
+    1280px;
+
+  --stage-logical-height:
+    720px;
+
+
   --outer-bg-image:
     url("../asset/art/Loading_page_BG.png");
 
@@ -179,10 +182,10 @@ button{
 
 
 /* =========================================================
-   16:9 外側延伸背景
+   Outer Background Fallback
 
-   19.5:9 / 20:9 手機橫向時，
-   Stage 左右不再顯示純黑。
+   正常情況 Stage 已經會 Full Screen，
+   這層只作 resize 過程中的保底。
 ========================================================= */
 
 #viewport::before{
@@ -192,8 +195,7 @@ button{
 
   position:absolute;
 
-
-  inset:-36px;
+  inset:-40px;
 
 
   z-index:-2;
@@ -224,82 +226,13 @@ button{
 
 
   filter:
-    blur(22px)
-    brightness(.62)
-    saturate(.82);
+    blur(20px)
+    brightness(.65)
+    saturate(.85);
 
 
   transform:
-    scale(1.06);
-
-
-  pointer-events:none;
-
-}
-
-
-/*
- * 外側背景再壓一層漸層，
- * 避免左右延伸區搶過正式 16:9 Stage。
- */
-
-#viewport::after{
-
-  content:"";
-
-
-  position:absolute;
-
-
-  inset:0;
-
-
-  z-index:-1;
-
-
-  background:
-
-    linear-gradient(
-      90deg,
-
-      rgba(
-        4,
-        9,
-        13,
-        .34
-      )
-      0%,
-
-      rgba(
-        4,
-        9,
-        13,
-        .08
-      )
-      18%,
-
-      transparent
-      36%,
-
-      transparent
-      64%,
-
-      rgba(
-        4,
-        9,
-        13,
-        .08
-      )
-      82%,
-
-      rgba(
-        4,
-        9,
-        13,
-        .34
-      )
-      100%
-    );
+    scale(1.08);
 
 
   pointer-events:none;
@@ -308,10 +241,10 @@ button{
 
 
 /* =========================================================
-   Fixed Logical Stage
+   Dynamic Stage
 
-   遊戲內容永遠使用 1280 × 720。
-   main.js 僅縮放整個 Stage。
+   高度固定 logical 720。
+   寬度由 main.js 依螢幕比例決定。
 ========================================================= */
 
 #stage{
@@ -327,15 +260,23 @@ button{
   z-index:1;
 
 
-  width:1280px;
+  width:
+    var(
+      --stage-logical-width
+    );
 
-  height:720px;
+
+  height:
+    var(
+      --stage-logical-height
+    );
 
 
   overflow:hidden;
 
 
-  background:#101820;
+  background:
+    #101820;
 
 
   transform-origin:
@@ -346,30 +287,21 @@ button{
     transform;
 
 
-  box-shadow:
+  /*
+   * Full Screen 不需要再有
+   * 16:9 畫框感。
+   */
 
-    0 0 0
-    1px
-    rgba(
-      255,
-      255,
-      255,
-      .04
-    ),
-
-    0 24px 80px
-    rgba(
-      0,
-      0,
-      0,
-      .32
-    );
+  box-shadow:none;
 
 }
 
 
 /* =========================================================
    Stage Layers
+
+   不再固定 1280px。
+   全部繼承 Stage 的動態尺寸。
 ========================================================= */
 
 #three-root,
@@ -382,9 +314,9 @@ button{
   inset:0;
 
 
-  width:1280px;
+  width:100%;
 
-  height:720px;
+  height:100%;
 
 }
 
@@ -404,9 +336,9 @@ button{
   display:block;
 
 
-  width:1280px !important;
+  width:100% !important;
 
-  height:720px !important;
+  height:100% !important;
 
 }
 
@@ -430,6 +362,9 @@ button{
 
 /* =========================================================
    Scene
+
+   LoadingScene / MenuScene / GameScene
+   都改成跟著 Dynamic Stage。
 ========================================================= */
 
 .app-scene{
@@ -440,9 +375,41 @@ button{
   inset:0;
 
 
-  width:1280px;
+  width:100%;
 
-  height:720px;
+  height:100%;
+
+}
+
+
+/*
+ * game.css 目前 .game-ui
+ * 仍有 width:1280px / height:720px。
+ *
+ * 這裡用更高 specificity 覆寫，
+ * 因此暫時不需要再修改 game.css。
+ */
+
+#ui-root .game-ui{
+
+  width:100% !important;
+
+  height:100% !important;
+
+}
+
+
+/*
+ * HUD 也必須真的覆蓋整個 Dynamic Stage。
+ */
+
+#ui-root .game-hud,
+#ui-root .touch-controls,
+#ui-root .game-overlay{
+
+  width:100%;
+
+  height:100%;
 
 }
 
@@ -528,7 +495,7 @@ button{
 
 
 /* =========================================================
-   Rotate Phone Icon
+   Rotate Phone
 ========================================================= */
 
 .rotate-phone{
@@ -605,9 +572,6 @@ button{
 
 /* =========================================================
    Landscape Mobile
-
-   Stage 本身仍維持 16:9。
-   外部 viewport 負責填滿 19.5:9 / 20:9。
 ========================================================= */
 
 @media
@@ -617,57 +581,7 @@ button{
 
   #stage{
 
-    box-shadow:
-
-      0 0 0
-      1px
-      rgba(
-        255,
-        255,
-        255,
-        .035
-      ),
-
-      0 14px 46px
-      rgba(
-        0,
-        0,
-        0,
-        .24
-      );
-
-  }
-
-
-  #viewport::before{
-
-    filter:
-      blur(26px)
-      brightness(.6)
-      saturate(.8);
-
-  }
-
-}
-
-
-/* =========================================================
-   Very Wide Mobile
-
-   19:9 / 19.5:9 / 20:9
-========================================================= */
-
-@media
-  (pointer:coarse)
-  and
-  (orientation:landscape)
-  and
-  (min-aspect-ratio:19/9){
-
-  #viewport::before{
-
-    transform:
-      scale(1.12);
+    box-shadow:none;
 
   }
 
