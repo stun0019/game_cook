@@ -1,28 +1,20 @@
 :root{
 
   --ink:#33251f;
-
   --paper:#fffaf0;
-
   --cream:#fff3d5;
 
   --red:#e45a45;
-
   --orange:#f29a46;
-
   --gold:#f6c34f;
-
   --green:#68a96d;
-
   --yellow:#e9b94f;
-
   --dark:#132027;
 
 
-  /*
-   * Stage 預設仍是 1280 × 720。
-   * main.js 啟動後會即時更新 width。
-   */
+  /* =======================================================
+     Dynamic Stage
+  ======================================================= */
 
   --stage-logical-width:
     1280px;
@@ -31,11 +23,47 @@
     720px;
 
 
+  /* =======================================================
+     Scene Background
+  ======================================================= */
+
   --outer-bg-image:
     url("../asset/art/Loading_page_BG.png");
 
   --outer-bg-color:
     #101522;
+
+
+  /* =======================================================
+     Safe Area
+
+     Safe Area 只保護 UI。
+     不再縮小整個遊戲畫面。
+  ======================================================= */
+
+  --safe-top:
+    env(
+      safe-area-inset-top,
+      0px
+    );
+
+  --safe-right:
+    env(
+      safe-area-inset-right,
+      0px
+    );
+
+  --safe-bottom:
+    env(
+      safe-area-inset-bottom,
+      0px
+    );
+
+  --safe-left:
+    env(
+      safe-area-inset-left,
+      0px
+    );
 
 }
 
@@ -46,16 +74,21 @@
 
 *{
 
-  box-sizing:border-box;
+  box-sizing:
+    border-box;
 
-  margin:0;
+  margin:
+    0;
 
-  padding:0;
+  padding:
+    0;
 
 
-  user-select:none;
+  user-select:
+    none;
 
-  -webkit-user-select:none;
+  -webkit-user-select:
+    none;
 
 
   -webkit-tap-highlight-color:
@@ -71,12 +104,15 @@
 html,
 body{
 
-  width:100%;
+  width:
+    100%;
 
-  height:100%;
+  height:
+    100%;
 
 
-  overflow:hidden;
+  overflow:
+    hidden;
 
 
   background:
@@ -85,9 +121,11 @@ body{
     );
 
 
-  touch-action:none;
+  touch-action:
+    none;
 
-  overscroll-behavior:none;
+  overscroll-behavior:
+    none;
 
 
   font-family:
@@ -99,11 +137,31 @@ body{
 }
 
 
+html{
+
+  width:
+    100vw;
+
+  height:
+    100dvh;
+
+}
+
+
 body{
 
-  position:fixed;
+  position:
+    fixed;
 
-  inset:0;
+  inset:
+    0;
+
+
+  width:
+    100vw;
+
+  height:
+    100dvh;
 
 }
 
@@ -111,66 +169,53 @@ body{
 button,
 input{
 
-  font:inherit;
+  font:
+    inherit;
 
 }
 
 
 button{
 
-  border:0;
+  border:
+    0;
 
 }
 
 
 /* =========================================================
    Viewport
+
+   關鍵修改：
+   不再用 safe-area-inset 去縮 viewport。
+
+   遊戲背景 / Three.js / Loading / Menu
+   都直接延伸到裝置最外圍。
 ========================================================= */
 
 #viewport{
 
-  position:fixed;
+  position:
+    fixed;
 
 
-  left:
-    env(
-      safe-area-inset-left
-    );
-
-  top:
-    env(
-      safe-area-inset-top
-    );
+  inset:
+    0;
 
 
   width:
-    calc(
-      100vw
-      - env(
-          safe-area-inset-left
-        )
-      - env(
-          safe-area-inset-right
-        )
-    );
-
+    100vw;
 
   height:
-    calc(
-      100dvh
-      - env(
-          safe-area-inset-top
-        )
-      - env(
-          safe-area-inset-bottom
-        )
-    );
+    100dvh;
 
 
-  overflow:hidden;
+  overflow:
+    hidden;
 
 
-  isolation:isolate;
+  isolation:
+    isolate;
 
 
   background:
@@ -184,21 +229,27 @@ button{
 /* =========================================================
    Outer Background Fallback
 
-   正常情況 Stage 已經會 Full Screen，
-   這層只作 resize 過程中的保底。
+   Dynamic Stage resize 的瞬間，
+   如果 Stage 還沒完成計算，
+   這一層負責填滿背景。
 ========================================================= */
 
 #viewport::before{
 
-  content:"";
+  content:
+    "";
 
 
-  position:absolute;
+  position:
+    absolute;
 
-  inset:-40px;
+
+  inset:
+    -40px;
 
 
-  z-index:-2;
+  z-index:
+    0;
 
 
   background-color:
@@ -235,7 +286,8 @@ button{
     scale(1.08);
 
 
-  pointer-events:none;
+  pointer-events:
+    none;
 
 }
 
@@ -243,21 +295,31 @@ button{
 /* =========================================================
    Dynamic Stage
 
-   高度固定 logical 720。
-   寬度由 main.js 依螢幕比例決定。
+   高度維持 logical 720。
+   寬度由 main.js 依實際螢幕比例動態計算。
+
+   16:9
+   1280 × 720
+
+   20:9
+   約 1600 × 720
 ========================================================= */
 
 #stage{
 
-  position:absolute;
+  position:
+    absolute;
 
 
-  left:50%;
+  left:
+    50%;
 
-  top:50%;
+  top:
+    50%;
 
 
-  z-index:1;
+  z-index:
+    2;
 
 
   width:
@@ -272,7 +334,8 @@ button{
     );
 
 
-  overflow:hidden;
+  overflow:
+    hidden;
 
 
   background:
@@ -287,164 +350,285 @@ button{
     transform;
 
 
-  /*
-   * Full Screen 不需要再有
-   * 16:9 畫框感。
-   */
-
-  box-shadow:none;
+  box-shadow:
+    none;
 
 }
 
 
 /* =========================================================
    Stage Layers
-
-   不再固定 1280px。
-   全部繼承 Stage 的動態尺寸。
 ========================================================= */
 
 #three-root,
 #scene-root,
 #ui-root{
 
-  position:absolute;
+  position:
+    absolute;
 
 
-  inset:0;
+  inset:
+    0;
 
 
-  width:100%;
+  width:
+    100%;
 
-  height:100%;
+  height:
+    100%;
 
 }
 
 
+/* =========================================================
+   Three.js
+========================================================= */
+
 #three-root{
 
-  z-index:1;
+  z-index:
+    1;
 
 
-  overflow:hidden;
+  overflow:
+    hidden;
 
 }
 
 
 #three-root canvas{
 
-  display:block;
+  display:
+    block;
 
 
-  width:100% !important;
+  width:
+    100% !important;
 
-  height:100% !important;
+  height:
+    100% !important;
 
 }
 
+
+/* =========================================================
+   Scene Root
+========================================================= */
 
 #scene-root{
 
-  z-index:10;
+  z-index:
+    10;
 
 }
 
 
+/* =========================================================
+   UI Root
+========================================================= */
+
 #ui-root{
 
-  z-index:20;
+  z-index:
+    20;
 
 
-  pointer-events:none;
+  pointer-events:
+    none;
 
 }
 
 
 /* =========================================================
    Scene
-
-   LoadingScene / MenuScene / GameScene
-   都改成跟著 Dynamic Stage。
 ========================================================= */
 
 .app-scene{
 
-  position:absolute;
+  position:
+    absolute;
 
 
-  inset:0;
+  inset:
+    0;
 
 
-  width:100%;
+  width:
+    100%;
 
-  height:100%;
-
-}
-
-
-/*
- * game.css 目前 .game-ui
- * 仍有 width:1280px / height:720px。
- *
- * 這裡用更高 specificity 覆寫，
- * 因此暫時不需要再修改 game.css。
- */
-
-#ui-root .game-ui{
-
-  width:100% !important;
-
-  height:100% !important;
-
-}
-
-
-/*
- * HUD 也必須真的覆蓋整個 Dynamic Stage。
- */
-
-#ui-root .game-hud,
-#ui-root .touch-controls,
-#ui-root .game-overlay{
-
-  width:100%;
-
-  height:100%;
-
-}
-
-
-.is-hidden{
-
-  display:none !important;
+  height:
+    100%;
 
 }
 
 
 /* =========================================================
-   Mobile Portrait Rotate Screen
+   Game UI Dynamic Size
+========================================================= */
+
+#ui-root .game-ui{
+
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
+}
+
+
+#ui-root .game-hud,
+#ui-root .touch-controls,
+#ui-root .game-overlay{
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+}
+
+
+/* =========================================================
+   Mobile Safe Area
+
+   只有 UI 避開瀏海 / 圓角 / Home Indicator。
+   Three.js 世界仍然滿版。
+========================================================= */
+
+@media
+  (pointer:coarse)
+  and
+  (orientation:landscape){
+
+  .hud-score{
+
+    margin-left:
+      var(
+        --safe-left
+      );
+
+  }
+
+
+  .hud-right-group{
+
+    margin-right:
+      var(
+        --safe-right
+      );
+
+  }
+
+
+  .touch-joystick{
+
+    margin-left:
+      var(
+        --safe-left
+      );
+
+  }
+
+
+  .touch-actions{
+
+    margin-right:
+      var(
+        --safe-right
+      );
+
+  }
+
+
+  /*
+   * 底部 UI 不直接吃 Home Indicator。
+   */
+
+  .game-message{
+
+    margin-bottom:
+      var(
+        --safe-bottom
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   Hidden
+========================================================= */
+
+.is-hidden{
+
+  display:
+    none !important;
+
+}
+
+
+/* =========================================================
+   Rotate Screen
 ========================================================= */
 
 #rotate-screen{
 
-  position:fixed;
+  position:
+    fixed;
 
 
-  inset:0;
+  inset:
+    0;
 
 
-  z-index:9999;
+  z-index:
+    9999;
 
 
-  display:none;
+  display:
+    none;
 
 
-  align-items:center;
+  align-items:
+    center;
 
-  justify-content:center;
+  justify-content:
+    center;
 
 
-  padding:30px;
+  padding:
+
+    max(
+      30px,
+      var(
+        --safe-top
+      )
+    )
+
+    max(
+      30px,
+      var(
+        --safe-right
+      )
+    )
+
+    max(
+      30px,
+      var(
+        --safe-bottom
+      )
+    )
+
+    max(
+      30px,
+      var(
+        --safe-left
+      )
+    );
 
 
   background:
@@ -458,20 +642,28 @@ button{
     );
 
 
-  color:#ffffff;
+  color:
+    #ffffff;
 
 
-  text-align:center;
+  text-align:
+    center;
 
 }
 
 
+/* =========================================================
+   Rotate Content
+========================================================= */
+
 .rotate-content h2{
 
-  margin-bottom:8px;
+  margin-bottom:
+    8px;
 
 
-  font-size:28px;
+  font-size:
+    28px;
 
 }
 
@@ -487,9 +679,11 @@ button{
     );
 
 
-  font-size:15px;
+  font-size:
+    15px;
 
-  font-weight:700;
+  font-weight:
+    700;
 
 }
 
@@ -500,9 +694,11 @@ button{
 
 .rotate-phone{
 
-  width:62px;
+  width:
+    62px;
 
-  height:106px;
+  height:
+    106px;
 
 
   margin:
@@ -514,7 +710,8 @@ button{
     #ffffff;
 
 
-  border-radius:15px;
+  border-radius:
+    15px;
 
 
   animation:
@@ -563,7 +760,8 @@ button{
 
   #rotate-screen{
 
-    display:flex;
+    display:
+      flex;
 
   }
 
@@ -581,7 +779,8 @@ button{
 
   #stage{
 
-    box-shadow:none;
+    box-shadow:
+      none;
 
   }
 
@@ -597,7 +796,8 @@ button{
 
   .rotate-phone{
 
-    animation:none;
+    animation:
+      none;
 
   }
 
