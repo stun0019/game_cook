@@ -24,11 +24,14 @@ export class GameScene {
     this.sceneManager =
       sceneManager;
 
+
     this.threeRoot =
       threeRoot;
 
+
     this.uiRoot =
       uiRoot;
+
 
     this.input =
       input;
@@ -37,8 +40,10 @@ export class GameScene {
     this.scene =
       null;
 
+
     this.camera =
       null;
+
 
     this.renderer =
       null;
@@ -47,12 +52,14 @@ export class GameScene {
     this.renderWidth =
       GameConfig.logicalWidth;
 
+
     this.renderHeight =
       GameConfig.logicalHeight;
 
 
     this.floorMesh =
       null;
+
 
     this.floorGrid =
       null;
@@ -61,8 +68,10 @@ export class GameScene {
     this.animationFrame =
       0;
 
+
     this.running =
       false;
+
 
     this.lastTime =
       0;
@@ -75,8 +84,10 @@ export class GameScene {
     this.player =
       null;
 
+
     this.heldAnchor =
       null;
+
 
     this.heldVisual =
       null;
@@ -85,12 +96,14 @@ export class GameScene {
     this.panContent =
       null;
 
+
     this.assemblyContent =
       null;
 
 
     this.obstacles =
       [];
+
 
     this.stationById =
       new Map();
@@ -107,36 +120,50 @@ export class GameScene {
     this.recipes = [
 
       {
-        name:"經典漢堡",
 
-        result:"burger",
+        name:
+          "經典漢堡",
+
+        result:
+          "burger",
 
         ingredients:[
           "bun",
           "cookedMeat"
         ]
+
       },
 
-      {
-        name:"生菜漢堡",
 
-        result:"lettuceBurger",
+      {
+
+        name:
+          "生菜漢堡",
+
+        result:
+          "lettuceBurger",
 
         ingredients:[
           "bun",
           "lettuce",
           "cookedMeat"
         ]
+
       },
 
-      {
-        name:"冰飲",
 
-        result:"drink",
+      {
+
+        name:
+          "冰飲",
+
+        result:
+          "drink",
 
         ingredients:[
           "drink"
         ]
+
       }
 
     ];
@@ -144,6 +171,7 @@ export class GameScene {
 
     this.state =
       null;
+
 
     this.ui =
       null;
@@ -163,15 +191,21 @@ export class GameScene {
 
     this.createState();
 
+
     this.createUI();
+
 
     this.createThreeScene();
 
+
     this.bindStageResize();
+
 
     this.buildKitchen();
 
+
     this.createPlayer();
+
 
     this.bindControls();
 
@@ -184,6 +218,7 @@ export class GameScene {
 
 
     this.renderOrders();
+
 
     this.updateHud();
 
@@ -203,10 +238,12 @@ export class GameScene {
 
     this.animationFrame =
       requestAnimationFrame(
+
         time =>
           this.loop(
             time
           )
+
       );
 
   }
@@ -220,51 +257,81 @@ export class GameScene {
 
     this.state = {
 
-      paused:false,
+      paused:
+        false,
 
-      ended:false,
+      ended:
+        false,
+
 
       time:
         GameConfig
           .gameplay
           .duration,
 
-      score:0,
 
-      served:0,
+      score:
+        0,
 
-      combo:0,
 
-      maxCombo:0,
+      served:
+        0,
 
-      held:null,
 
-      nearestStation:null,
+      combo:
+        0,
 
-      panState:"empty",
 
-      panTimer:0,
+      maxCombo:
+        0,
 
-      assembly:[],
 
-      orders:[],
+      held:
+        null,
 
-      orderSpawnTimer:0,
 
-      messageTimer:0,
+      nearestStation:
+        null,
+
+
+      panState:
+        "empty",
+
+
+      panTimer:
+        0,
+
+
+      assembly:
+        [],
+
+
+      orders:
+        [],
+
+
+      orderSpawnTimer:
+        0,
+
+
+      messageTimer:
+        0,
+
 
       playerPosition:
         new THREE.Vector3(
 
           Number(
             this.layout.player.x
-          ) || 0,
+          ) ||
+          0,
 
           0,
 
           Number(
             this.layout.player.z
-          ) || 0
+          ) ||
+          0
 
         )
 
@@ -300,6 +367,7 @@ export class GameScene {
               分數
             </span>
 
+
             <strong
               class="hud-stat-value"
               data-score
@@ -329,6 +397,7 @@ export class GameScene {
               >
                 時間
               </span>
+
 
               <strong
                 class="hud-stat-value"
@@ -425,6 +494,7 @@ export class GameScene {
               暫停營業
             </h2>
 
+
             <p>
               遊戲時間與訂單耐心已暫停。
             </p>
@@ -518,90 +588,108 @@ export class GameScene {
           "[data-score]"
         ),
 
+
       time:
         this.uiRoot.querySelector(
           "[data-time]"
         ),
+
 
       orderStrip:
         this.uiRoot.querySelector(
           "[data-order-strip]"
         ),
 
+
       message:
         this.uiRoot.querySelector(
           "[data-game-message]"
         ),
+
 
       stationHint:
         this.uiRoot.querySelector(
           "[data-station-hint]"
         ),
 
+
       pauseTrigger:
         this.uiRoot.querySelector(
           "[data-pause-trigger]"
         ),
+
 
       pauseOverlay:
         this.uiRoot.querySelector(
           "[data-pause-overlay]"
         ),
 
+
       resultOverlay:
         this.uiRoot.querySelector(
           "[data-result-overlay]"
         ),
+
 
       resultTitle:
         this.uiRoot.querySelector(
           "[data-result-title]"
         ),
 
+
       resultText:
         this.uiRoot.querySelector(
           "[data-result-text]"
         ),
+
 
       resume:
         this.uiRoot.querySelector(
           "[data-resume]"
         ),
 
+
       pauseMenu:
         this.uiRoot.querySelector(
           "[data-pause-menu]"
         ),
+
 
       retry:
         this.uiRoot.querySelector(
           "[data-retry]"
         ),
 
+
       resultMenu:
         this.uiRoot.querySelector(
           "[data-result-menu]"
         ),
+
 
       touchControls:
         this.uiRoot.querySelector(
           "[data-touch-controls]"
         ),
 
+
       joystick:
         this.uiRoot.querySelector(
           "[data-joystick]"
         ),
+
 
       stick:
         this.uiRoot.querySelector(
           "[data-stick]"
         ),
 
+
       discard:
         this.uiRoot.querySelector(
           "[data-discard]"
         ),
+
 
       interact:
         this.uiRoot.querySelector(
@@ -652,6 +740,7 @@ export class GameScene {
           ) ||
           GameConfig.logicalWidth,
 
+
         height:
           Number(
             metrics.logicalHeight
@@ -668,6 +757,7 @@ export class GameScene {
       width:
         this.threeRoot.clientWidth ||
         GameConfig.logicalWidth,
+
 
       height:
         this.threeRoot.clientHeight ||
@@ -691,6 +781,7 @@ export class GameScene {
     this.renderWidth =
       size.width;
 
+
     this.renderHeight =
       size.height;
 
@@ -709,7 +800,7 @@ export class GameScene {
       new THREE.Fog(
         0xc6d7cf,
         16,
-        26
+        30
       );
 
 
@@ -719,9 +810,7 @@ export class GameScene {
 
 
     const viewHeight =
-      GameConfig
-        .camera
-        .viewHeight;
+      GameConfig.camera.viewHeight;
 
 
     const viewWidth =
@@ -732,17 +821,21 @@ export class GameScene {
     this.camera =
       new THREE.OrthographicCamera(
 
-        -viewWidth / 2,
+        -viewWidth /
+        2,
 
-        viewWidth / 2,
+        viewWidth /
+        2,
 
-        viewHeight / 2,
+        viewHeight /
+        2,
 
-        -viewHeight / 2,
+        -viewHeight /
+        2,
 
         .1,
 
-        50
+        60
 
       );
 
@@ -772,9 +865,11 @@ export class GameScene {
     this.renderer =
       new THREE.WebGLRenderer({
 
-        antialias:true,
+        antialias:
+          true,
 
-        alpha:false,
+        alpha:
+          false,
 
         powerPreference:
           "high-performance"
@@ -785,8 +880,12 @@ export class GameScene {
     this.renderer.setPixelRatio(
 
       Math.min(
-        window.devicePixelRatio || 1,
+
+        window.devicePixelRatio ||
+        1,
+
         1.5
+
       )
 
     );
@@ -822,9 +921,13 @@ export class GameScene {
 
     const hemisphere =
       new THREE.HemisphereLight(
+
         0xfff6df,
+
         0x6b765e,
+
         2.35
+
       );
 
 
@@ -835,8 +938,11 @@ export class GameScene {
 
     const keyLight =
       new THREE.DirectionalLight(
+
         0xffe4b8,
+
         2.4
+
       );
 
 
@@ -854,8 +960,11 @@ export class GameScene {
 
     const fillLight =
       new THREE.DirectionalLight(
+
         0xaad9ff,
+
         1.15
+
       );
 
 
@@ -883,7 +992,8 @@ export class GameScene {
       event => {
 
         const detail =
-          event.detail || {};
+          event.detail ||
+          {};
 
 
         this.resizeThreeScene(
@@ -891,11 +1001,14 @@ export class GameScene {
           Number(
             detail.logicalWidth
           ) ||
-          this.threeRoot.clientWidth,
+          this.threeRoot.clientWidth ||
+          GameConfig.logicalWidth,
+
 
           Number(
             detail.logicalHeight
           ) ||
+          this.threeRoot.clientHeight ||
           GameConfig.logicalHeight
 
         );
@@ -904,20 +1017,28 @@ export class GameScene {
 
 
     window.addEventListener(
+
       "game-stage-resize",
+
       handler
+
     );
 
 
     this.cleanups.push(
+
       () => {
 
         window.removeEventListener(
+
           "game-stage-resize",
+
           handler
+
         );
 
       }
+
     );
 
   }
@@ -941,14 +1062,20 @@ export class GameScene {
     this.renderWidth =
       Math.max(
         1,
-        width
+        Number(
+          width
+        ) ||
+        GameConfig.logicalWidth
       );
 
 
     this.renderHeight =
       Math.max(
         1,
-        height
+        Number(
+          height
+        ) ||
+        GameConfig.logicalHeight
       );
 
 
@@ -967,16 +1094,23 @@ export class GameScene {
 
 
     this.camera.left =
-      -viewWidth / 2;
+      -viewWidth /
+      2;
+
 
     this.camera.right =
-      viewWidth / 2;
+      viewWidth /
+      2;
+
 
     this.camera.top =
-      viewHeight / 2;
+      viewHeight /
+      2;
+
 
     this.camera.bottom =
-      -viewHeight / 2;
+      -viewHeight /
+      2;
 
 
     this.camera.updateProjectionMatrix();
@@ -1000,6 +1134,11 @@ export class GameScene {
 
   /* =======================================================
      Full Screen Floor
+
+     Floor 與玩家 Bounds 分離。
+
+     這裡故意讓地板遠大於 Camera，
+     以避免斜俯視視角下看到 Plane 邊界。
   ======================================================= */
 
   getVisualFloorSize(){
@@ -1010,16 +1149,9 @@ export class GameScene {
 
 
     const cameraWidth =
-      GameConfig
-        .camera
-        .viewHeight *
+      GameConfig.camera.viewHeight *
       aspect;
 
-
-    /*
-     * Floor 比 Camera 可見範圍更大，
-     * 避免因斜視 Camera 看見地板邊界。
-     */
 
     return {
 
@@ -1029,9 +1161,12 @@ export class GameScene {
           GameConfig.world.floorWidth,
 
           cameraWidth *
-          1.5
+          2.4,
+
+          32
 
         ),
+
 
       depth:
         Math.max(
@@ -1039,7 +1174,9 @@ export class GameScene {
           GameConfig.world.floorDepth,
 
           GameConfig.camera.viewHeight *
-          2
+          3.2,
+
+          30
 
         )
 
@@ -1068,8 +1205,11 @@ export class GameScene {
 
     this.floorMesh.geometry =
       new THREE.PlaneGeometry(
+
         size.width,
+
         size.depth
+
       );
 
 
@@ -1106,15 +1246,20 @@ export class GameScene {
       new THREE.Mesh(
 
         new THREE.PlaneGeometry(
+
           floorSize.width,
+
           floorSize.depth
+
         ),
 
         new THREE.MeshStandardMaterial({
 
-          color:0xd8b877,
+          color:
+            0xd8b877,
 
-          roughness:.92
+          roughness:
+            .92
 
         })
 
@@ -1122,13 +1267,26 @@ export class GameScene {
 
 
     this.floorMesh.rotation.x =
-      -Math.PI / 2;
+      -Math.PI /
+      2;
 
+
+    /*
+     * 關鍵：
+     * 地板往 Camera 前方延伸。
+     *
+     * 原本 z = .2，
+     * 現在改成 1.5。
+     */
 
     this.floorMesh.position.set(
+
       0,
+
       -.02,
-      .2
+
+      1.5
+
     );
 
 
@@ -1136,11 +1294,6 @@ export class GameScene {
       this.floorMesh
     );
 
-
-    /*
-     * Grid 使用 1 × 1 基底，
-     * 再依 Full Screen Floor 尺寸縮放。
-     */
 
     this.floorGrid =
       new THREE.GridHelper(
@@ -1157,9 +1310,13 @@ export class GameScene {
 
 
     this.floorGrid.position.set(
+
       0,
+
       .005,
-      .2
+
+      1.5
+
     );
 
 
@@ -1178,8 +1335,6 @@ export class GameScene {
       this.floorGrid
     );
 
-
-    /* Counter */
 
     this.layout.counters.forEach(
       counter => {
@@ -1208,8 +1363,6 @@ export class GameScene {
     );
 
 
-    /* Station */
-
     this.layout.stations.forEach(
       station => {
 
@@ -1235,21 +1388,25 @@ export class GameScene {
 
           ...station,
 
+
           x:
             Number(
               station.x
             ),
+
 
           z:
             Number(
               station.z
             ),
 
+
           ix:
             Number(
               station.x
             ) +
             offsetX,
+
 
           iz:
             Number(
@@ -1298,9 +1455,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xaa5d37,
+          color:
+            0xaa5d37,
 
-          roughness:.82
+          roughness:
+            .82
 
         })
 
@@ -1333,9 +1492,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0x7e432f,
+          color:
+            0x7e432f,
 
-          roughness:.9
+          roughness:
+            .9
 
         })
 
@@ -1348,9 +1509,13 @@ export class GameScene {
 
       .38,
 
-      depth > width
+      depth >
+      width
+
         ? 0
-        : depth * .04
+
+        : depth *
+          .04
 
     );
 
@@ -1377,9 +1542,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xef9b4a,
+          color:
+            0xef9b4a,
 
-          roughness:.65
+          roughness:
+            .65
 
         })
 
@@ -1474,7 +1641,9 @@ export class GameScene {
 
       ...definition,
 
+
       group,
+
 
       content:
         new THREE.Group()
@@ -1561,9 +1730,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xf3dfb2,
+            color:
+              0xf3dfb2,
 
-            roughness:.75
+            roughness:
+              .75
 
           })
 
@@ -1613,9 +1784,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xd99b56,
+            color:
+              0xd99b56,
 
-            roughness:.82
+            roughness:
+              .82
 
           })
 
@@ -1650,11 +1823,14 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0x2b3b40,
+            color:
+              0x2b3b40,
 
-            roughness:.5,
+            roughness:
+              .5,
 
-            metalness:.18
+            metalness:
+              .18
 
           })
 
@@ -1681,9 +1857,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0x2b3b40,
+            color:
+              0x2b3b40,
 
-            roughness:.55
+            roughness:
+              .55
 
           })
 
@@ -1720,9 +1898,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xd95645,
+            color:
+              0xd95645,
 
-            roughness:.6
+            roughness:
+              .6
 
           })
 
@@ -1749,9 +1929,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xf4e7d0,
+            color:
+              0xf4e7d0,
 
-            roughness:.5
+            roughness:
+              .5
 
           })
 
@@ -1795,9 +1977,11 @@ export class GameScene {
 
             new THREE.MeshStandardMaterial({
 
-              color:0xf7f1e7,
+              color:
+                0xf7f1e7,
 
-              roughness:.48
+              roughness:
+                .48
 
             })
 
@@ -1836,9 +2020,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xf7f1e7,
+            color:
+              0xf7f1e7,
 
-            roughness:.48
+            roughness:
+              .48
 
           })
 
@@ -1873,11 +2059,14 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0xe0aa35,
+            color:
+              0xe0aa35,
 
-            roughness:.38,
+            roughness:
+              .38,
 
-            metalness:.35
+            metalness:
+              .35
 
           })
 
@@ -1906,21 +2095,26 @@ export class GameScene {
 
             0,
 
-            Math.PI * 2,
+            Math.PI *
+            2,
 
             0,
 
-            Math.PI / 2
+            Math.PI /
+            2
 
           ),
 
           new THREE.MeshStandardMaterial({
 
-            color:0xf3bd40,
+            color:
+              0xf3bd40,
 
-            roughness:.3,
+            roughness:
+              .3,
 
-            metalness:.3
+            metalness:
+              .3
 
           })
 
@@ -1959,11 +2153,14 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0x748789,
+            color:
+              0x748789,
 
-            roughness:.72,
+            roughness:
+              .72,
 
-            metalness:.12
+            metalness:
+              .12
 
           })
 
@@ -1991,9 +2188,11 @@ export class GameScene {
 
           new THREE.MeshStandardMaterial({
 
-            color:0x49595c,
+            color:
+              0x49595c,
 
-            roughness:.6
+            roughness:
+              .6
 
           })
 
@@ -2001,7 +2200,8 @@ export class GameScene {
 
 
       rim.rotation.x =
-        Math.PI / 2;
+        Math.PI /
+        2;
 
 
       rim.position.y =
@@ -2036,6 +2236,7 @@ export class GameScene {
 
     canvas.width =
       256;
+
 
     canvas.height =
       80;
@@ -2072,6 +2273,7 @@ export class GameScene {
 
 
     context.fill();
+
 
     context.stroke();
 
@@ -2112,11 +2314,14 @@ export class GameScene {
     const material =
       new THREE.SpriteMaterial({
 
-        map:texture,
+        map:
+          texture,
 
-        transparent:true,
+        transparent:
+          true,
 
-        depthTest:false
+        depthTest:
+          false
 
       });
 
@@ -2165,9 +2370,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xfff8e9,
+          color:
+            0xfff8e9,
 
-          roughness:.7
+          roughness:
+            .7
 
         })
 
@@ -2194,9 +2401,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xe45b45,
+          color:
+            0xe45b45,
 
-          roughness:.7
+          roughness:
+            .7
 
         })
 
@@ -2226,9 +2435,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xc97844,
+          color:
+            0xc97844,
 
-          roughness:.75
+          roughness:
+            .75
 
         })
 
@@ -2256,9 +2467,11 @@ export class GameScene {
 
         new THREE.MeshStandardMaterial({
 
-          color:0xfffbef,
+          color:
+            0xfffbef,
 
-          roughness:.65
+          roughness:
+            .65
 
         })
 
@@ -2287,19 +2500,23 @@ export class GameScene {
 
           0,
 
-          Math.PI * 2,
+          Math.PI *
+          2,
 
           0,
 
-          Math.PI / 2
+          Math.PI /
+          2
 
         ),
 
         new THREE.MeshStandardMaterial({
 
-          color:0xfffbef,
+          color:
+            0xfffbef,
 
-          roughness:.65
+          roughness:
+            .65
 
         })
 
@@ -2371,11 +2588,13 @@ export class GameScene {
 
     const material =
       color =>
+
         new THREE.MeshStandardMaterial({
 
           color,
 
-          roughness:.68
+          roughness:
+            .68
 
         });
 
@@ -2704,9 +2923,12 @@ export class GameScene {
     this.cleanups.push(
 
       this.input.on(
+
         "interact",
+
         () =>
           this.interact()
+
       )
 
     );
@@ -2715,9 +2937,12 @@ export class GameScene {
     this.cleanups.push(
 
       this.input.on(
+
         "discard",
+
         () =>
           this.discard()
+
       )
 
     );
@@ -2726,29 +2951,41 @@ export class GameScene {
     this.cleanups.push(
 
       this.input.on(
+
         "pause",
+
         () =>
           this.togglePause()
+
       )
 
     );
 
 
     this.input.attachJoystick(
+
       this.ui.joystick,
+
       this.ui.stick
+
     );
 
 
     this.input.bindActionButton(
+
       this.ui.interact,
+
       "interact"
+
     );
 
 
     this.input.bindActionButton(
+
       this.ui.discard,
+
       "discard"
+
     );
 
 
@@ -2822,52 +3059,62 @@ export class GameScene {
 
 
     this.cleanups.push(
+
       () =>
         this.ui.pauseTrigger
           .removeEventListener(
             "click",
             pauseClick
           )
+
     );
 
 
     this.cleanups.push(
+
       () =>
         this.ui.resume
           .removeEventListener(
             "click",
             resumeClick
           )
+
     );
 
 
     this.cleanups.push(
+
       () =>
         this.ui.pauseMenu
           .removeEventListener(
             "click",
             pauseMenuClick
           )
+
     );
 
 
     this.cleanups.push(
+
       () =>
         this.ui.retry
           .removeEventListener(
             "click",
             retryClick
           )
+
     );
 
 
     this.cleanups.push(
+
       () =>
         this.ui.resultMenu
           .removeEventListener(
             "click",
             resultMenuClick
           )
+
     );
 
   }
@@ -2923,17 +3170,22 @@ export class GameScene {
 
 
     this.renderer.render(
+
       this.scene,
+
       this.camera
+
     );
 
 
     this.animationFrame =
       requestAnimationFrame(
+
         nextTime =>
           this.loop(
             nextTime
           )
+
       );
 
   }
@@ -2969,11 +3221,15 @@ export class GameScene {
 
 
     if(
+
       this.state.orderSpawnTimer >=
-        GameConfig.gameplay.orderSpawnInterval
+      GameConfig.gameplay.orderSpawnInterval
+
       &&
+
       this.state.orders.length <
-        GameConfig.gameplay.maxOrders
+      GameConfig.gameplay.maxOrders
+
     ){
 
       this.state.orderSpawnTimer =
@@ -2981,6 +3237,7 @@ export class GameScene {
 
 
       this.addOrder();
+
 
       this.renderOrders();
 
@@ -3051,6 +3308,7 @@ export class GameScene {
 
       this.updateHud();
 
+
       this.renderOrders();
 
     }
@@ -3073,8 +3331,11 @@ export class GameScene {
 
     const length =
       Math.hypot(
+
         movement.x,
+
         movement.y
+
       );
 
 
@@ -3157,8 +3418,11 @@ export class GameScene {
 
       this.player.rotation.y =
         Math.atan2(
+
           movement.x,
+
           movement.y
+
         );
 
 
@@ -3221,18 +3485,24 @@ export class GameScene {
             x -
             obstacle.x
           ) <
+
           obstacle.width /
           2 +
+
           radius
 
+
           &&
+
 
           Math.abs(
             z -
             obstacle.z
           ) <
+
           obstacle.depth /
           2 +
+
           radius
 
         );
@@ -3291,9 +3561,14 @@ export class GameScene {
 
 
     if(
-      nearest &&
+
+      nearest
+
+      &&
+
       nearestDistance <=
-        GameConfig.gameplay.interactionDistance
+      GameConfig.gameplay.interactionDistance
+
     ){
 
       this.state.nearestStation =
@@ -3337,6 +3612,7 @@ export class GameScene {
   ){
 
     this.state.orders.forEach(
+
       (
         order,
         index
@@ -3347,12 +3623,16 @@ export class GameScene {
           delta *
 
           (
-            index === 0
+            index ===
+            0
+
               ? 4.1
+
               : 2
           );
 
       }
+
     );
 
 
@@ -3371,9 +3651,12 @@ export class GameScene {
 
       this.state.score =
         Math.max(
+
           0,
+
           this.state.score -
           60
+
         );
 
 
@@ -3479,8 +3762,6 @@ export class GameScene {
       );
 
 
-    /* Ingredient */
-
     if(
       [
         "bun",
@@ -3532,19 +3813,21 @@ export class GameScene {
     }
 
 
-    /* Pan */
-
     if(
       station.id ===
       "pan"
     ){
 
       if(
+
         this.state.held ===
-          "rawMeat"
+        "rawMeat"
+
         &&
+
         this.state.panState ===
-          "empty"
+        "empty"
+
       ){
 
         this.setHeld(
@@ -3574,10 +3857,14 @@ export class GameScene {
 
 
       if(
+
         this.state.panState ===
-          "done"
+        "done"
+
         &&
+
         !this.state.held
+
       ){
 
         this.state.panState =
@@ -3622,8 +3909,6 @@ export class GameScene {
 
     }
 
-
-    /* Assembly */
 
     if(
       station.id ===
@@ -3671,13 +3956,17 @@ export class GameScene {
 
 
       if(
+
         ingredients.has(
           "bun"
         )
+
         &&
+
         ingredients.has(
           "cookedMeat"
         )
+
       ){
 
         const result =
@@ -3722,8 +4011,6 @@ export class GameScene {
     }
 
 
-    /* Serve */
-
     if(
       station.id ===
       "serve"
@@ -3734,9 +4021,14 @@ export class GameScene {
 
 
       if(
-        order &&
+
+        order
+
+        &&
+
         this.state.held ===
-          order.result
+        order.result
+
       ){
 
         const earned =
@@ -3787,6 +4079,7 @@ export class GameScene {
 
         this.renderOrders();
 
+
         this.updateHud();
 
 
@@ -3803,9 +4096,12 @@ export class GameScene {
 
         this.state.score =
           Math.max(
+
             0,
+
             this.state.score -
             40
+
           );
 
 
@@ -3882,9 +4178,14 @@ export class GameScene {
 
 
     if(
-      this.state.held ||
+
+      this.state.held
+
+      ||
+
       this.state.assembly.length >
       0
+
     ){
 
       this.setHeld(
@@ -4042,6 +4343,7 @@ export class GameScene {
 
 
     this.state.assembly.forEach(
+
       (
         type,
         index
@@ -4076,6 +4378,7 @@ export class GameScene {
         );
 
       }
+
     );
 
   }
@@ -4116,7 +4419,9 @@ export class GameScene {
 
       globalThis.crypto
         ?.randomUUID
-        ?.() ||
+        ?.()
+
+      ||
 
       `${Date.now()}-${Math.random()}`;
 
@@ -4125,17 +4430,22 @@ export class GameScene {
 
       id,
 
+
       name:
         recipe.name,
 
+
       result:
         recipe.result,
+
 
       ingredients:[
         ...recipe.ingredients
       ],
 
-      patience:100
+
+      patience:
+        100
 
     });
 
@@ -4437,17 +4747,23 @@ export class GameScene {
 
     return {
 
-      bun:"麵包",
+      bun:
+        "麵包",
 
-      lettuce:"生菜",
+      lettuce:
+        "生菜",
 
-      rawMeat:"生肉",
+      rawMeat:
+        "生肉",
 
-      cookedMeat:"熟肉",
+      cookedMeat:
+        "熟肉",
 
-      drink:"飲料",
+      drink:
+        "飲料",
 
-      burger:"漢堡",
+      burger:
+        "漢堡",
 
       lettuceBurger:
         "生菜漢堡"
@@ -4464,19 +4780,26 @@ export class GameScene {
 
     return {
 
-      bun:"#e9ad56",
+      bun:
+        "#e9ad56",
 
-      lettuce:"#6fac63",
+      lettuce:
+        "#6fac63",
 
-      rawMeat:"#d7554e",
+      rawMeat:
+        "#d7554e",
 
-      cookedMeat:"#80503b",
+      cookedMeat:
+        "#80503b",
 
-      drink:"#e45745",
+      drink:
+        "#e45745",
 
-      burger:"#d89140",
+      burger:
+        "#d89140",
 
-      lettuceBurger:"#6fac63"
+      lettuceBurger:
+        "#6fac63"
 
     }[type] ||
     "#999999";
@@ -4650,8 +4973,10 @@ export class GameScene {
     this.scene =
       null;
 
+
     this.camera =
       null;
+
 
     this.renderer =
       null;
@@ -4660,6 +4985,7 @@ export class GameScene {
     this.floorMesh =
       null;
 
+
     this.floorGrid =
       null;
 
@@ -4667,17 +4993,22 @@ export class GameScene {
     this.layout =
       null;
 
+
     this.player =
       null;
+
 
     this.heldAnchor =
       null;
 
+
     this.heldVisual =
       null;
 
+
     this.panContent =
       null;
+
 
     this.assemblyContent =
       null;
